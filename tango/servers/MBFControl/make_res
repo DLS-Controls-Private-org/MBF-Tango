@@ -1,5 +1,14 @@
 #!/bin/bash
 
+# Takes 3 parameters
+#  - path to a .config file
+#  - path of the MBF_HOME of the server where MacroServer will be run
+#  - path of top directory of MBF-Tango
+
+CONFIG_FILE=$1
+MBF_HOME=$2
+TOP=$3
+
 # Reads key from given config file.  Called thus:
 #
 #   read_key file key
@@ -8,19 +17,22 @@ read_key()
     sed -n "/^$2 *= */{s///; p; q;}" "$1"
 }
 
-IOC_NAME="$(basename $1 ".config")"
-IOC_DIR="$(cd "$(dirname $1)/../../../iocs"; pwd)"
+if ! $TOP/tango/tools/is_epics_conf $CONFIG_FILE
+    then exit 0
+fi
+
+IOC_NAME="$(basename $CONFIG_FILE ".config")"
 
 VAR_SUBST=""
-VAR_SUBST="$VAR_SUBST;s:@@DEVICE_NAME_H@@:$(read_key $1 tango_MBFControl_h_devicename):"
-VAR_SUBST="$VAR_SUBST;s:@@DEVICE_NAME_V@@:$(read_key $1 tango_MBFControl_v_devicename):"
-VAR_SUBST="$VAR_SUBST;s:@@DOOR_DEVICE_NAME_H@@:$(read_key $1 tango_door_h_devicename):"
-VAR_SUBST="$VAR_SUBST;s:@@DOOR_DEVICE_NAME_V@@:$(read_key $1 tango_door_v_devicename):"
-VAR_SUBST="$VAR_SUBST;s:@@MACRO_DEVICE_NAME@@:$(read_key $1 tango_macro_devicename):"
-VAR_SUBST="$VAR_SUBST;s:@@T2E_DEVICE_NAME_G@@:$(read_key $1 tango_T2E_g_devicename):"
-VAR_SUBST="$VAR_SUBST;s:@@T2E_DEVICE_NAME_H@@:$(read_key $1 tango_T2E_h_devicename):"
-VAR_SUBST="$VAR_SUBST;s:@@T2E_DEVICE_NAME_V@@:$(read_key $1 tango_T2E_v_devicename):"
-VAR_SUBST="$VAR_SUBST;s:@@CONFIG_FILE_PATH_H@@:$(read_key $1 tango_MBFControl_h_configfilepath):"
-VAR_SUBST="$VAR_SUBST;s:@@CONFIG_FILE_PATH_V@@:$(read_key $1 tango_MBFControl_v_configfilepath):"
-VAR_SUBST="$VAR_SUBST;s:@@INSTANCE@@:$(read_key $1 tango_MBFControl_instance):"
+VAR_SUBST="$VAR_SUBST;s:@@DEVICE_NAME_H@@:$(read_key $CONFIG_FILE tango_MBFControl_h_devicename):"
+VAR_SUBST="$VAR_SUBST;s:@@DEVICE_NAME_V@@:$(read_key $CONFIG_FILE tango_MBFControl_v_devicename):"
+VAR_SUBST="$VAR_SUBST;s:@@DOOR_DEVICE_NAME_H@@:$(read_key $CONFIG_FILE tango_door_h_devicename):"
+VAR_SUBST="$VAR_SUBST;s:@@DOOR_DEVICE_NAME_V@@:$(read_key $CONFIG_FILE tango_door_v_devicename):"
+VAR_SUBST="$VAR_SUBST;s:@@MACRO_DEVICE_NAME@@:$(read_key $CONFIG_FILE tango_macro_devicename):"
+VAR_SUBST="$VAR_SUBST;s:@@T2E_DEVICE_NAME_G@@:$(read_key $CONFIG_FILE tango_T2E_g_devicename):"
+VAR_SUBST="$VAR_SUBST;s:@@T2E_DEVICE_NAME_H@@:$(read_key $CONFIG_FILE tango_T2E_h_devicename):"
+VAR_SUBST="$VAR_SUBST;s:@@T2E_DEVICE_NAME_V@@:$(read_key $CONFIG_FILE tango_T2E_v_devicename):"
+VAR_SUBST="$VAR_SUBST;s:@@CONFIG_FILE_PATH_H@@:$(read_key $CONFIG_FILE tango_MBFControl_h_configfilepath):"
+VAR_SUBST="$VAR_SUBST;s:@@CONFIG_FILE_PATH_V@@:$(read_key $CONFIG_FILE tango_MBFControl_v_configfilepath):"
+VAR_SUBST="$VAR_SUBST;s:@@INSTANCE@@:$(read_key $CONFIG_FILE tango_MBFControl_instance):"
 sed "$VAR_SUBST" MBFControl_template.res

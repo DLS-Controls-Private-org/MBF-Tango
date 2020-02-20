@@ -1,13 +1,8 @@
 # Makefile for Tango server and resource files
 
-MBF_TOP = ..
-include $(MBF_TOP)/Makefile.common
+TOP = $(CURDIR)/..
 
-SCRIPT_DIR := $(MBF_TOP)/sites/$(SITE)/scripts/tango
-RESSOURCE_DIR := servers/resources
-
-SCRIPTS := $(wildcard $(SCRIPT_DIR)/*)
-SCRIPTS := $(notdir $(SCRIPTS))
+include $(TOP)/CONFIG
 
 TMBF_RES =
 TMBF_RES += e2t_tmbf_global.res
@@ -18,49 +13,40 @@ TFIT_RES =
 TFIT_RES += e2t_tfit_horizontal.res
 TFIT_RES += e2t_tfit_vertical.res
 
-default: $(SCRIPTS) $(TMBF_RES) $(TFIT_RES) install-py mbfstartioc-res macroserver-res mbfcontrol-res
+default: $(TMBF_RES) $(TFIT_RES) mbfstartioc-res macroserver-res mbfcontrol-res
 .PHONY: default
 
-$(TMBF_RES): %.res: ../epics/db/tmbf.db
-	tools/T2E_make_res.py tmbf ../epics/db/tmbf.db $(subst e2t_tmbf_,,$*) > $(RESSOURCE_DIR)/$*.res
+$(TMBF_RES): %.res: $(DB_FILES_DIR)/tmbf.db
+	tools/T2E_make_res.py tmbf $(DB_FILES_DIR)/tmbf.db $(subst e2t_tmbf_,,$*) > $(RESSOURCE_DIR)/$*.res
 
-$(TFIT_RES): %.res: tools/tune_fit.db
-	tools/T2E_make_res.py tfit tools/tune_fit.db $(subst e2t_tfit_,,$*) > $(RESSOURCE_DIR)/$*.res
-
-%.py: $(SCRIPT_DIR)/%.py
-	ln -sf ../../sites/$(SITE)/scripts/tango/$@ macros/$@
+$(TFIT_RES): %.res: $(DB_FILES_DIR)/tune_fit.db
+	tools/T2E_make_res.py tfit $(DB_FILES_DIR)/tune_fit.db $(subst e2t_tfit_,,$*) > $(RESSOURCE_DIR)/$*.res
 
 mbfstartioc-res:
-	make -C servers/MBFStartIOC -f Makefile-res
+	make -C servers/MBFStartIOC -f ../Makefile-res TOP=$(TOP)
 .PHONY: mbfstartioc-res
 
 mbfstartioc-res-clean:
-	make -C servers/MBFStartIOC -f Makefile-res clean
+	make -C servers/MBFStartIOC -f ../Makefile-res TOP=$(TOP) clean
 .PHONY: mbfstartioc-res-clean
 
 macroserver-res:
-	make -C servers/MacroServer -f Makefile-res
+	make -C servers/MacroServer -f ../Makefile-res TOP=$(TOP)
 .PHONY: macroserver-res
 
 macroserver-res-clean:
-	make -C servers/MacroServer -f Makefile-res clean
+	make -C servers/MacroServer -f ../Makefile-res TOP=$(TOP) clean
 .PHONY: macroserver-res-clean
 
 mbfcontrol-res:
-	make -C servers/MBFControl -f Makefile-res
+	make -C servers/MBFControl -f ../Makefile-res TOP=$(TOP)
 .PHONY: mbfcontrol-res
 
 mbfcontrol-res-clean:
-	make -C servers/MBFControl -f Makefile-res clean
+	make -C servers/MBFControl -f ../Makefile-res TOP=$(TOP) clean
 .PHONY: mbfcontrol-res-clean
 
-install-py:
-	install -d $(INSTALL_DIR)
-	install -T servers/MBFStartIOC/MBFStartIOC.py $(INSTALL_DIR)/MBFStartIOC
-
 clean: mbfstartioc-res-clean macroserver-res-clean mbfcontrol-res-clean
-	rm -f macros/*.py
 	rm -f tools/*.pyc
 	rm -f $(RESSOURCE_DIR)/*.res
-	rm -f $(INSTALL_DIR)/MBFStartIOC
 .PHONY: clean
