@@ -38,11 +38,15 @@ Tango servers can only be installed once the EPICS layer on MBF crate is working
 1. Add some configuration parameters.
 * Both epics and tune_fit IOC require some extra parameters in their configuration files (those parameters are not require for the EPICS layer). See examples:
   * epics: [SR-TMBF.config](https://github.com/DLS-Controls-Private-org/DLS-MBF/blob/ESRF/sites/ESRF/iocs/SR-TMBF.config "SR-TMBF.config")
+  * epics lmbf: [SR-LMBF.config](https://github.com/DLS-Controls-Private-org/DLS-MBF/blob/Elettra/sites/Elettra/iocs/SR-LMBF.config "SR-LMBF.config")
   * tune_fit: [SR-TFIT.config](https://github.com/DLS-Controls-Private-org/DLS-MBF/blob/ESRF/sites/ESRF/iocs/SR-TFIT.config "SR-TFIT.config")
 * Clone MBF-Tango, this directory will be called $MBF_TANGO_HOME
 * Create a `$MBF_TANGO_HOME/tango/tools/config.py` (this file is crate-dependant).  
 as an example, the ESRF file can be use with:  
 `ln -s ../../sites/ESRF/tango/config.py.l-c31-3 $MBF_TANGO_HOME/tango/tools/config.py`
+* Create a `$MBF_TANGO_HOME/tango/tools/config_lmbf.py` (this file is crate-dependant).  
+as an example, the Elettra file can be use with:  
+`ln -s ../../sites/Elettra/tango/config_lmbf.py $MBF_TANGO_HOME/tango/tools/config_lmbf.py`
 * Create a `$MBF_TANGO_HOME/CONFIG` (this one is site-dependant).  
 as an example, the ESRF file can be use with:  
 `ln -s sites/ESRF/CONFIG $MBF_TANGO_HOME/CONFIG`

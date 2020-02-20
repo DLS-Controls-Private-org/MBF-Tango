@@ -13,7 +13,10 @@ TFIT_RES =
 TFIT_RES += e2t_tfit_horizontal.res
 TFIT_RES += e2t_tfit_vertical.res
 
-default: $(TMBF_RES) $(TFIT_RES) mbfstartioc-res macroserver-res mbfcontrol-res
+LMBF_RES = 
+LMBF_RES += e2t_lmbf_longitudinal.res
+
+default: $(TMBF_RES) $(TFIT_RES) $(LMBF_RES) mbfstartioc-res macroserver-res mbfcontrol-res
 .PHONY: default
 
 $(TMBF_RES): %.res: $(DB_FILES_DIR)/tmbf.db
@@ -21,6 +24,9 @@ $(TMBF_RES): %.res: $(DB_FILES_DIR)/tmbf.db
 
 $(TFIT_RES): %.res: $(DB_FILES_DIR)/tune_fit.db
 	tools/T2E_make_res.py tfit $(DB_FILES_DIR)/tune_fit.db $(subst e2t_tfit_,,$*) > $(RESSOURCE_DIR)/$*.res
+
+$(LMBF_RES): %.res: $(DB_FILES_DIR)/lmbf.db
+	tools/T2E_make_lmbf_res.py lmbf $(DB_FILES_DIR)/lmbf.db $(subst e2t_lmbf_,,$*) > $(RESSOURCE_DIR)/$*.res
 
 mbfstartioc-res:
 	make -C servers/MBFStartIOC -f ../Makefile-res TOP=$(TOP)

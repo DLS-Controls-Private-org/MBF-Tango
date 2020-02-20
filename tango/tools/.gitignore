@@ -2,3 +2,4 @@
 *.res
 *.log
 /config.py
+/config_lmbf.py
