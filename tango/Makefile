@@ -20,13 +20,13 @@ default: $(TMBF_RES) $(TFIT_RES) $(LMBF_RES) mbfstartioc-res macroserver-res mbf
 .PHONY: default
 
 $(TMBF_RES): %.res: $(DB_FILES_DIR)/tmbf.db
-	tools/T2E_make_res.py tmbf $(DB_FILES_DIR)/tmbf.db $(subst e2t_tmbf_,,$*) > $(RESSOURCE_DIR)/$*.res
+	tools/T2E_make_res.py tmbf $(DB_FILES_DIR)/tmbf.db $(subst e2t_tmbf_,,$*) > $(RESOURCE_DIR)/$*.res
 
 $(TFIT_RES): %.res: $(DB_FILES_DIR)/tune_fit.db
-	tools/T2E_make_res.py tfit $(DB_FILES_DIR)/tune_fit.db $(subst e2t_tfit_,,$*) > $(RESSOURCE_DIR)/$*.res
+	tools/T2E_make_res.py tfit $(DB_FILES_DIR)/tune_fit.db $(subst e2t_tfit_,,$*) > $(RESOURCE_DIR)/$*.res
 
 $(LMBF_RES): %.res: $(DB_FILES_DIR)/lmbf.db
-	tools/T2E_make_lmbf_res.py lmbf $(DB_FILES_DIR)/lmbf.db $(subst e2t_lmbf_,,$*) > $(RESSOURCE_DIR)/$*.res
+	tools/T2E_make_lmbf_res.py lmbf $(DB_FILES_DIR)/lmbf.db $(subst e2t_lmbf_,,$*) > $(RESOURCE_DIR)/$*.res
 
 mbfstartioc-res:
 	make -C servers/MBFStartIOC -f ../Makefile-res TOP=$(TOP)
@@ -54,5 +54,5 @@ mbfcontrol-res-clean:
 
 clean: mbfstartioc-res-clean macroserver-res-clean mbfcontrol-res-clean
 	rm -f tools/*.pyc
-	rm -f $(RESSOURCE_DIR)/*.res
+	rm -f $(RESOURCE_DIR)/*.res
 .PHONY: clean

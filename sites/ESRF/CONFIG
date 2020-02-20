@@ -1,11 +1,21 @@
 # Config settings for building at ESRF
 
+# folder where the db files must be located
+# it should contain:
+#  * lmbf.db
+#  * tmbf.db
+#  * tune_fit.db
 DB_FILES_DIR = $(TOP)/epics/db
 
-RESSOURCE_DIR = $(TOP)/tango/servers/resources
+# The output directory for resources files
+RESOURCE_DIR = $(TOP)/tango/servers/resources
 
+# Config file for the IOCS
+# it can be a link to $MBF_HOME/sites/$SITE/iocs
 CONFIG_DIR = $(TOP)/epics/iocs
 
+# Path of the MBF home directory on the server
+# where Tango Devices will be started
 MBF_HOME = /home/dserver/mbf
 
 # vim: set filetype=make:

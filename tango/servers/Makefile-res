@@ -15,7 +15,7 @@ resource_files: $(IOCS_RES)
 	make_res $(CONFIG_DIR)/$*.config $(MBF_HOME) $(TOP) >$@
 	# if the file $@ is empty, remove it
 	if [ -f $@ -a ! -s $@ ] ; then rm $@ ; fi
-	if [ -f $@ ] ; then mv $@ $(RESSOURCE_DIR)/$(DSERVER_NAME)_$@ ; fi
+	if [ -f $@ ] ; then mv $@ $(RESOURCE_DIR)/$(DSERVER_NAME)_$@ ; fi
 
 clean:
 	rm -f $(IOCS_RES)
