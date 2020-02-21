@@ -1,13 +1,15 @@
 #!/bin/bash
 
-# Takes 3 parameters
+# Takes 4 parameters
 #  - path to a .config file
-#  - path of the MBF_HOME of the server where MacroServer will be run
+#  - path of MBF_HOME
+#  - path of the MACRO_DIR where Python macros for MacroServer are stored
 #  - path of top directory of MBF-Tango
 
 CONFIG_FILE=$1
 MBF_HOME=$2
-TOP=$3
+MACRO_DIR=$3
+TOP=$4
 
 # Reads key from given config file.  Called thus:
 #
@@ -26,6 +28,6 @@ VAR_SUBST="$VAR_SUBST;s:@@DEVICE_NAME_DOOR_H@@:$(read_key $CONFIG_FILE tango_doo
 VAR_SUBST="$VAR_SUBST;s:@@DEVICE_NAME_DOOR_V@@:$(read_key $CONFIG_FILE tango_door_v_devicename):"
 VAR_SUBST="$VAR_SUBST;s:@@DEVICE_NAME_MACRO@@:$(read_key $CONFIG_FILE tango_macro_devicename):"
 VAR_SUBST="$VAR_SUBST;s:@@INSTANCE@@:$(read_key $CONFIG_FILE tango_macroserver_instance):"
-VAR_SUBST="$VAR_SUBST;s:@@DOOR_PYTHONPATH@@:$MBF_HOME/tango/macros:"
-VAR_SUBST="$VAR_SUBST;s:@@DOOR_MACROPATH@@:$MBF_HOME/tango/macros\",\\\\ \n\"$(read_key $CONFIG_FILE tango_macroserver_sardana_path):"
+VAR_SUBST="$VAR_SUBST;s:@@DOOR_PYTHONPATH@@:$MACRO_DIR:"
+VAR_SUBST="$VAR_SUBST;s:@@DOOR_MACROPATH@@:$MACRO_DIR\",\\\\ \n\"$(read_key $CONFIG_FILE tango_macroserver_sardana_path):"
 sed "$VAR_SUBST" MacroServer_template.res

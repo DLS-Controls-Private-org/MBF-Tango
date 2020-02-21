@@ -1,13 +1,15 @@
 #!/bin/bash
 
-# Takes 3 parameters
+# Takes 4 parameters
 #  - path to a .config file
-#  - path of the MBF_HOME of the server where MacroServer will be run
+#  - path of MBF_HOME
+#  - path of the MACRO_DIR where Python macros for MacroServer are stored
 #  - path of top directory of MBF-Tango
 
 CONFIG_FILE=$1
 MBF_HOME=$2
-TOP=$3
+MACRO_DIR=$3
+TOP=$4
 
 # Reads key from given config file.  Called thus:
 #

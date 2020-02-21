@@ -11,8 +11,7 @@ resource_files: $(IOCS_RES)
 .PHONY: resource_files
 
 %.res: $(CONFIG_DIR)/%.config
-	#if $(TOP)/tango/tools/is_epics_conf $(CONFIG_DIR)/$*.config ; then ./make_res $(CONFIG_DIR)/$*.config $(MBF_HOME) >$@ ; fi
-	make_res $(CONFIG_DIR)/$*.config $(MBF_HOME) $(TOP) >$@
+	make_res $(CONFIG_DIR)/$*.config $(MBF_HOME) $(MACRO_DIR) $(TOP) >$@
 	# if the file $@ is empty, remove it
 	if [ -f $@ -a ! -s $@ ] ; then rm $@ ; fi
 	if [ -f $@ ] ; then mv $@ $(RESOURCE_DIR)/$(DSERVER_NAME)_$@ ; fi

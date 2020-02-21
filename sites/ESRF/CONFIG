@@ -10,9 +10,12 @@ DB_FILES_DIR = $(TOP)/epics/db
 # The output directory for resources files
 RESOURCE_DIR = $(TOP)/tango/servers/resources
 
-# Config file for the IOCS
+# Directory where config file for the IOCS are located
 # it can be a link to $MBF_HOME/sites/$SITE/iocs
 CONFIG_DIR = $(TOP)/epics/iocs
+
+# Directory where Python macros will be stored
+MACRO_DIR = /home/dserver/mbf/tango/macros
 
 # Path of the MBF home directory on the server
 # where Tango Devices will be started
