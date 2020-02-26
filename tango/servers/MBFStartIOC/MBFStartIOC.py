@@ -101,14 +101,14 @@ class MBFStartIOC (PyTango.Device_4Impl):
         self.poll_command("State", 3000)
 
         if len(self.command) == 0:
-            print >>sys.stderr, "The property command is not defined."
-            print >>sys.stderr, "-> the device will not do anything"
+            print("The property command is not defined.", file=sys.stderr)
+            print("-> the device will not do anything", file=sys.stderr)
             return
 
         if len(self.tmux_session_name) == 0:
-            print >>sys.stderr, "The property tmux_session_name is not defined."
-            print >>sys.stderr, "-> Exiting."
-            print >>sys.stderr, ""
+            print("The property tmux_session_name is not defined.", file=sys.stderr)
+            print("-> Exiting.", file=sys.stderr)
+            print("", file=sys.stderr)
             exit(1)
 
         if self.wait_for_amc525:
@@ -118,7 +118,7 @@ class MBFStartIOC (PyTango.Device_4Impl):
                 pop_inst = subprocess.Popen(["lspci"],
                         stdout=subprocess.PIPE,
                         stdin=subprocess.PIPE)
-                lspci_out = pop_inst.stdout.read()
+                lspci_out = pop_inst.stdout.read().decode('utf8')
                 if lspci_out.find("Xilinx") != -1:
                     break
                 sleep(0.2)
@@ -177,8 +177,8 @@ class MBFStartIOC (PyTango.Device_4Impl):
                 self.set_state(PyTango.DevState.ON)
             else:
                 self.set_state(PyTango.DevState.OFF)
-                print "Screen session closed."
-                print "-> Committing suicide"
+                print("Screen session closed.")
+                print("-> Committing suicide")
                 pid = os.getpid()
                 os.kill(pid, signal.SIGTERM)
         else:
