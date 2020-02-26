@@ -5,17 +5,17 @@
 #  * lmbf.db
 #  * tmbf.db
 #  * tune_fit.db
-DB_FILES_DIR = $(TOP)/epics/db
+DB_FILES_DIR = /home/dserver/mbf/epics/db
 
 # The output directory for resources files
 RESOURCE_DIR = $(TOP)/tango/servers/resources
 
 # Directory where config file for the IOCS are located
 # it can be a link to $MBF_HOME/sites/$SITE/iocs
-CONFIG_DIR = $(TOP)/epics/iocs
+CONFIG_DIR = /home/dserver/mbf/sites/ESRF/iocs
 
 # Directory where Python macros will be stored
-MACRO_DIR = /home/dserver/mbf/tango/macros
+MACRO_DIR = /home/dserver/mbf-tango/sites/ESRF/macros
 
 # Path of the MBF home directory on the server
 # where Tango Devices will be started
