@@ -43,7 +43,7 @@ MBFControl/@@INSTANCE@@/DEVICE/MBFControl: "@@DEVICE_NAME_H@@",\
                                                  -30dB,\ 
                                                  -36dB,\ 
                                                  -42dB
-@@DEVICE_NAME_H@@/FeedbackGain->__value: 10
+@@DEVICE_NAME_H@@/FeedbackGain->__value: 15
 @@DEVICE_NAME_H@@/FeedbackPhase->__value: 29
 @@DEVICE_NAME_H@@/Harmonic->__value: 0
 @@DEVICE_NAME_H@@/Mode->enum_labels: "7/8+1",\ 
@@ -55,7 +55,7 @@ MBFControl/@@INSTANCE@@/DEVICE/MBFControl: "@@DEVICE_NAME_H@@",\
                                           MDT_NCO1b
 @@DEVICE_NAME_H@@/Mode->__value: 0
 @@DEVICE_NAME_H@@/SweepDwellTime->__value: 100
-@@DEVICE_NAME_H@@/SweepGain->EnumLabels: 0dB,\ 
+@@DEVICE_NAME_H@@/SweepGainSingleBunch->EnumLabels: 0dB,\ 
                                               -6dB,\ 
                                               -12dB,\ 
                                               -18dB,\ 
@@ -71,7 +71,24 @@ MBFControl/@@INSTANCE@@/DEVICE/MBFControl: "@@DEVICE_NAME_H@@",\
                                               -78dB,\ 
                                               -84dB,\ 
                                               -90dB
-@@DEVICE_NAME_H@@/SweepGain->__value: 8
+@@DEVICE_NAME_H@@/SweepGainSingleBunch->__value: 15
+@@DEVICE_NAME_H@@/SweepGainAllBunches->EnumLabels: 0dB,\ 
+                                              -6dB,\ 
+                                              -12dB,\ 
+                                              -18dB,\ 
+                                              -24dB,\ 
+                                              -30dB,\ 
+                                              -36dB,\ 
+                                              -42dB,\ 
+                                              -48dB,\ 
+                                              -54dB,\ 
+                                              -60dB,\ 
+                                              -66dB,\ 
+                                              -72dB,\ 
+                                              -78dB,\ 
+                                              -84dB,\ 
+                                              -90dB
+@@DEVICE_NAME_H@@/SweepGainAllBunches->__value: 15
 @@DEVICE_NAME_H@@/SweepRange->__value: 0.05
 @@DEVICE_NAME_H@@/Tune->__value: 0.44
 @@DEVICE_NAME_H@@/TuneBunch->__value: 500
@@ -126,23 +143,40 @@ MBFControl/@@INSTANCE@@/DEVICE/MBFControl: "@@DEVICE_NAME_H@@",\
                                         MDT_NCO1b
 @@DEVICE_NAME_V@@/Mode->__value: 5
 @@DEVICE_NAME_V@@/SweepDwellTime->__value: 100
-@@DEVICE_NAME_V@@/SweepGain->EnumLabels: 0dB,\ 
-                                            -6dB,\ 
-                                            -12dB,\ 
-                                            -18dB,\ 
-                                            -24dB,\ 
-                                            -30dB,\ 
-                                            -36dB,\ 
-                                            -42dB,\ 
-                                            -48dB,\ 
-                                            -54dB,\ 
-                                            -60dB,\ 
-                                            -66dB,\ 
-                                            -72dB,\ 
-                                            -78dB,\ 
-                                            -84dB,\ 
-                                            -90dB
-@@DEVICE_NAME_V@@/SweepGain->__value: 8
+@@DEVICE_NAME_V@@/SweepGainSingleBunch->EnumLabels: 0dB,\ 
+                                              -6dB,\ 
+                                              -12dB,\ 
+                                              -18dB,\ 
+                                              -24dB,\ 
+                                              -30dB,\ 
+                                              -36dB,\ 
+                                              -42dB,\ 
+                                              -48dB,\ 
+                                              -54dB,\ 
+                                              -60dB,\ 
+                                              -66dB,\ 
+                                              -72dB,\ 
+                                              -78dB,\ 
+                                              -84dB,\ 
+                                              -90dB
+@@DEVICE_NAME_V@@/SweepGainSingleBunch->__value: 15
+@@DEVICE_NAME_V@@/SweepGainAllBunches->EnumLabels: 0dB,\ 
+                                              -6dB,\ 
+                                              -12dB,\ 
+                                              -18dB,\ 
+                                              -24dB,\ 
+                                              -30dB,\ 
+                                              -36dB,\ 
+                                              -42dB,\ 
+                                              -48dB,\ 
+                                              -54dB,\ 
+                                              -60dB,\ 
+                                              -66dB,\ 
+                                              -72dB,\ 
+                                              -78dB,\ 
+                                              -84dB,\ 
+                                              -90dB
+@@DEVICE_NAME_V@@/SweepGainAllBunches->__value: 15
 @@DEVICE_NAME_V@@/SweepRange->display_unit: 1.0
 @@DEVICE_NAME_V@@/SweepRange->format: %6.3f
 @@DEVICE_NAME_V@@/SweepRange->standard_unit: 1.0
