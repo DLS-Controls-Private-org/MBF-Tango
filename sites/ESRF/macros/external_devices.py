@@ -1,7 +1,12 @@
 from PyTango import *
 
+def set_highgain(val):
+    dev = DeviceProxy('srdiag/mbf/mfdbk-ctrl')
+    dev.gain1 = val
+
 def set_config(mode, mbfDevName):
     # set PLL mode
+    """
     db = Database()
     d = {'pll_device': ''}
     db.get_device_property(mbfDevName, d)
@@ -13,4 +18,6 @@ def set_config(mode, mbfDevName):
         return
     pll_dev = DeviceProxy(PLL_device_name)
     pll_dev.Mode = mode
+    """
+    return
 

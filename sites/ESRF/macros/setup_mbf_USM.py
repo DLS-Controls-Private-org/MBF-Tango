@@ -217,6 +217,9 @@ class MBF_HL():
             return "ON"
 
     def comm_set_feedback_on(self, state=True):
+        reload(external_devices)
+        external_devices.set_highgain(state)
+
         Mbf = self.Mbf
         if state == True:
             Mbf.put('SEQ:1:BANK_S', 2)
