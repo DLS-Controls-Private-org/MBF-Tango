@@ -16,7 +16,7 @@ class Cleaning():
         try:
             if "vertical" in Mbf.mbfDevName:
                 # Get cleaning parameters
-                d = Mbf.db.get_property('Mfdbk', 'Cleaning_Device')
+                d = Mbf.db.get_property('MBF', 'Cleaning_Device')
                 SRCleaning_device_name = d['Cleaning_Device'][0]
                 cleaningDS = smc.get_device(SRCleaning_device_name)
                 self.freq_min = cleaningDS.FreqMin
