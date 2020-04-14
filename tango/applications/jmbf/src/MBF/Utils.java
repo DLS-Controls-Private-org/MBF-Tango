@@ -23,9 +23,13 @@ import static MBF.MainPanel.mfdbkVDevName;
 public class Utils {
   
   private static ADCSetupPanel hADCPanel = null;
+  private static ChartPanel    hADCChartPanel = null;
   private static ADCSetupPanel vADCPanel = null;
+  private static ChartPanel    vADCChartPanel = null;
   private static DACSetupPanel hDACPanel = null;
+  private static ChartPanel    hDACChartPanel = null;
   private static DACSetupPanel vDACPanel = null;
+  private static ChartPanel    vDACChartPanel = null;
   private static FIRSetupPanel hFIRPanel = null;
   private static FIRSetupPanel vFIRPanel = null;
   private static SEQSetupPanel hSEQPanel = null;
@@ -62,20 +66,33 @@ public class Utils {
   }
   
   public static void showhADCPanel() {
-     if(hADCPanel==null) hADCPanel = new ADCSetupPanel(mfdbkHEpicsDevName); 
-     hADCPanel.setVisible(true);    
+     if(hADCChartPanel==null) {
+       hADCPanel = new ADCSetupPanel(mfdbkHEpicsDevName); 
+       hADCChartPanel = new ChartPanel(mfdbkHEpicsDevName, "ADC",hADCPanel);
+     }     
+     hADCChartPanel.setVisible(true);    
   }
   public static void showvADCPanel() {
-     if(vADCPanel==null) vADCPanel = new ADCSetupPanel(mfdbkVEpicsDevName); 
-     vADCPanel.setVisible(true);    
+    
+     if(vADCPanel==null) {
+       vADCPanel = new ADCSetupPanel(mfdbkVEpicsDevName);
+       vADCChartPanel = new ChartPanel(mfdbkVEpicsDevName, "ADC",vADCPanel);
+     } 
+     vADCChartPanel.setVisible(true);    
   }
   public static void showhDACPanel() {
-     if(hDACPanel==null) hDACPanel = new DACSetupPanel(mfdbkHEpicsDevName); 
-     hDACPanel.setVisible(true);    
+     if(hDACPanel==null) {
+       hDACPanel = new DACSetupPanel(mfdbkHEpicsDevName);
+       hDACChartPanel = new ChartPanel(mfdbkHEpicsDevName, "DAC",hDACPanel);
+     } 
+     hDACChartPanel.setVisible(true);    
   }
   public static void showvDACPanel() {
-     if(vDACPanel==null) vDACPanel = new DACSetupPanel(mfdbkVEpicsDevName); 
-     vDACPanel.setVisible(true);    
+     if(vDACPanel==null) {
+       vDACPanel = new DACSetupPanel(mfdbkVEpicsDevName);
+       vDACChartPanel = new ChartPanel(mfdbkVEpicsDevName, "DAC",vDACPanel);
+     } 
+     vDACChartPanel.setVisible(true);    
   }
   public static void showhFIRPanel() {
      if(hFIRPanel==null) hFIRPanel = new FIRSetupPanel(mfdbkHEpicsDevName); 

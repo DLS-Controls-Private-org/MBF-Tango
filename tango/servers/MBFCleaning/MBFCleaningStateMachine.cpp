@@ -146,126 +146,6 @@ bool MBFCleaning::is_ConfigFileName_allowed(TANGO_UNUSED(Tango::AttReqType type)
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFCleaning::is_Scrapers_allowed()
- *	Description : Execution allowed for Scrapers attribute
- */
-//--------------------------------------------------------
-bool MBFCleaning::is_Scrapers_allowed(TANGO_UNUSED(Tango::AttReqType type))
-{
-	//	Not any excluded states for Scrapers attribute in Write access.
-	/*----- PROTECTED REGION ID(MBFCleaning::ScrapersStateAllowed_WRITE) ENABLED START -----*/
-	
-	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::ScrapersStateAllowed_WRITE
-
-	//	Not any excluded states for Scrapers attribute in read access.
-	/*----- PROTECTED REGION ID(MBFCleaning::ScrapersStateAllowed_READ) ENABLED START -----*/
-	
-	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::ScrapersStateAllowed_READ
-	return true;
-}
-
-//--------------------------------------------------------
-/**
- *	Method      : MBFCleaning::is_Upp5_allowed()
- *	Description : Execution allowed for Upp5 attribute
- */
-//--------------------------------------------------------
-bool MBFCleaning::is_Upp5_allowed(TANGO_UNUSED(Tango::AttReqType type))
-{
-	//	Not any excluded states for Upp5 attribute in Write access.
-	/*----- PROTECTED REGION ID(MBFCleaning::Upp5StateAllowed_WRITE) ENABLED START -----*/
-	
-	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::Upp5StateAllowed_WRITE
-
-	//	Not any excluded states for Upp5 attribute in read access.
-	/*----- PROTECTED REGION ID(MBFCleaning::Upp5StateAllowed_READ) ENABLED START -----*/
-	
-	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::Upp5StateAllowed_READ
-	return true;
-}
-
-//--------------------------------------------------------
-/**
- *	Method      : MBFCleaning::is_Low5_allowed()
- *	Description : Execution allowed for Low5 attribute
- */
-//--------------------------------------------------------
-bool MBFCleaning::is_Low5_allowed(TANGO_UNUSED(Tango::AttReqType type))
-{
-	//	Not any excluded states for Low5 attribute in Write access.
-	/*----- PROTECTED REGION ID(MBFCleaning::Low5StateAllowed_WRITE) ENABLED START -----*/
-	
-	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::Low5StateAllowed_WRITE
-
-	//	Not any excluded states for Low5 attribute in read access.
-	/*----- PROTECTED REGION ID(MBFCleaning::Low5StateAllowed_READ) ENABLED START -----*/
-	
-	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::Low5StateAllowed_READ
-	return true;
-}
-
-//--------------------------------------------------------
-/**
- *	Method      : MBFCleaning::is_Upp25_allowed()
- *	Description : Execution allowed for Upp25 attribute
- */
-//--------------------------------------------------------
-bool MBFCleaning::is_Upp25_allowed(TANGO_UNUSED(Tango::AttReqType type))
-{
-	//	Not any excluded states for Upp25 attribute in Write access.
-	/*----- PROTECTED REGION ID(MBFCleaning::Upp25StateAllowed_WRITE) ENABLED START -----*/
-	
-	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::Upp25StateAllowed_WRITE
-
-	//	Not any excluded states for Upp25 attribute in read access.
-	/*----- PROTECTED REGION ID(MBFCleaning::Upp25StateAllowed_READ) ENABLED START -----*/
-	
-	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::Upp25StateAllowed_READ
-	return true;
-}
-
-//--------------------------------------------------------
-/**
- *	Method      : MBFCleaning::is_Low25_allowed()
- *	Description : Execution allowed for Low25 attribute
- */
-//--------------------------------------------------------
-bool MBFCleaning::is_Low25_allowed(TANGO_UNUSED(Tango::AttReqType type))
-{
-	//	Not any excluded states for Low25 attribute in Write access.
-	/*----- PROTECTED REGION ID(MBFCleaning::Low25StateAllowed_WRITE) ENABLED START -----*/
-	
-	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::Low25StateAllowed_WRITE
-
-	//	Not any excluded states for Low25 attribute in read access.
-	/*----- PROTECTED REGION ID(MBFCleaning::Low25StateAllowed_READ) ENABLED START -----*/
-	
-	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::Low25StateAllowed_READ
-	return true;
-}
-
-//--------------------------------------------------------
-/**
- *	Method      : MBFCleaning::is_Upp22_allowed()
- *	Description : Execution allowed for Upp22 attribute
- */
-//--------------------------------------------------------
-bool MBFCleaning::is_Upp22_allowed(TANGO_UNUSED(Tango::AttReqType type))
-{
-	//	Not any excluded states for Upp22 attribute in Write access.
-	/*----- PROTECTED REGION ID(MBFCleaning::Upp22StateAllowed_WRITE) ENABLED START -----*/
-	
-	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::Upp22StateAllowed_WRITE
-
-	//	Not any excluded states for Upp22 attribute in read access.
-	/*----- PROTECTED REGION ID(MBFCleaning::Upp22StateAllowed_READ) ENABLED START -----*/
-	
-	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::Upp22StateAllowed_READ
-	return true;
-}
-
-//--------------------------------------------------------
-/**
  *	Method      : MBFCleaning::is_ExternalSweep_allowed()
  *	Description : Execution allowed for ExternalSweep attribute
  */
@@ -281,6 +161,22 @@ bool MBFCleaning::is_ExternalSweep_allowed(TANGO_UNUSED(Tango::AttReqType type))
 	/*----- PROTECTED REGION ID(MBFCleaning::ExternalSweepStateAllowed_READ) ENABLED START -----*/
 	
 	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::ExternalSweepStateAllowed_READ
+	return true;
+}
+
+//--------------------------------------------------------
+/**
+ *	Method      : MBFCleaning::is_UsedScrapers_allowed()
+ *	Description : Execution allowed for UsedScrapers attribute
+ */
+//--------------------------------------------------------
+bool MBFCleaning::is_UsedScrapers_allowed(TANGO_UNUSED(Tango::AttReqType type))
+{
+
+	//	Not any excluded states for UsedScrapers attribute in read access.
+	/*----- PROTECTED REGION ID(MBFCleaning::UsedScrapersStateAllowed_READ) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::UsedScrapersStateAllowed_READ
 	return true;
 }
 
@@ -406,6 +302,21 @@ bool MBFCleaning::is_Stop_allowed(TANGO_UNUSED(const CORBA::Any &any))
 	/*----- PROTECTED REGION ID(MBFCleaning::StopStateAllowed) ENABLED START -----*/
 	
 	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::StopStateAllowed
+	return true;
+}
+
+//--------------------------------------------------------
+/**
+ *	Method      : MBFCleaning::is_SelectScraper_allowed()
+ *	Description : Execution allowed for SelectScraper attribute
+ */
+//--------------------------------------------------------
+bool MBFCleaning::is_SelectScraper_allowed(TANGO_UNUSED(const CORBA::Any &any))
+{
+	//	Not any excluded states for SelectScraper command.
+	/*----- PROTECTED REGION ID(MBFCleaning::SelectScraperStateAllowed) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::SelectScraperStateAllowed
 	return true;
 }
 

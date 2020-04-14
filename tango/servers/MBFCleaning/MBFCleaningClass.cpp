@@ -299,6 +299,26 @@ CORBA::Any *StopClass::execute(Tango::DeviceImpl *device, TANGO_UNUSED(const COR
 	return new CORBA::Any();
 }
 
+//--------------------------------------------------------
+/**
+ * method : 		SelectScraperClass::execute()
+ * description : 	method to trigger the execution of the command.
+ *
+ * @param	device	The device on which the command must be executed
+ * @param	in_any	The command input data
+ *
+ *	returns The command output data (packed in the Any object)
+ */
+//--------------------------------------------------------
+CORBA::Any *SelectScraperClass::execute(Tango::DeviceImpl *device, const CORBA::Any &in_any)
+{
+	cout2 << "SelectScraperClass::execute(): arrived" << endl;
+	const Tango::DevVarShortArray *argin;
+	extract(in_any, argin);
+	((static_cast<MBFCleaning *>(device))->select_scraper(argin));
+	return new CORBA::Any();
+}
+
 
 //===================================================================
 //	Properties management
@@ -381,71 +401,6 @@ void MBFCleaningClass::set_default_property()
 	}
 	else
 		add_wiz_dev_prop(prop_name, prop_desc);
-	prop_name = "ScrUpp25Device";
-	prop_desc = "Name of the scraper Upp25";
-	prop_def  = "";
-	vect_data.clear();
-	if (prop_def.length()>0)
-	{
-		Tango::DbDatum	data(prop_name);
-		data << vect_data ;
-		dev_def_prop.push_back(data);
-		add_wiz_dev_prop(prop_name, prop_desc,  prop_def);
-	}
-	else
-		add_wiz_dev_prop(prop_name, prop_desc);
-	prop_name = "ScrLow25Device";
-	prop_desc = "Name of the scraper Low25";
-	prop_def  = "";
-	vect_data.clear();
-	if (prop_def.length()>0)
-	{
-		Tango::DbDatum	data(prop_name);
-		data << vect_data ;
-		dev_def_prop.push_back(data);
-		add_wiz_dev_prop(prop_name, prop_desc,  prop_def);
-	}
-	else
-		add_wiz_dev_prop(prop_name, prop_desc);
-	prop_name = "ScrUpp5Device";
-	prop_desc = "Name of the scraper Upp5";
-	prop_def  = "";
-	vect_data.clear();
-	if (prop_def.length()>0)
-	{
-		Tango::DbDatum	data(prop_name);
-		data << vect_data ;
-		dev_def_prop.push_back(data);
-		add_wiz_dev_prop(prop_name, prop_desc,  prop_def);
-	}
-	else
-		add_wiz_dev_prop(prop_name, prop_desc);
-	prop_name = "ScrLow5Device";
-	prop_desc = "Name of the ScrLow5 device";
-	prop_def  = "";
-	vect_data.clear();
-	if (prop_def.length()>0)
-	{
-		Tango::DbDatum	data(prop_name);
-		data << vect_data ;
-		dev_def_prop.push_back(data);
-		add_wiz_dev_prop(prop_name, prop_desc,  prop_def);
-	}
-	else
-		add_wiz_dev_prop(prop_name, prop_desc);
-	prop_name = "ScrUpp22Device";
-	prop_desc = "Name of the scraper Upp22";
-	prop_def  = "";
-	vect_data.clear();
-	if (prop_def.length()>0)
-	{
-		Tango::DbDatum	data(prop_name);
-		data << vect_data ;
-		dev_def_prop.push_back(data);
-		add_wiz_dev_prop(prop_name, prop_desc,  prop_def);
-	}
-	else
-		add_wiz_dev_prop(prop_name, prop_desc);
 	prop_name = "ExternalShakerDevice";
 	prop_desc = "External shaker used for external sweep";
 	prop_def  = "";
@@ -461,6 +416,32 @@ void MBFCleaningClass::set_default_property()
 		add_wiz_dev_prop(prop_name, prop_desc);
 	prop_name = "ConfigFilePath";
 	prop_desc = "Path where are stored configuration files";
+	prop_def  = "";
+	vect_data.clear();
+	if (prop_def.length()>0)
+	{
+		Tango::DbDatum	data(prop_name);
+		data << vect_data ;
+		dev_def_prop.push_back(data);
+		add_wiz_dev_prop(prop_name, prop_desc,  prop_def);
+	}
+	else
+		add_wiz_dev_prop(prop_name, prop_desc);
+	prop_name = "ScraperNames";
+	prop_desc = "Scraper device list";
+	prop_def  = "";
+	vect_data.clear();
+	if (prop_def.length()>0)
+	{
+		Tango::DbDatum	data(prop_name);
+		data << vect_data ;
+		dev_def_prop.push_back(data);
+		add_wiz_dev_prop(prop_name, prop_desc,  prop_def);
+	}
+	else
+		add_wiz_dev_prop(prop_name, prop_desc);
+	prop_name = "UsedScrapers";
+	prop_desc = "Array of scraper enable/disable flag";
 	prop_def  = "";
 	vect_data.clear();
 	if (prop_def.length()>0)
@@ -702,156 +683,6 @@ void MBFCleaningClass::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	Not Memorized
 	att_list.push_back(configfilename);
 
-	//	Attribute : Scrapers
-	ScrapersAttrib	*scrapers = new ScrapersAttrib();
-	Tango::UserDefaultAttrProp	scrapers_prop;
-	//	description	not set for Scrapers
-	//	label	not set for Scrapers
-	//	unit	not set for Scrapers
-	//	standard_unit	not set for Scrapers
-	//	display_unit	not set for Scrapers
-	//	format	not set for Scrapers
-	//	max_value	not set for Scrapers
-	//	min_value	not set for Scrapers
-	//	max_alarm	not set for Scrapers
-	//	min_alarm	not set for Scrapers
-	//	max_warning	not set for Scrapers
-	//	min_warning	not set for Scrapers
-	//	delta_t	not set for Scrapers
-	//	delta_val	not set for Scrapers
-	
-	scrapers->set_default_properties(scrapers_prop);
-	//	Not Polled
-	scrapers->set_disp_level(Tango::OPERATOR);
-	scrapers->set_memorized();
-	scrapers->set_memorized_init(true);
-	att_list.push_back(scrapers);
-
-	//	Attribute : Upp5
-	Upp5Attrib	*upp5 = new Upp5Attrib();
-	Tango::UserDefaultAttrProp	upp5_prop;
-	//	description	not set for Upp5
-	//	label	not set for Upp5
-	//	unit	not set for Upp5
-	//	standard_unit	not set for Upp5
-	//	display_unit	not set for Upp5
-	//	format	not set for Upp5
-	//	max_value	not set for Upp5
-	//	min_value	not set for Upp5
-	//	max_alarm	not set for Upp5
-	//	min_alarm	not set for Upp5
-	//	max_warning	not set for Upp5
-	//	min_warning	not set for Upp5
-	//	delta_t	not set for Upp5
-	//	delta_val	not set for Upp5
-	
-	upp5->set_default_properties(upp5_prop);
-	//	Not Polled
-	upp5->set_disp_level(Tango::OPERATOR);
-	upp5->set_memorized();
-	upp5->set_memorized_init(true);
-	att_list.push_back(upp5);
-
-	//	Attribute : Low5
-	Low5Attrib	*low5 = new Low5Attrib();
-	Tango::UserDefaultAttrProp	low5_prop;
-	//	description	not set for Low5
-	//	label	not set for Low5
-	//	unit	not set for Low5
-	//	standard_unit	not set for Low5
-	//	display_unit	not set for Low5
-	//	format	not set for Low5
-	//	max_value	not set for Low5
-	//	min_value	not set for Low5
-	//	max_alarm	not set for Low5
-	//	min_alarm	not set for Low5
-	//	max_warning	not set for Low5
-	//	min_warning	not set for Low5
-	//	delta_t	not set for Low5
-	//	delta_val	not set for Low5
-	
-	low5->set_default_properties(low5_prop);
-	//	Not Polled
-	low5->set_disp_level(Tango::OPERATOR);
-	low5->set_memorized();
-	low5->set_memorized_init(true);
-	att_list.push_back(low5);
-
-	//	Attribute : Upp25
-	Upp25Attrib	*upp25 = new Upp25Attrib();
-	Tango::UserDefaultAttrProp	upp25_prop;
-	//	description	not set for Upp25
-	//	label	not set for Upp25
-	//	unit	not set for Upp25
-	//	standard_unit	not set for Upp25
-	//	display_unit	not set for Upp25
-	//	format	not set for Upp25
-	//	max_value	not set for Upp25
-	//	min_value	not set for Upp25
-	//	max_alarm	not set for Upp25
-	//	min_alarm	not set for Upp25
-	//	max_warning	not set for Upp25
-	//	min_warning	not set for Upp25
-	//	delta_t	not set for Upp25
-	//	delta_val	not set for Upp25
-	
-	upp25->set_default_properties(upp25_prop);
-	//	Not Polled
-	upp25->set_disp_level(Tango::OPERATOR);
-	upp25->set_memorized();
-	upp25->set_memorized_init(true);
-	att_list.push_back(upp25);
-
-	//	Attribute : Low25
-	Low25Attrib	*low25 = new Low25Attrib();
-	Tango::UserDefaultAttrProp	low25_prop;
-	//	description	not set for Low25
-	//	label	not set for Low25
-	//	unit	not set for Low25
-	//	standard_unit	not set for Low25
-	//	display_unit	not set for Low25
-	//	format	not set for Low25
-	//	max_value	not set for Low25
-	//	min_value	not set for Low25
-	//	max_alarm	not set for Low25
-	//	min_alarm	not set for Low25
-	//	max_warning	not set for Low25
-	//	min_warning	not set for Low25
-	//	delta_t	not set for Low25
-	//	delta_val	not set for Low25
-	
-	low25->set_default_properties(low25_prop);
-	//	Not Polled
-	low25->set_disp_level(Tango::OPERATOR);
-	low25->set_memorized();
-	low25->set_memorized_init(true);
-	att_list.push_back(low25);
-
-	//	Attribute : Upp22
-	Upp22Attrib	*upp22 = new Upp22Attrib();
-	Tango::UserDefaultAttrProp	upp22_prop;
-	//	description	not set for Upp22
-	//	label	not set for Upp22
-	//	unit	not set for Upp22
-	//	standard_unit	not set for Upp22
-	//	display_unit	not set for Upp22
-	//	format	not set for Upp22
-	//	max_value	not set for Upp22
-	//	min_value	not set for Upp22
-	//	max_alarm	not set for Upp22
-	//	min_alarm	not set for Upp22
-	//	max_warning	not set for Upp22
-	//	min_warning	not set for Upp22
-	//	delta_t	not set for Upp22
-	//	delta_val	not set for Upp22
-	
-	upp22->set_default_properties(upp22_prop);
-	//	Not Polled
-	upp22->set_disp_level(Tango::OPERATOR);
-	upp22->set_memorized();
-	upp22->set_memorized_init(true);
-	att_list.push_back(upp22);
-
 	//	Attribute : ExternalSweep
 	ExternalSweepAttrib	*externalsweep = new ExternalSweepAttrib();
 	Tango::UserDefaultAttrProp	externalsweep_prop;
@@ -876,6 +707,30 @@ void MBFCleaningClass::attribute_factory(vector<Tango::Attr *> &att_list)
 	externalsweep->set_memorized();
 	externalsweep->set_memorized_init(true);
 	att_list.push_back(externalsweep);
+
+	//	Attribute : UsedScrapers
+	UsedScrapersAttrib	*usedscrapers = new UsedScrapersAttrib();
+	Tango::UserDefaultAttrProp	usedscrapers_prop;
+	//	description	not set for UsedScrapers
+	//	label	not set for UsedScrapers
+	//	unit	not set for UsedScrapers
+	//	standard_unit	not set for UsedScrapers
+	//	display_unit	not set for UsedScrapers
+	//	format	not set for UsedScrapers
+	//	max_value	not set for UsedScrapers
+	//	min_value	not set for UsedScrapers
+	//	max_alarm	not set for UsedScrapers
+	//	min_alarm	not set for UsedScrapers
+	//	max_warning	not set for UsedScrapers
+	//	min_warning	not set for UsedScrapers
+	//	delta_t	not set for UsedScrapers
+	//	delta_val	not set for UsedScrapers
+	
+	usedscrapers->set_default_properties(usedscrapers_prop);
+	//	Not Polled
+	usedscrapers->set_disp_level(Tango::OPERATOR);
+	//	Not Memorized
+	att_list.push_back(usedscrapers);
 
 
 	//	Create a list of static attributes
@@ -993,6 +848,15 @@ void MBFCleaningClass::command_factory()
 			"",
 			Tango::OPERATOR);
 	command_list.push_back(pStopCmd);
+
+	//	Command SelectScraper
+	SelectScraperClass	*pSelectScraperCmd =
+		new SelectScraperClass("SelectScraper",
+			Tango::DEVVAR_SHORTARRAY, Tango::DEV_VOID,
+			"[0] = Scraper index\n[1] = Scraper enable=1 / disable=0",
+			"",
+			Tango::OPERATOR);
+	command_list.push_back(pSelectScraperCmd);
 
 	/*----- PROTECTED REGION ID(MBFCleaningClass::command_factory_after) ENABLED START -----*/
 	

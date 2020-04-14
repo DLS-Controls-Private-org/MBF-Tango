@@ -30,108 +30,42 @@ void CleaningTask::scrapper_up(bool updateState) {
 
   Tango::DeviceAttribute val;
   struct timespec nanotime;
-  Tango::DevState upp5_state;
-  Tango::DevState low5_state;
-  Tango::DevState upp25_state;
-  Tango::DevState low25_state;
-  Tango::DevState upp22_state;
-
 
   // Restore scraper value ---------------------------------------------------------------
 
   try {
 
-    switch (ds->attr_Scrapers_read[0]) {
+    // Restore init position
+    val.set_name("Position");
+    for(int i=0;i<ds->nbScrapers;i++) {
+      if( ds->usedScrapers[i] ) {
+        ds->scraperDs[i]->set_source(Tango::DEV);
+        val << ds->scrInitPos[i];
+        ds->scraperDs[i]->write_attribute(val);
+      }
+    }
 
-      case USE_UPP5LOW5:
+    // Wait while moving
 
-        ds->upp5Ds->set_source(Tango::DEV);
-        val.set_name("Position");
-        val << ds->Upp5_initpos;
-        ds->upp5Ds->write_attribute(val);
-        cout << "ScraperUpThread: Write upp5 position " << ds->Upp5_initpos << endl;
+    bool isMoving = true;
+    Tango::DevState state;
 
-        ds->low5Ds->set_source(Tango::DEV);
-        val.set_name("Position");
-        val << ds->Low5_initpos;
-        ds->low5Ds->write_attribute(val);
-        cout << "ScraperUpThread: Write low5 position " << ds->Low5_initpos << endl;
+    while(isMoving) {
 
-        // Wait while moving
-        upp5_state = Tango::MOVING;
-        low5_state = Tango::MOVING;
-        while (upp5_state == Tango::MOVING || low5_state == Tango::MOVING) {
+      // Sleep 1s
+      nanotime.tv_sec = 1;
+      nanotime.tv_nsec = 0;
+      nanosleep(&nanotime, NULL);
+      isMoving = false;
 
-          // Sleep 1s
-          nanotime.tv_sec = 1;
-          nanotime.tv_nsec = 0;
-          nanosleep(&nanotime, NULL);
-
-          val = ds->upp5Ds->read_attribute("State");
-          val >> upp5_state;
-          val = ds->low5Ds->read_attribute("State");
-          val >> low5_state;
-
+      for (int i = 0; i < ds->nbScrapers; i++) {
+        if (ds->usedScrapers[i]) {
+          val = ds->scraperDs[i]->read_attribute("State");
+          val >> state;
+          isMoving |= (state == Tango::MOVING);
         }
+      }
 
-        break;
-
-      case USE_UPP25LOW25:
-
-        ds->upp25Ds->set_source(Tango::DEV);
-        val.set_name("Position");
-        val << ds->Upp25_initpos;
-        ds->upp25Ds->write_attribute(val);
-        cout << "ScraperUpThread: Write upp25 position " << ds->Upp25_initpos << endl;
-
-        ds->low25Ds->set_source(Tango::DEV);
-        val.set_name("Position");
-        val << ds->Low25_initpos;
-        ds->low25Ds->write_attribute(val);
-        cout << "ScraperUpThread: Write low25 position " << ds->Low25_initpos << endl;
-
-        // Wait while moving
-        upp25_state = Tango::MOVING;
-        low25_state = Tango::MOVING;
-        while (upp25_state == Tango::MOVING || low25_state == Tango::MOVING) {
-
-          // Sleep 1s
-          nanotime.tv_sec = 1;
-          nanotime.tv_nsec = 0;
-          nanosleep(&nanotime, NULL);
-
-          val = ds->upp25Ds->read_attribute("State");
-          val >> upp25_state;
-          val = ds->low25Ds->read_attribute("State");
-          val >> low25_state;
-
-        }
-
-        break;
-
-      case USE_UPP22:
-
-        ds->upp22Ds->set_source(Tango::DEV);
-        val.set_name("Position");
-        val << ds->Upp22_initpos;
-        ds->upp22Ds->write_attribute(val);
-        cout << "ScraperUpThread: Write upp22 position " << ds->Upp22_initpos << endl;
-
-        // Wait while moving
-        upp22_state = Tango::MOVING;
-        while (upp22_state == Tango::MOVING) {
-
-          // Sleep 1s
-          nanotime.tv_sec = 1;
-          nanotime.tv_nsec = 0;
-          nanosleep(&nanotime, NULL);
-
-          val = ds->upp22Ds->read_attribute("State");
-          val >> upp22_state;
-
-        }
-
-        break;
     }
 
   } catch (Tango::DevFailed e) {
@@ -167,55 +101,19 @@ void CleaningTask::scrapper_down(bool updateState) {
 
   Tango::DeviceAttribute val;
   struct timespec nanotime;
-  Tango::DevState upp5_state;
-  Tango::DevState low5_state;
-  Tango::DevState upp25_state;
-  Tango::DevState low25_state;
-  Tango::DevState upp22_state;
 
   // Read init position of scraper -------------------------------------------------------------------
 
   try {
 
-    switch (ds->attr_Scrapers_read[0]) {
-
-      case USE_UPP5LOW5:
-
-        ds->upp5Ds->set_source(Tango::DEV);
-        val = ds->upp5Ds->read_attribute("Position");
-        val >> ds->Upp5_initpos;
-        cout << "ScraperDownThread: Read upp5 position " << ds->Upp5_initpos << endl;
-
-        ds->low5Ds->set_source(Tango::DEV);
-        val = ds->low5Ds->read_attribute("Position");
-        val >> ds->Low5_initpos;
-        cout << "ScraperDownThread: Read low5 position " << ds->Low5_initpos << endl;
-
-        break;
-
-      case USE_UPP25LOW25:
-
-        ds->upp25Ds->set_source(Tango::DEV);
-        val = ds->upp25Ds->read_attribute("Position");
-        val >> ds->Upp25_initpos;
-        cout << "ScraperDownThread: Read upp25 position " << ds->Upp25_initpos << endl;
-
-        ds->low25Ds->set_source(Tango::DEV);
-        val = ds->low25Ds->read_attribute("Position");
-        val >> ds->Low25_initpos;
-        cout << "ScraperDownThread: Read low25 position " << ds->Low25_initpos << endl;
-
-        break;
-
-      case USE_UPP22:
-
-        ds->upp22Ds->set_source(Tango::DEV);
-        val = ds->upp22Ds->read_attribute("Position");
-        val >> ds->Upp22_initpos;
-        cout << "ScraperDownThread: Read upp22 position " << ds->Upp22_initpos << endl;
-
-        break;
+    for(int i=0;i<ds->nbScrapers;i++) {
+      if( ds->usedScrapers[i] ) {
+        ds->scraperDs[i]->set_source(Tango::DEV);
+        val = ds->scraperDs[i]->read_attribute("Position");
+        val >> ds->scrInitPos[i];
+      }
     }
+
 
   } catch (Tango::DevFailed e) {
 
@@ -225,7 +123,7 @@ void CleaningTask::scrapper_down(bool updateState) {
     {
       omni_mutex_lock l(mutex);
       string tmp;
-      tmp = "Failure while moving scraper:\n" + string(e.errors[0].desc);
+      tmp = "Failure while reading scraper:\n" + string(e.errors[0].desc);
       ds->set_status(tmp.c_str());
       ds->set_state(Tango::OFF);
     }
@@ -243,92 +141,36 @@ void CleaningTask::scrapper_down(bool updateState) {
 
   try {
 
-    switch (ds->attr_Scrapers_read[0]) {
+    // Move scrapers to cleaning value
+    for(int i=0;i<ds->nbScrapers;i++) {
+      if( ds->usedScrapers[i] ) {
+        ds->scraperDs[i]->set_source(Tango::DEV);
+        val << ds->scrSetPoints[i];
+        ds->scraperDs[i]->write_attribute(val);
+      }
+    }
 
-      case USE_UPP5LOW5:
+    // Wait while moving
 
-        val.set_name("Position");
-        val << ds->attr_Upp5_read[0];
-        ds->upp5Ds->write_attribute(val);
-        cout << "ScraperDownThread: Write upp5 position " << ds->attr_Upp5_read[0] << endl;
+    bool isMoving = true;
+    Tango::DevState state;
 
-        val.set_name("Position");
-        val << ds->attr_Low5_read[0];
-        ds->low5Ds->write_attribute(val);
-        cout << "ScraperDownThread: Write low5 position " << ds->attr_Low5_read[0] << endl;
+    while(isMoving) {
 
-        // Wait while moving
-        upp5_state = Tango::MOVING;
-        low5_state = Tango::MOVING;
-        while (upp5_state == Tango::MOVING || low5_state == Tango::MOVING) {
+      // Sleep 1s
+      nanotime.tv_sec = 1;
+      nanotime.tv_nsec = 0;
+      nanosleep(&nanotime, NULL);
+      isMoving = false;
 
-          // Sleep 1s
-          nanotime.tv_sec = 1;
-          nanotime.tv_nsec = 0;
-          nanosleep(&nanotime, NULL);
-
-          val = ds->upp5Ds->read_attribute("State");
-          val >> upp5_state;
-          val = ds->low5Ds->read_attribute("State");
-          val >> low5_state;
-
+      for (int i = 0; i < ds->nbScrapers; i++) {
+        if (ds->usedScrapers[i]) {
+          val = ds->scraperDs[i]->read_attribute("State");
+          val >> state;
+          isMoving |= (state == Tango::MOVING);
         }
+      }
 
-        break;
-
-      case USE_UPP25LOW25:
-
-        val.set_name("Position");
-        val << ds->attr_Upp25_read[0];
-        ds->upp25Ds->write_attribute(val);
-        cout << "ScraperDownThread: Write upp25 position " << ds->attr_Upp25_read[0] << endl;
-
-        val.set_name("Position");
-        val << ds->attr_Low25_read[0];
-        ds->low25Ds->write_attribute(val);
-        cout << "ScraperDownThread: Write low25 position " << ds->attr_Low25_read[0] << endl;
-
-        // Wait while moving
-        upp25_state = Tango::MOVING;
-        low25_state = Tango::MOVING;
-        while (upp25_state == Tango::MOVING || low25_state == Tango::MOVING) {
-
-          // Sleep 1s
-          nanotime.tv_sec = 1;
-          nanotime.tv_nsec = 0;
-          nanosleep(&nanotime, NULL);
-
-          val = ds->upp25Ds->read_attribute("State");
-          val >> upp25_state;
-          val = ds->low25Ds->read_attribute("State");
-          val >> low25_state;
-
-        }
-
-        break;
-
-      case USE_UPP22:
-
-        val.set_name("Position");
-        val << ds->attr_Upp22_read[0];
-        ds->upp22Ds->write_attribute(val);
-        cout << "ScraperDownThread: Write upp22 position " << ds->attr_Upp22_read[0] << endl;
-
-        // Wait while moving
-        upp22_state = Tango::MOVING;
-        while (upp22_state == Tango::MOVING) {
-
-          // Sleep 1s
-          nanotime.tv_sec = 1;
-          nanotime.tv_nsec = 0;
-          nanosleep(&nanotime, NULL);
-
-          val = ds->upp22Ds->read_attribute("State");
-          val >> upp22_state;
-
-        }
-
-        break;
     }
 
   } catch (Tango::DevFailed e) {

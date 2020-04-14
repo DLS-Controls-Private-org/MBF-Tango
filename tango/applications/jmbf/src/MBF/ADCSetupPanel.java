@@ -25,10 +25,9 @@ import java.awt.Dimension;
  *
  * @author pons
  */
-public class ADCSetupPanel extends javax.swing.JFrame implements IEnumScalarListener {
+public class ADCSetupPanel extends OptionPanel implements IEnumScalarListener {
 
   private AttributePolledList attList;
-  private ChartPanel chartPanel = null;
   private String devName;
   private EnumScalar event;
   
@@ -115,7 +114,6 @@ public class ADCSetupPanel extends javax.swing.JFrame implements IEnumScalarList
     filterPanel = new javax.swing.JPanel();
     filterViewer = new fr.esrf.tangoatk.widget.attribute.NumberSpectrumViewer();
     btnPanel = new javax.swing.JPanel();
-    chartButton = new javax.swing.JButton();
     resetButton = new javax.swing.JButton();
     dismissButton = new javax.swing.JButton();
 
@@ -269,14 +267,6 @@ public class ADCSetupPanel extends javax.swing.JFrame implements IEnumScalarList
 
     btnPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
 
-    chartButton.setText("Charts...");
-    chartButton.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        chartButtonActionPerformed(evt);
-      }
-    });
-    btnPanel.add(chartButton);
-
     resetButton.setText("Reset");
     resetButton.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -303,19 +293,12 @@ public class ADCSetupPanel extends javax.swing.JFrame implements IEnumScalarList
     setVisible(false);
   }//GEN-LAST:event_dismissButtonActionPerformed
 
-  private void chartButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chartButtonActionPerformed
-    if( chartPanel== null )
-      chartPanel = new ChartPanel(devName,"ADC");
-    chartPanel.setVisible(true);
-  }//GEN-LAST:event_chartButtonActionPerformed
-
   private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetButtonActionPerformed
     Utils.execCommand(devName, "ADC_MMS_RESET_FAULT_S");
   }//GEN-LAST:event_resetButtonActionPerformed
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JPanel btnPanel;
-  private javax.swing.JButton chartButton;
   private javax.swing.JButton dismissButton;
   private fr.esrf.tangoatk.widget.attribute.EnumScalarComboEditor dramInputComboEditor;
   private javax.swing.JPanel eventPanel;
@@ -355,6 +338,15 @@ public class ADCSetupPanel extends javax.swing.JFrame implements IEnumScalarList
   @Override
   public void errorChange(ErrorEvent ee) {
     eventPanel.setBackground(ATKConstant.getColor4State("UNKNOWN"));
+  }
+
+  @Override
+  public String getName() {
+    return "ADC Setup Panel";
+  }
+
+  public String getButtonName() {
+    return "ADC Setup";
   }
   
 }

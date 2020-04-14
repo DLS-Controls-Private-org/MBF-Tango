@@ -46,16 +46,18 @@ public class ChartPanel extends javax.swing.JFrame implements ISpectrumListener,
   
   private String devName;
   private String type;
+  private OptionPanel optionPanel;
 
   /**
    * Creates new form ChartPanel
    */
-  public ChartPanel(String devName,String type) {
+  public ChartPanel(String devName,String type,OptionPanel optionPanel) {
     
     initComponents();
     
     this.devName = devName;
     this.type = type;
+    this.optionPanel = optionPanel;
     attList = new AttributePolledList();
     attList.addErrorListener(errWin);
     attChartList = new AttributePolledList();
@@ -138,9 +140,14 @@ public class ChartPanel extends javax.swing.JFrame implements ISpectrumListener,
     stdChart.getXAxis().setAnnotation(JLAxis.VALUE_ANNO);
     stdChart.getY1Axis().setAutoScale(true);
     stdChart.getY1Axis().addDataView(stdView);    
-        
+    
+    if(devName.endsWith("horizontal"))
+      setupButton.setText("H " + optionPanel.getButtonName());
+    else
+      setupButton.setText("V " + optionPanel.getButtonName());
+    
     attList.setRefreshInterval(1000);
-    attChartList.setRefreshInterval(1000);
+    attChartList.setRefreshInterval(1000);    
     
     setTitle(type+" Charts [" + devName + "]");
     ATKGraphicsUtils.centerFrameOnScreen(this);
@@ -205,6 +212,7 @@ public class ChartPanel extends javax.swing.JFrame implements ISpectrumListener,
     jSmoothLabel5 = new fr.esrf.tangoatk.widget.util.JSmoothLabel();
     adcScanComboEditor = new fr.esrf.tangoatk.widget.attribute.EnumScalarComboEditor();
     downPanel = new javax.swing.JPanel();
+    setupButton = new javax.swing.JButton();
     scanButton = new javax.swing.JButton();
     dismissButton = new javax.swing.JButton();
 
@@ -290,6 +298,14 @@ public class ChartPanel extends javax.swing.JFrame implements ISpectrumListener,
 
     downPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
 
+    setupButton.setText("Setup");
+    setupButton.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        setupButtonActionPerformed(evt);
+      }
+    });
+    downPanel.add(setupButton);
+
     scanButton.setText("Scan");
     scanButton.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -328,6 +344,11 @@ public class ChartPanel extends javax.swing.JFrame implements ISpectrumListener,
     attChartList.refresh();    
   }//GEN-LAST:event_scanButtonActionPerformed
 
+  private void setupButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_setupButtonActionPerformed
+    // TODO add your handling code here:
+    optionPanel.setVisible(true);
+  }//GEN-LAST:event_setupButtonActionPerformed
+
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private fr.esrf.tangoatk.widget.attribute.EnumScalarComboEditor adcScanComboEditor;
@@ -344,6 +365,7 @@ public class ChartPanel extends javax.swing.JFrame implements ISpectrumListener,
   private fr.esrf.tangoatk.widget.attribute.SimpleScalarViewer meanViewer;
   private fr.esrf.tangoatk.widget.util.chart.JLChart minmaxChart;
   private javax.swing.JButton scanButton;
+  private javax.swing.JButton setupButton;
   private fr.esrf.tangoatk.widget.util.chart.JLChart stdChart;
   private fr.esrf.tangoatk.widget.attribute.SimpleScalarViewer stdMeanViewer;
   private fr.esrf.tangoatk.widget.attribute.SimpleScalarViewer turnsViewer;

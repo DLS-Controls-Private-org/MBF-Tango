@@ -20,7 +20,7 @@ import java.awt.Dimension;
  *
  * @author pons
  */
-public class DACSetupPanel extends javax.swing.JFrame {
+public class DACSetupPanel extends OptionPanel {
 
   private AttributePolledList attList;
   private ChartPanel chartPanel = null;
@@ -100,7 +100,6 @@ public class DACSetupPanel extends javax.swing.JFrame {
     filterPanel = new javax.swing.JPanel();
     filterViewer = new fr.esrf.tangoatk.widget.attribute.NumberSpectrumViewer();
     btnPanel = new javax.swing.JPanel();
-    chartButton = new javax.swing.JButton();
     resetButton = new javax.swing.JButton();
     dismissButton = new javax.swing.JButton();
 
@@ -204,14 +203,6 @@ public class DACSetupPanel extends javax.swing.JFrame {
 
     btnPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
 
-    chartButton.setText("Charts...");
-    chartButton.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        chartButtonActionPerformed(evt);
-      }
-    });
-    btnPanel.add(chartButton);
-
     resetButton.setText("Reset");
     resetButton.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -233,12 +224,6 @@ public class DACSetupPanel extends javax.swing.JFrame {
     pack();
   }// </editor-fold>//GEN-END:initComponents
 
-  private void chartButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chartButtonActionPerformed
-    if( chartPanel== null )
-      chartPanel = new ChartPanel(devName, "DAC");
-    chartPanel.setVisible(true);
-  }//GEN-LAST:event_chartButtonActionPerformed
-
   private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetButtonActionPerformed
     Utils.execCommand(devName, "DAC_MMS_RESET_FAULT_S");
   }//GEN-LAST:event_resetButtonActionPerformed
@@ -248,9 +233,16 @@ public class DACSetupPanel extends javax.swing.JFrame {
     setVisible(false);
   }//GEN-LAST:event_dismissButtonActionPerformed
 
+  public String getName() {
+    return "DAC Setup Panel";
+  }
+
+  public String getButtonName() {
+    return "DAC Setup";
+  }
+
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JPanel btnPanel;
-  private javax.swing.JButton chartButton;
   private javax.swing.JButton dismissButton;
   private fr.esrf.tangoatk.widget.attribute.EnumScalarComboEditor dramInputComboEditor;
   private javax.swing.JPanel filterPanel;

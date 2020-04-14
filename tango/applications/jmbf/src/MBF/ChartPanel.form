@@ -203,6 +203,14 @@
             <Property name="alignment" type="int" value="2"/>
           </Layout>
           <SubComponents>
+            <Component class="javax.swing.JButton" name="setupButton">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Setup"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="setupButtonActionPerformed"/>
+              </Events>
+            </Component>
             <Component class="javax.swing.JButton" name="scanButton">
               <Properties>
                 <Property name="text" type="java.lang.String" value="Scan"/>

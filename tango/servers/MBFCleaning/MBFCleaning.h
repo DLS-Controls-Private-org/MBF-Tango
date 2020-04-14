@@ -39,10 +39,6 @@
 
 #include <tango.h>
 
-#define USE_UPP5LOW5   0
-#define USE_UPP25LOW25 1
-#define USE_UPP22      2
-
 #define SR_FREQ  355043.0 // SR Clock
 
 #define RAISE_EXCEPTION(cmd) Tango::Except::throw_exception(\
@@ -62,6 +58,7 @@ namespace MBFCleaning_ns
 /*----- PROTECTED REGION ID(MBFCleaning::Additional Class Declarations) ENABLED START -----*/
 
 //	Additional Class Declarations
+class ScraperAttribute;
 
 /*----- PROTECTED REGION END -----*/	//	MBFCleaning::Additional Class Declarations
 
@@ -72,20 +69,17 @@ class MBFCleaning : public TANGO_BASE_CLASS
 
 //	Add your own data members
 public:
+    virtual void read_scraper_attribute(Tango::Attribute &attr,ScraperAttribute *src);
+    virtual void write_scraper_attribute(Tango::WAttribute &attr,ScraperAttribute *src);
 
 		Tango::DeviceProxy *shakerDS;
 		Tango::DeviceProxy *mbfDS;
-		Tango::DeviceProxy *upp5Ds;
-		Tango::DeviceProxy *low5Ds;
-		Tango::DeviceProxy *upp25Ds;
-		Tango::DeviceProxy *low25Ds;
-		Tango::DeviceProxy *upp22Ds;
+		vector<Tango::DeviceProxy *> scraperDs;
 
-		double Upp5_initpos;
-		double Low5_initpos;
-		double Upp25_initpos;
-		double Low25_initpos;
-		double Upp22_initpos;
+		vector<double> scrInitPos;  // Position before motion
+		vector<double> scrSetPoints; // Cleaning position
+		vector<string> scrAttNames;
+		int nbScrapers;
 
 		string configFile;
 		int  configurationLoadFailed;
@@ -94,6 +88,9 @@ public:
 
 		void get_scr_open_pos(string scraperName,double *pos);
 		void save_attribute_property(string attName,string propName,double value);
+    string get_last_field(string name);
+    int get_scr_idx(string attName);
+    void split(vector<string> &tokens, const string &text, char sep);
 
 /*----- PROTECTED REGION END -----*/	//	MBFCleaning::Data Members
 
@@ -101,20 +98,14 @@ public:
 public:
 	//	MBFDevice:	Name of the MBF device
 	string	mBFDevice;
-	//	ScrUpp25Device:	Name of the scraper Upp25
-	string	scrUpp25Device;
-	//	ScrLow25Device:	Name of the scraper Low25
-	string	scrLow25Device;
-	//	ScrUpp5Device:	Name of the scraper Upp5
-	string	scrUpp5Device;
-	//	ScrLow5Device:	Name of the ScrLow5 device
-	string	scrLow5Device;
-	//	ScrUpp22Device:	Name of the scraper Upp22
-	string	scrUpp22Device;
 	//	ExternalShakerDevice:	External shaker used for external sweep
 	string	externalShakerDevice;
 	//	ConfigFilePath:	Path where are stored configuration files
 	string	configFilePath;
+	//	ScraperNames:	Scraper device list
+	vector<string>	scraperNames;
+	//	UsedScrapers:	Array of scraper enable/disable flag
+	vector<Tango::DevShort>	usedScrapers;
 
 //	Attribute data members
 public:
@@ -123,13 +114,8 @@ public:
 	Tango::DevDouble	*attr_SweepTime_read;
 	Tango::DevDouble	*attr_Gain_read;
 	Tango::DevString	*attr_ConfigFileName_read;
-	Tango::DevShort	*attr_Scrapers_read;
-	Tango::DevDouble	*attr_Upp5_read;
-	Tango::DevDouble	*attr_Low5_read;
-	Tango::DevDouble	*attr_Upp25_read;
-	Tango::DevDouble	*attr_Low25_read;
-	Tango::DevDouble	*attr_Upp22_read;
 	Tango::DevBoolean	*attr_ExternalSweep_read;
+	Tango::DevBoolean	*attr_UsedScrapers_read;
 
 //	Constructors and destructors
 public:
@@ -248,66 +234,6 @@ public:
 	virtual void read_ConfigFileName(Tango::Attribute &attr);
 	virtual bool is_ConfigFileName_allowed(Tango::AttReqType type);
 /**
- *	Attribute Scrapers related methods
- *	Description: 
- *
- *	Data type:	Tango::DevShort
- *	Attr type:	Scalar
- */
-	virtual void read_Scrapers(Tango::Attribute &attr);
-	virtual void write_Scrapers(Tango::WAttribute &attr);
-	virtual bool is_Scrapers_allowed(Tango::AttReqType type);
-/**
- *	Attribute Upp5 related methods
- *	Description: 
- *
- *	Data type:	Tango::DevDouble
- *	Attr type:	Scalar
- */
-	virtual void read_Upp5(Tango::Attribute &attr);
-	virtual void write_Upp5(Tango::WAttribute &attr);
-	virtual bool is_Upp5_allowed(Tango::AttReqType type);
-/**
- *	Attribute Low5 related methods
- *	Description: 
- *
- *	Data type:	Tango::DevDouble
- *	Attr type:	Scalar
- */
-	virtual void read_Low5(Tango::Attribute &attr);
-	virtual void write_Low5(Tango::WAttribute &attr);
-	virtual bool is_Low5_allowed(Tango::AttReqType type);
-/**
- *	Attribute Upp25 related methods
- *	Description: 
- *
- *	Data type:	Tango::DevDouble
- *	Attr type:	Scalar
- */
-	virtual void read_Upp25(Tango::Attribute &attr);
-	virtual void write_Upp25(Tango::WAttribute &attr);
-	virtual bool is_Upp25_allowed(Tango::AttReqType type);
-/**
- *	Attribute Low25 related methods
- *	Description: 
- *
- *	Data type:	Tango::DevDouble
- *	Attr type:	Scalar
- */
-	virtual void read_Low25(Tango::Attribute &attr);
-	virtual void write_Low25(Tango::WAttribute &attr);
-	virtual bool is_Low25_allowed(Tango::AttReqType type);
-/**
- *	Attribute Upp22 related methods
- *	Description: 
- *
- *	Data type:	Tango::DevDouble
- *	Attr type:	Scalar
- */
-	virtual void read_Upp22(Tango::Attribute &attr);
-	virtual void write_Upp22(Tango::WAttribute &attr);
-	virtual bool is_Upp22_allowed(Tango::AttReqType type);
-/**
  *	Attribute ExternalSweep related methods
  *	Description: 
  *
@@ -317,6 +243,15 @@ public:
 	virtual void read_ExternalSweep(Tango::Attribute &attr);
 	virtual void write_ExternalSweep(Tango::WAttribute &attr);
 	virtual bool is_ExternalSweep_allowed(Tango::AttReqType type);
+/**
+ *	Attribute UsedScrapers related methods
+ *	Description: 
+ *
+ *	Data type:	Tango::DevBoolean
+ *	Attr type:	Spectrum max = 16
+ */
+	virtual void read_UsedScrapers(Tango::Attribute &attr);
+	virtual bool is_UsedScrapers_allowed(Tango::AttReqType type);
 
 
 	//--------------------------------------------------------
@@ -391,6 +326,15 @@ public:
 	 */
 	virtual void stop();
 	virtual bool is_Stop_allowed(const CORBA::Any &any);
+	/**
+	 *	Command SelectScraper related method
+	 *	Description: 
+	 *
+	 *	@param argin [0] = Scraper index
+	 *               [1] = Scraper enable=1 / disable=0
+	 */
+	virtual void select_scraper(const Tango::DevVarShortArray *argin);
+	virtual bool is_SelectScraper_allowed(const CORBA::Any &any);
 
 
 	//--------------------------------------------------------

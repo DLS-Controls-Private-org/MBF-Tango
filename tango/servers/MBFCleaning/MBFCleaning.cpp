@@ -68,6 +68,7 @@
 //  EndCleaning               |  end_cleaning
 //  DoAll                     |  do_all
 //  Stop                      |  stop
+//  SelectScraper             |  select_scraper
 //================================================================
 
 //================================================================
@@ -78,13 +79,8 @@
 //  SweepTime       |  Tango::DevDouble	Scalar
 //  Gain            |  Tango::DevDouble	Scalar
 //  ConfigFileName  |  Tango::DevString	Scalar
-//  Scrapers        |  Tango::DevShort	Scalar
-//  Upp5            |  Tango::DevDouble	Scalar
-//  Low5            |  Tango::DevDouble	Scalar
-//  Upp25           |  Tango::DevDouble	Scalar
-//  Low25           |  Tango::DevDouble	Scalar
-//  Upp22           |  Tango::DevDouble	Scalar
 //  ExternalSweep   |  Tango::DevBoolean	Scalar
+//  UsedScrapers    |  Tango::DevBoolean	Spectrum  ( max = 16)
 //================================================================
 
 namespace MBFCleaning_ns
@@ -143,10 +139,9 @@ void MBFCleaning::delete_device()
 	/*----- PROTECTED REGION ID(MBFCleaning::delete_device) ENABLED START -----*/
 	
 	//	Delete device allocated objects
-	SF_DELETE(low5Ds);
-	SF_DELETE(upp25Ds);
-	SF_DELETE(low25Ds);
-	SF_DELETE(upp22Ds);
+	for(int i=0;i<nbScrapers;i++) {
+	  delete scraperDs[i];
+	}
 	SF_DELETE(mbfDS);
 	SF_DELETE(shakerDS);
 
@@ -156,13 +151,8 @@ void MBFCleaning::delete_device()
 	delete[] attr_SweepTime_read;
 	delete[] attr_Gain_read;
 	delete[] attr_ConfigFileName_read;
-	delete[] attr_Scrapers_read;
-	delete[] attr_Upp5_read;
-	delete[] attr_Low5_read;
-	delete[] attr_Upp25_read;
-	delete[] attr_Low25_read;
-	delete[] attr_Upp22_read;
 	delete[] attr_ExternalSweep_read;
+	delete[] attr_UsedScrapers_read;
 }
 
 //--------------------------------------------------------
@@ -177,13 +167,10 @@ void MBFCleaning::init_device()
 	/*----- PROTECTED REGION ID(MBFCleaning::init_device_before) ENABLED START -----*/
 	
 	//	Initialization before get_device_property() call
-	upp5Ds = nullptr;
-	low5Ds = nullptr;
-	upp25Ds = nullptr;
-	low25Ds = nullptr;
-	upp22Ds = nullptr;
+	scraperDs.clear();
 	mbfDS = nullptr;
 	shakerDS = nullptr;
+  scrAttNames.clear();
 
 	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::init_device_before
 	
@@ -196,13 +183,8 @@ void MBFCleaning::init_device()
 	attr_SweepTime_read = new Tango::DevDouble[1];
 	attr_Gain_read = new Tango::DevDouble[1];
 	attr_ConfigFileName_read = new Tango::DevString[1];
-	attr_Scrapers_read = new Tango::DevShort[1];
-	attr_Upp5_read = new Tango::DevDouble[1];
-	attr_Low5_read = new Tango::DevDouble[1];
-	attr_Upp25_read = new Tango::DevDouble[1];
-	attr_Low25_read = new Tango::DevDouble[1];
-	attr_Upp22_read = new Tango::DevDouble[1];
 	attr_ExternalSweep_read = new Tango::DevBoolean[1];
+	attr_UsedScrapers_read = new Tango::DevBoolean[16];
 	/*----- PROTECTED REGION ID(MBFCleaning::init_device) ENABLED START -----*/
 	
   // If '/' is missing at the end of config path, add it !
@@ -212,12 +194,18 @@ void MBFCleaning::init_device()
   cout << "configFilePath is:" << configFilePath << endl;
 
   // Print out scraper device
-  cout << "Scraper Upp25 is:" << scrUpp25Device << endl;
-  cout << "Scraper Low25 is:" << scrLow25Device << endl;
-  cout << "Scraper Upp5 is:" << scrUpp5Device << endl;
-  cout << "Scraper Low5 is:" << scrLow5Device << endl;
-  cout << "Scraper Upp22 is:" << scrUpp22Device << endl;
+  if(scraperNames.size()==0) {
+    cerr << "ERROR: ScraperNames property not defined " << endl;
+    exit(0);
+  }
 
+  if(usedScrapers.size() != scraperNames.size()) {
+    cerr << "ERROR: ScraperNames and UsedScrapers properties must have same length " << endl;
+    exit(0);
+
+  }
+
+  nbScrapers = (int)scraperNames.size();
 
   // Connect to the MBF device
   try {
@@ -237,17 +225,17 @@ void MBFCleaning::init_device()
     }
   }
 
+
 	// Connect to scrapers
-	try {
-  	upp5Ds = new Tango::DeviceProxy(scrUpp5Device);
-		low5Ds = new Tango::DeviceProxy(scrLow5Device);
-		upp25Ds = new Tango::DeviceProxy(scrUpp25Device);
-		low25Ds = new Tango::DeviceProxy(scrLow25Device);
-		upp22Ds = new Tango::DeviceProxy(scrUpp22Device);
-	} catch (Tango::DevFailed &e) {
-		cerr << "ERROR: cannot import scraper device " << e.errors[0].desc << endl;
-		exit(0);
-	}
+  for(int i=0;i<nbScrapers;i++) {
+    try {
+      Tango::DeviceProxy *ds = new Tango::DeviceProxy(scraperNames[i]);
+      scraperDs.push_back(ds);
+    } catch (Tango::DevFailed &e) {
+      cerr << "ERROR: cannot import " << scraperNames[i] << " scraper device " << e.errors[0].desc << endl;
+      exit(0);
+    }
+  }
 
 	// Initialise default value
   attr_FreqMin_read[0] = 0.0;
@@ -255,17 +243,15 @@ void MBFCleaning::init_device()
   attr_SweepTime_read[0] = 0.0;
   attr_Gain_read[0] = 0;
   configFile = "No file loaded";
-  attr_Scrapers_read[0] = USE_UPP5LOW5;
-  attr_Upp5_read[0] = 0.0;
-  attr_Low5_read[0] = 0.0;
-  attr_Upp25_read[0] = 0.0;
-  attr_Low25_read[0] = 0.0;
-  attr_Upp22_read[0] = 0.0;
-	get_scr_open_pos(scrUpp5Device,&Upp5_initpos);
-	get_scr_open_pos(scrLow5Device,&Low5_initpos);
-	get_scr_open_pos(scrUpp25Device,&Upp25_initpos);
-	get_scr_open_pos(scrLow25Device,&Low25_initpos);
-	get_scr_open_pos(scrUpp22Device,&Upp22_initpos);
+  memset(attr_UsedScrapers_read,0,16*sizeof(Tango::DevBoolean));
+
+  // Default scraper setpoint and initvalue
+  for(int i=0;i<nbScrapers;i++) {
+    scrSetPoints.push_back(0.0);
+    double iPos;
+    get_scr_open_pos(scraperNames[i],&iPos);
+    scrInitPos.push_back(iPos);
+  }
 	configurationLoadFailed = false;
   attr_ExternalSweep_read[0] = false;
 
@@ -286,20 +272,19 @@ void MBFCleaning::get_device_property()
 	/*----- PROTECTED REGION ID(MBFCleaning::get_device_property_before) ENABLED START -----*/
 	
 	//	Initialize property data members
-	
+  scraperNames.clear();
+  usedScrapers.clear();
+
 	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::get_device_property_before
 
 
 	//	Read device properties from database.
 	Tango::DbData	dev_prop;
 	dev_prop.push_back(Tango::DbDatum("MBFDevice"));
-	dev_prop.push_back(Tango::DbDatum("ScrUpp25Device"));
-	dev_prop.push_back(Tango::DbDatum("ScrLow25Device"));
-	dev_prop.push_back(Tango::DbDatum("ScrUpp5Device"));
-	dev_prop.push_back(Tango::DbDatum("ScrLow5Device"));
-	dev_prop.push_back(Tango::DbDatum("ScrUpp22Device"));
 	dev_prop.push_back(Tango::DbDatum("ExternalShakerDevice"));
 	dev_prop.push_back(Tango::DbDatum("ConfigFilePath"));
+	dev_prop.push_back(Tango::DbDatum("ScraperNames"));
+	dev_prop.push_back(Tango::DbDatum("UsedScrapers"));
 
 	//	is there at least one property to be read ?
 	if (dev_prop.size()>0)
@@ -325,61 +310,6 @@ void MBFCleaning::get_device_property()
 		//	And try to extract MBFDevice value from database
 		if (dev_prop[i].is_empty()==false)	dev_prop[i]  >>  mBFDevice;
 
-		//	Try to initialize ScrUpp25Device from class property
-		cl_prop = ds_class->get_class_property(dev_prop[++i].name);
-		if (cl_prop.is_empty()==false)	cl_prop  >>  scrUpp25Device;
-		else {
-			//	Try to initialize ScrUpp25Device from default device value
-			def_prop = ds_class->get_default_device_property(dev_prop[i].name);
-			if (def_prop.is_empty()==false)	def_prop  >>  scrUpp25Device;
-		}
-		//	And try to extract ScrUpp25Device value from database
-		if (dev_prop[i].is_empty()==false)	dev_prop[i]  >>  scrUpp25Device;
-
-		//	Try to initialize ScrLow25Device from class property
-		cl_prop = ds_class->get_class_property(dev_prop[++i].name);
-		if (cl_prop.is_empty()==false)	cl_prop  >>  scrLow25Device;
-		else {
-			//	Try to initialize ScrLow25Device from default device value
-			def_prop = ds_class->get_default_device_property(dev_prop[i].name);
-			if (def_prop.is_empty()==false)	def_prop  >>  scrLow25Device;
-		}
-		//	And try to extract ScrLow25Device value from database
-		if (dev_prop[i].is_empty()==false)	dev_prop[i]  >>  scrLow25Device;
-
-		//	Try to initialize ScrUpp5Device from class property
-		cl_prop = ds_class->get_class_property(dev_prop[++i].name);
-		if (cl_prop.is_empty()==false)	cl_prop  >>  scrUpp5Device;
-		else {
-			//	Try to initialize ScrUpp5Device from default device value
-			def_prop = ds_class->get_default_device_property(dev_prop[i].name);
-			if (def_prop.is_empty()==false)	def_prop  >>  scrUpp5Device;
-		}
-		//	And try to extract ScrUpp5Device value from database
-		if (dev_prop[i].is_empty()==false)	dev_prop[i]  >>  scrUpp5Device;
-
-		//	Try to initialize ScrLow5Device from class property
-		cl_prop = ds_class->get_class_property(dev_prop[++i].name);
-		if (cl_prop.is_empty()==false)	cl_prop  >>  scrLow5Device;
-		else {
-			//	Try to initialize ScrLow5Device from default device value
-			def_prop = ds_class->get_default_device_property(dev_prop[i].name);
-			if (def_prop.is_empty()==false)	def_prop  >>  scrLow5Device;
-		}
-		//	And try to extract ScrLow5Device value from database
-		if (dev_prop[i].is_empty()==false)	dev_prop[i]  >>  scrLow5Device;
-
-		//	Try to initialize ScrUpp22Device from class property
-		cl_prop = ds_class->get_class_property(dev_prop[++i].name);
-		if (cl_prop.is_empty()==false)	cl_prop  >>  scrUpp22Device;
-		else {
-			//	Try to initialize ScrUpp22Device from default device value
-			def_prop = ds_class->get_default_device_property(dev_prop[i].name);
-			if (def_prop.is_empty()==false)	def_prop  >>  scrUpp22Device;
-		}
-		//	And try to extract ScrUpp22Device value from database
-		if (dev_prop[i].is_empty()==false)	dev_prop[i]  >>  scrUpp22Device;
-
 		//	Try to initialize ExternalShakerDevice from class property
 		cl_prop = ds_class->get_class_property(dev_prop[++i].name);
 		if (cl_prop.is_empty()==false)	cl_prop  >>  externalShakerDevice;
@@ -401,6 +331,28 @@ void MBFCleaning::get_device_property()
 		}
 		//	And try to extract ConfigFilePath value from database
 		if (dev_prop[i].is_empty()==false)	dev_prop[i]  >>  configFilePath;
+
+		//	Try to initialize ScraperNames from class property
+		cl_prop = ds_class->get_class_property(dev_prop[++i].name);
+		if (cl_prop.is_empty()==false)	cl_prop  >>  scraperNames;
+		else {
+			//	Try to initialize ScraperNames from default device value
+			def_prop = ds_class->get_default_device_property(dev_prop[i].name);
+			if (def_prop.is_empty()==false)	def_prop  >>  scraperNames;
+		}
+		//	And try to extract ScraperNames value from database
+		if (dev_prop[i].is_empty()==false)	dev_prop[i]  >>  scraperNames;
+
+		//	Try to initialize UsedScrapers from class property
+		cl_prop = ds_class->get_class_property(dev_prop[++i].name);
+		if (cl_prop.is_empty()==false)	cl_prop  >>  usedScrapers;
+		else {
+			//	Try to initialize UsedScrapers from default device value
+			def_prop = ds_class->get_default_device_property(dev_prop[i].name);
+			if (def_prop.is_empty()==false)	def_prop  >>  usedScrapers;
+		}
+		//	And try to extract UsedScrapers value from database
+		if (dev_prop[i].is_empty()==false)	dev_prop[i]  >>  usedScrapers;
 
 	}
 
@@ -649,252 +601,6 @@ void MBFCleaning::read_ConfigFileName(Tango::Attribute &attr)
 }
 //--------------------------------------------------------
 /**
- *	Read attribute Scrapers related method
- *	Description: 
- *
- *	Data type:	Tango::DevShort
- *	Attr type:	Scalar
- */
-//--------------------------------------------------------
-void MBFCleaning::read_Scrapers(Tango::Attribute &attr)
-{
-	DEBUG_STREAM << "MBFCleaning::read_Scrapers(Tango::Attribute &attr) entering... " << endl;
-	/*----- PROTECTED REGION ID(MBFCleaning::read_Scrapers) ENABLED START -----*/
-
-	attr.set_value(attr_Scrapers_read);
-	
-	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::read_Scrapers
-}
-//--------------------------------------------------------
-/**
- *	Write attribute Scrapers related method
- *	Description: 
- *
- *	Data type:	Tango::DevShort
- *	Attr type:	Scalar
- */
-//--------------------------------------------------------
-void MBFCleaning::write_Scrapers(Tango::WAttribute &attr)
-{
-	DEBUG_STREAM << "MBFCleaning::write_Scrapers(Tango::WAttribute &attr) entering... " << endl;
-	//	Retrieve write value
-	Tango::DevShort	w_val;
-	attr.get_write_value(w_val);
-	/*----- PROTECTED REGION ID(MBFCleaning::write_Scrapers) ENABLED START -----*/
-
-  if( get_state()==Tango::MOVING )
-    RAISE_EXCEPTION("Parameter change not allowed while moving.");
-  attr_Scrapers_read[0] = w_val;
-
-	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::write_Scrapers
-}
-//--------------------------------------------------------
-/**
- *	Read attribute Upp5 related method
- *	Description: 
- *
- *	Data type:	Tango::DevDouble
- *	Attr type:	Scalar
- */
-//--------------------------------------------------------
-void MBFCleaning::read_Upp5(Tango::Attribute &attr)
-{
-	DEBUG_STREAM << "MBFCleaning::read_Upp5(Tango::Attribute &attr) entering... " << endl;
-	/*----- PROTECTED REGION ID(MBFCleaning::read_Upp5) ENABLED START -----*/
-
-	attr.set_value(attr_Upp5_read);
-	
-	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::read_Upp5
-}
-//--------------------------------------------------------
-/**
- *	Write attribute Upp5 related method
- *	Description: 
- *
- *	Data type:	Tango::DevDouble
- *	Attr type:	Scalar
- */
-//--------------------------------------------------------
-void MBFCleaning::write_Upp5(Tango::WAttribute &attr)
-{
-	DEBUG_STREAM << "MBFCleaning::write_Upp5(Tango::WAttribute &attr) entering... " << endl;
-	//	Retrieve write value
-	Tango::DevDouble	w_val;
-	attr.get_write_value(w_val);
-	/*----- PROTECTED REGION ID(MBFCleaning::write_Upp5) ENABLED START -----*/
-
-  if( get_state()==Tango::MOVING )
-    RAISE_EXCEPTION("Parameter change not allowed while moving.");
-  attr_Upp5_read[0] = w_val;
-
-	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::write_Upp5
-}
-//--------------------------------------------------------
-/**
- *	Read attribute Low5 related method
- *	Description: 
- *
- *	Data type:	Tango::DevDouble
- *	Attr type:	Scalar
- */
-//--------------------------------------------------------
-void MBFCleaning::read_Low5(Tango::Attribute &attr)
-{
-	DEBUG_STREAM << "MBFCleaning::read_Low5(Tango::Attribute &attr) entering... " << endl;
-	/*----- PROTECTED REGION ID(MBFCleaning::read_Low5) ENABLED START -----*/
-
-	attr.set_value(attr_Low5_read);
-	
-	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::read_Low5
-}
-//--------------------------------------------------------
-/**
- *	Write attribute Low5 related method
- *	Description: 
- *
- *	Data type:	Tango::DevDouble
- *	Attr type:	Scalar
- */
-//--------------------------------------------------------
-void MBFCleaning::write_Low5(Tango::WAttribute &attr)
-{
-	DEBUG_STREAM << "MBFCleaning::write_Low5(Tango::WAttribute &attr) entering... " << endl;
-	//	Retrieve write value
-	Tango::DevDouble	w_val;
-	attr.get_write_value(w_val);
-	/*----- PROTECTED REGION ID(MBFCleaning::write_Low5) ENABLED START -----*/
-
-  if( get_state()==Tango::MOVING )
-    RAISE_EXCEPTION("Parameter change not allowed while moving.");
-  attr_Low5_read[0] = w_val;
-
-	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::write_Low5
-}
-//--------------------------------------------------------
-/**
- *	Read attribute Upp25 related method
- *	Description: 
- *
- *	Data type:	Tango::DevDouble
- *	Attr type:	Scalar
- */
-//--------------------------------------------------------
-void MBFCleaning::read_Upp25(Tango::Attribute &attr)
-{
-	DEBUG_STREAM << "MBFCleaning::read_Upp25(Tango::Attribute &attr) entering... " << endl;
-	/*----- PROTECTED REGION ID(MBFCleaning::read_Upp25) ENABLED START -----*/
-
-	attr.set_value(attr_Upp25_read);
-	
-	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::read_Upp25
-}
-//--------------------------------------------------------
-/**
- *	Write attribute Upp25 related method
- *	Description: 
- *
- *	Data type:	Tango::DevDouble
- *	Attr type:	Scalar
- */
-//--------------------------------------------------------
-void MBFCleaning::write_Upp25(Tango::WAttribute &attr)
-{
-	DEBUG_STREAM << "MBFCleaning::write_Upp25(Tango::WAttribute &attr) entering... " << endl;
-	//	Retrieve write value
-	Tango::DevDouble	w_val;
-	attr.get_write_value(w_val);
-	/*----- PROTECTED REGION ID(MBFCleaning::write_Upp25) ENABLED START -----*/
-
-  if( get_state()==Tango::MOVING )
-    RAISE_EXCEPTION("Parameter change not allowed while moving.");
-  attr_Upp25_read[0] = w_val;
-
-	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::write_Upp25
-}
-//--------------------------------------------------------
-/**
- *	Read attribute Low25 related method
- *	Description: 
- *
- *	Data type:	Tango::DevDouble
- *	Attr type:	Scalar
- */
-//--------------------------------------------------------
-void MBFCleaning::read_Low25(Tango::Attribute &attr)
-{
-	DEBUG_STREAM << "MBFCleaning::read_Low25(Tango::Attribute &attr) entering... " << endl;
-	/*----- PROTECTED REGION ID(MBFCleaning::read_Low25) ENABLED START -----*/
-
-	attr.set_value(attr_Low25_read);
-	
-	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::read_Low25
-}
-//--------------------------------------------------------
-/**
- *	Write attribute Low25 related method
- *	Description: 
- *
- *	Data type:	Tango::DevDouble
- *	Attr type:	Scalar
- */
-//--------------------------------------------------------
-void MBFCleaning::write_Low25(Tango::WAttribute &attr)
-{
-	DEBUG_STREAM << "MBFCleaning::write_Low25(Tango::WAttribute &attr) entering... " << endl;
-	//	Retrieve write value
-	Tango::DevDouble	w_val;
-	attr.get_write_value(w_val);
-	/*----- PROTECTED REGION ID(MBFCleaning::write_Low25) ENABLED START -----*/
-
-  if( get_state()==Tango::MOVING )
-    RAISE_EXCEPTION("Parameter change not allowed while moving.");
-  attr_Low25_read[0] = w_val;
-
-	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::write_Low25
-}
-//--------------------------------------------------------
-/**
- *	Read attribute Upp22 related method
- *	Description: 
- *
- *	Data type:	Tango::DevDouble
- *	Attr type:	Scalar
- */
-//--------------------------------------------------------
-void MBFCleaning::read_Upp22(Tango::Attribute &attr)
-{
-	DEBUG_STREAM << "MBFCleaning::read_Upp22(Tango::Attribute &attr) entering... " << endl;
-	/*----- PROTECTED REGION ID(MBFCleaning::read_Upp22) ENABLED START -----*/
-
-	attr.set_value(attr_Upp22_read);
-	
-	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::read_Upp22
-}
-//--------------------------------------------------------
-/**
- *	Write attribute Upp22 related method
- *	Description: 
- *
- *	Data type:	Tango::DevDouble
- *	Attr type:	Scalar
- */
-//--------------------------------------------------------
-void MBFCleaning::write_Upp22(Tango::WAttribute &attr)
-{
-	DEBUG_STREAM << "MBFCleaning::write_Upp22(Tango::WAttribute &attr) entering... " << endl;
-	//	Retrieve write value
-	Tango::DevDouble	w_val;
-	attr.get_write_value(w_val);
-	/*----- PROTECTED REGION ID(MBFCleaning::write_Upp22) ENABLED START -----*/
-
-  if( get_state()==Tango::MOVING )
-    RAISE_EXCEPTION("Parameter change not allowed while moving.");
-  attr_Upp22_read[0] = w_val;
-	
-	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::write_Upp22
-}
-//--------------------------------------------------------
-/**
  *	Read attribute ExternalSweep related method
  *	Description: 
  *
@@ -934,6 +640,26 @@ void MBFCleaning::write_ExternalSweep(Tango::WAttribute &attr)
 
 	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::write_ExternalSweep
 }
+//--------------------------------------------------------
+/**
+ *	Read attribute UsedScrapers related method
+ *	Description: 
+ *
+ *	Data type:	Tango::DevBoolean
+ *	Attr type:	Spectrum max = 16
+ */
+//--------------------------------------------------------
+void MBFCleaning::read_UsedScrapers(Tango::Attribute &attr)
+{
+	DEBUG_STREAM << "MBFCleaning::read_UsedScrapers(Tango::Attribute &attr) entering... " << endl;
+	/*----- PROTECTED REGION ID(MBFCleaning::read_UsedScrapers) ENABLED START -----*/
+
+	for(int i=0;i<nbScrapers;i++)
+    attr_UsedScrapers_read[i] = usedScrapers[i];
+	attr.set_value(attr_UsedScrapers_read, nbScrapers);
+	
+	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::read_UsedScrapers
+}
 
 //--------------------------------------------------------
 /**
@@ -945,8 +671,21 @@ void MBFCleaning::write_ExternalSweep(Tango::WAttribute &attr)
 void MBFCleaning::add_dynamic_attributes()
 {
 	/*----- PROTECTED REGION ID(MBFCleaning::add_dynamic_attributes) ENABLED START -----*/
-	
-	//	Add your own code to create and add dynamic attributes if any
+
+	// Create scraper attributes
+	for(int i=0;i<nbScrapers;i++) {
+	  string attName =  "Scraper_" + get_last_field(scraperNames[i]);
+    scrAttNames.push_back(attName);
+	  ScraperAttribute *att = new ScraperAttribute(attName.c_str(),i);
+	  add_attribute(att);
+	}
+
+  // Save List to DB
+  Tango::DbData db_data;
+  Tango::DbDatum data("ScraperAttList");
+  data << scrAttNames;
+  db_data.push_back(data);
+  get_db_device()->put_property(db_data);
 	
 	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::add_dynamic_attributes
 }
@@ -965,27 +704,6 @@ void MBFCleaning::start_cleaning()
 
   if( get_state()==Tango::MOVING )
     RAISE_EXCEPTION("Start cleaning not allowed while moving.");
-
-  switch(attr_Scrapers_read[0]) {
-    case USE_UPP5LOW5:
-      if( attr_Upp5_read[0] <= 0.0 )
-        RAISE_EXCEPTION("Scrapper Upp5 must be srictly positive");
-      if( attr_Low5_read[0] <= 0.0 )
-        RAISE_EXCEPTION("Scrapper Low5 must be srictly positive");
-      break;
-    case USE_UPP25LOW25:
-      if( attr_Upp25_read[0] <= 0.0 )
-        RAISE_EXCEPTION("Scrapper Upp25 must be srictly positive");
-      if( attr_Low25_read[0] <= 0.0 )
-        RAISE_EXCEPTION("Scrapper Low25 must be srictly positive");
-      break;
-    case USE_UPP22:
-      if( attr_Upp22_read[0] <= 0.0 )
-        RAISE_EXCEPTION("Scrapper Upp22 must be srictly positive");
-      break;
-    default:
-      RAISE_EXCEPTION("Invalid scrapper mode");
-  }
 
   set_state(Tango::MOVING);
   set_status("Moving scrapers");
@@ -1072,41 +790,50 @@ void MBFCleaning::load_configuration_file(Tango::DevString argin)
 				Tango::WAttribute &att = dev_attr->get_w_attr_by_name("Gain");
 				att.set_write_value(attr_Gain_read[0]);
 				save_attribute_property("Gain","__value",attr_Gain_read[0]);
-			} else if (att_name=="Scrapers") {
-				ss >> attr_Scrapers_read[0];
-				Tango::WAttribute &att = dev_attr->get_w_attr_by_name("Scrapers");
-				att.set_write_value(attr_Scrapers_read[0]);
-				save_attribute_property("Scrapers","__value",attr_Scrapers_read[0]);
+			} else if (att_name=="UsedScrapers") {
+
+			  string value;
+			  ss >> value;
+			  vector<string> values;
+			  split(values,value,',');
+			  if((int)values.size()!=nbScrapers) {
+          configurationLoadFailed = true;
+          RAISE_EXCEPTION("Invalid UsedScrapers length, must have same number of items as number of scrapers");
+        }
+			  usedScrapers.clear();
+			  for(int i=0;i<nbScrapers;i++) {
+			    short u = (short)atoi(values[i].c_str());
+			    usedScrapers.push_back(u);
+			  }
 			} else if (att_name=="ExternalSweep") {
 				ss >> attr_ExternalSweep_read[0];
 				Tango::WAttribute &att = dev_attr->get_w_attr_by_name("ExternalSweep");
 				att.set_write_value(attr_ExternalSweep_read[0]);
 				save_attribute_property("ExternalSweep","__value",attr_ExternalSweep_read[0]);
-			} else if (att_name=="Upp22") {
-				ss >> attr_Upp22_read[0];
-				Tango::WAttribute &att = dev_attr->get_w_attr_by_name("Upp22");
-				att.set_write_value(attr_Upp22_read[0]);
-				save_attribute_property("Upp22","__value",attr_Upp22_read[0]);
-			} else if (att_name=="Low5") {
-				ss >> attr_Low5_read[0];
-				Tango::WAttribute &att = dev_attr->get_w_attr_by_name("Low5");
-				att.set_write_value(attr_Low5_read[0]);
-				save_attribute_property("Low5","__value",attr_Low5_read[0]);
-			} else if (att_name=="Upp5") {
-				ss >> attr_Upp5_read[0];
-				Tango::WAttribute &att = dev_attr->get_w_attr_by_name("Upp5");
-				att.set_write_value(attr_Upp5_read[0]);
-				save_attribute_property("Upp5","__value",attr_Upp5_read[0]);
-			} else if (att_name=="Low25") {
-				ss >> attr_Low25_read[0];
-				Tango::WAttribute &att = dev_attr->get_w_attr_by_name("Low25");
-				att.set_write_value(attr_Low25_read[0]);
-				save_attribute_property("Low25","__value",attr_Low25_read[0]);
-			} else if (att_name=="Upp25") {
-				ss >> attr_Upp5_read[0];
-				Tango::WAttribute &att = dev_attr->get_w_attr_by_name("Upp25");
-				att.set_write_value(attr_Upp5_read[0]);
-				save_attribute_property("Upp25","__value",attr_Upp5_read[0]);
+			}  else  {
+
+        int scrIdx = get_scr_idx(att_name);
+        if(scrIdx<0) {
+
+          cout << "Warning, ignoring " << att_name << " : Attribute not found" << endl;
+
+        } else {
+
+          try {
+
+            Tango::WAttribute &att = dev_attr->get_w_attr_by_name(att_name.c_str());
+            double value;
+            ss >> value;
+            att.set_write_value(value);
+            scrSetPoints[scrIdx]=value;
+            save_attribute_property(att_name, "__value", value);
+
+          } catch (Tango::DevFailed &e) {
+            cout << "Warning, ignoring " << att_name << " : " << e.errors[0].desc << endl;
+          }
+
+        }
+
 			}
 
 		}
@@ -1156,20 +883,19 @@ void MBFCleaning::save_configuration_file(Tango::DevString argin)
 		conf << "SweepTime\t"       <<  attr_SweepTime_read[0] << endl;
 		conf << "Gain\t"            <<  attr_Gain_read[0] << endl;
 		conf << "ExternalSweep\t" <<  attr_ExternalSweep_read[0] << endl;
-		conf << "Scrapers\t" <<  attr_Scrapers_read[0] << endl;
-		switch(attr_Scrapers_read[0]) {
-			case USE_UPP5LOW5:
-				conf << "Upp5\t" <<  attr_Upp5_read[0] << endl;
-				conf << "Low5\t" <<  attr_Low5_read[0] << endl;
-				break;
-			case USE_UPP25LOW25:
-				conf << "Upp25\t" <<  attr_Upp25_read[0] << endl;
-				conf << "Low25\t" <<  attr_Low25_read[0] << endl;
-				break;
-			case USE_UPP22:
-				conf << "Upp22\t" <<  attr_Upp22_read[0] << endl;
-				break;
+		conf << "UsedScrapers\t";
+		for(int i=0;i<nbScrapers;i++) {
+		  conf << usedScrapers[i];
+		  if(i<(int)scraperNames.size()-1)
+		    conf << ",";
 		}
+		conf << endl;
+
+		for(int i=0;i<nbScrapers;i++) {
+      if(usedScrapers[i]) {
+        conf << scrAttNames[i] << "\t" << scrSetPoints[i] << endl;
+      }
+    }
 
 		conf.close();
 		configFile = string(argin);
@@ -1277,27 +1003,6 @@ void MBFCleaning::do_all()
 		RAISE_EXCEPTION("SweepTime must be srictly positive");
 	}
 
-	switch(attr_Scrapers_read[0]) {
-		case USE_UPP5LOW5:
-			if( attr_Upp5_read[0] <= 0.0 )
-				RAISE_EXCEPTION("Scrapper Upp5 must be srictly positive");
-			if( attr_Low5_read[0] <= 0.0 )
-				RAISE_EXCEPTION("Scrapper Low5 must be srictly positive");
-			break;
-		case USE_UPP25LOW25:
-			if( attr_Upp25_read[0] <= 0.0 )
-				RAISE_EXCEPTION("Scrapper Upp25 must be srictly positive");
-			if( attr_Low25_read[0] <= 0.0 )
-				RAISE_EXCEPTION("Scrapper Low25 must be srictly positive");
-			break;
-		case USE_UPP22:
-			if( attr_Upp22_read[0] <= 0.0 )
-				RAISE_EXCEPTION("Scrapper Upp22 must be srictly positive");
-			break;
-		default:
-			RAISE_EXCEPTION("Invalid scrapper mode");
-	}
-
 	set_state(Tango::MOVING);
 	set_status("Moving scrapers");
 	DoAllThread *t = new DoAllThread(this, mutexsweep);
@@ -1317,24 +1022,49 @@ void MBFCleaning::stop()
 	/*----- PROTECTED REGION ID(MBFCleaning::stop) ENABLED START -----*/
 
 	// Abort scraper motion
-	switch(attr_Scrapers_read[0]) {
-		case USE_UPP5LOW5:
-			upp5Ds->command_inout("Abort");
-			low5Ds->command_inout("Abort");
-			break;
-		case USE_UPP25LOW25:
-			upp25Ds->command_inout("Abort");
-			low25Ds->command_inout("Abort");
-			break;
-		case USE_UPP22:
-			upp22Ds->command_inout("Abort");
-			break;
+	for(int i=0;i<nbScrapers;i++) {
+	  if(usedScrapers[i])
+	    scraperDs[i]->command_inout("Abort");
 	}
 
 	// Abort cleaning
 	mbfDS->command_inout("Reset");
 
 	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::stop
+}
+//--------------------------------------------------------
+/**
+ *	Command SelectScraper related method
+ *	Description: 
+ *
+ *	@param argin [0] = Scraper index
+ *               [1] = Scraper enable=1 / disable=0
+ */
+//--------------------------------------------------------
+void MBFCleaning::select_scraper(const Tango::DevVarShortArray *argin)
+{
+	DEBUG_STREAM << "MBFCleaning::SelectScraper()  - " << device_name << endl;
+	/*----- PROTECTED REGION ID(MBFCleaning::select_scraper) ENABLED START -----*/
+
+	if(argin->length()!=2) {
+	  RAISE_EXCEPTION("Invalid argin length, 2 expected (scraper index,scraper enable)");
+	}
+
+	int idx = (*argin)[0];
+	if(idx<0 || idx>=nbScrapers) {
+    RAISE_EXCEPTION("Scraper index out of range");
+	}
+
+	usedScrapers[idx] = (*argin)[1];
+
+	// Save to DB
+  Tango::DbData db_data;
+  Tango::DbDatum data("UsedScrapers");
+  data << usedScrapers;
+  db_data.push_back(data);
+  get_db_device()->put_property(db_data);
+
+	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::select_scraper
 }
 //--------------------------------------------------------
 /**
@@ -1355,6 +1085,19 @@ void MBFCleaning::add_dynamic_commands()
 /*----- PROTECTED REGION ID(MBFCleaning::namespace_ending) ENABLED START -----*/
 
 //	Additional Methods
+
+int MBFCleaning::get_scr_idx(string attName) {
+  bool found = false;
+  int i = 0;
+  while(!found && i<nbScrapers) {
+    found = strcasecmp(attName.c_str(),scrAttNames[i].c_str())==0;
+    if(!found) i++;
+  }
+  if(found)
+    return i;
+  else
+    return -1;
+}
 
 void MBFCleaning::get_scr_open_pos(string scraperName,double *pos) {
 
@@ -1382,6 +1125,114 @@ void MBFCleaning::save_attribute_property(string attName,string propName,double 
 	get_db_device()->put_attribute_property(dbData);
 
 }
+
+void MBFCleaning::read_scraper_attribute(Tango::Attribute &attr,ScraperAttribute *src) {
+
+  	attr.set_value(&scrSetPoints[src->scrIdx]);
+
+}
+
+void MBFCleaning::write_scraper_attribute(Tango::WAttribute &attr,ScraperAttribute *src) {
+
+ 	Tango::DevDouble	w_val;
+ 	attr.get_write_value(w_val);
+  if( get_state()==Tango::MOVING )
+     RAISE_EXCEPTION("Parameter change not allowed while moving.");
+  scrSetPoints[src->scrIdx] = w_val;
+
+}
+
+string MBFCleaning::get_last_field(string name) {
+
+  char *p = strrchr((char *)name.c_str(),'/');
+  if(p) {
+    p++;
+    return string(p);
+  } else {
+    return name;
+  }
+
+}
+
+void MBFCleaning::split(vector<string> &tokens, const string &text, char sep) {
+
+  size_t start = 0, end = 0;
+  tokens.clear();
+
+  while ((end = text.find(sep, start)) != string::npos) {
+    tokens.push_back(text.substr(start, end - start));
+    start = end + 1;
+  }
+
+  tokens.push_back(text.substr(start));
+
+}
+
+// //--------------------------------------------------------
+// //--------------------------------------------------------
+// void MBFCleaning::read_Upp22(Tango::Attribute &attr)
+// {
+// 	DEBUG_STREAM << "MBFCleaning::read_Upp22(Tango::Attribute &attr) entering... " << endl;
+// 	attr.set_value(attr_Upp22_read);
+// 	
+// }
+
+// //--------------------------------------------------------
+// /**
+//  *	Write attribute Upp22 related method
+//  *	Description: 
+//  *
+//  *	Data type:	Tango::DevDouble
+//  *	Attr type:	Scalar
+//  */
+// //--------------------------------------------------------
+// void MBFCleaning::write_Upp22(Tango::WAttribute &attr)
+// {
+// 	DEBUG_STREAM << "MBFCleaning::write_Upp22(Tango::WAttribute &attr) entering... " << endl;
+// 	//	Retrieve write value
+// 	Tango::DevDouble	w_val;
+// 	attr.get_write_value(w_val);
+//   if( get_state()==Tango::MOVING )
+//     RAISE_EXCEPTION("Parameter change not allowed while moving.");
+//   attr_Upp22_read[0] = w_val;
+// 	
+// }
+
+// //--------------------------------------------------------
+// /**
+//  *	Read attribute Scrapers related method
+//  *	Description: 
+//  *
+//  *	Data type:	Tango::DevShort
+//  *	Attr type:	Scalar
+//  */
+// //--------------------------------------------------------
+// void MBFCleaning::read_Scrapers(Tango::Attribute &attr)
+// {
+// 	DEBUG_STREAM << "MBFCleaning::read_Scrapers(Tango::Attribute &attr) entering... " << endl;
+// 	attr.set_value(attr_Scrapers_read);
+// 	
+// }
+
+// //--------------------------------------------------------
+// /**
+//  *	Write attribute Scrapers related method
+//  *	Description: 
+//  *
+//  *	Data type:	Tango::DevShort
+//  *	Attr type:	Scalar
+//  */
+// //--------------------------------------------------------
+// void MBFCleaning::write_Scrapers(Tango::WAttribute &attr)
+// {
+// 	DEBUG_STREAM << "MBFCleaning::write_Scrapers(Tango::WAttribute &attr) entering... " << endl;
+// 	//	Retrieve write value
+// 	Tango::DevShort	w_val;
+// 	attr.get_write_value(w_val);
+//   if( get_state()==Tango::MOVING )
+//     RAISE_EXCEPTION("Parameter change not allowed while moving.");
+//   attr_Scrapers_read[0] = w_val;
+// }
 
 
 /*----- PROTECTED REGION END -----*/	//	MBFCleaning::namespace_ending

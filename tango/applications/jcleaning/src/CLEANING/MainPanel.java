@@ -9,23 +9,26 @@ import fr.esrf.Tango.DevFailed;
 import fr.esrf.TangoApi.ApiUtil;
 import fr.esrf.TangoApi.Database;
 import fr.esrf.TangoApi.DbDatum;
+import fr.esrf.TangoApi.DeviceData;
+import fr.esrf.TangoApi.DeviceProxy;
 import fr.esrf.tangoatk.core.AttributeList;
 import fr.esrf.tangoatk.core.AttributeStateEvent;
+import fr.esrf.tangoatk.core.BooleanSpectrumEvent;
 import fr.esrf.tangoatk.core.CommandList;
 import fr.esrf.tangoatk.core.ConnectionException;
 import fr.esrf.tangoatk.core.DevStateScalarEvent;
 import fr.esrf.tangoatk.core.DeviceFactory;
-import fr.esrf.tangoatk.core.EnumScalarEvent;
 import fr.esrf.tangoatk.core.ErrorEvent;
+import fr.esrf.tangoatk.core.IBooleanSpectrumListener;
 import fr.esrf.tangoatk.core.IDevStateScalarListener;
 import fr.esrf.tangoatk.core.IDevice;
-import fr.esrf.tangoatk.core.IEnumScalarListener;
 import fr.esrf.tangoatk.core.attribute.BooleanScalar;
+import fr.esrf.tangoatk.core.attribute.BooleanSpectrum;
 import fr.esrf.tangoatk.core.attribute.DevStateScalar;
-import fr.esrf.tangoatk.core.attribute.EnumScalar;
 import fr.esrf.tangoatk.core.attribute.NumberScalar;
 import fr.esrf.tangoatk.core.attribute.StringScalar;
 import fr.esrf.tangoatk.core.command.VoidVoidCommand;
+import fr.esrf.tangoatk.widget.attribute.NumberScalarWheelEditor;
 import fr.esrf.tangoatk.widget.util.ATKGraphicsUtils;
 import fr.esrf.tangoatk.widget.util.ErrorHistory;
 import fr.esrf.tangoatk.widget.util.ErrorPane;
@@ -34,6 +37,7 @@ import fr.esrf.tangoatk.widget.util.Splash;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -41,42 +45,42 @@ import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
-import jpll.PllFrame;
+//import jpll.PllFrame;
 
 /**
  *
  * @author pons
  */
-public class MainPanel extends javax.swing.JFrame implements IEnumScalarListener,IDevStateScalarListener {
+public class MainPanel extends javax.swing.JFrame implements IBooleanSpectrumListener,IDevStateScalarListener,ActionListener {
   
-  final static String APP_RELEASE = "1.0";
-  final static String cleaningDevName = "sr/d-mfdbk/cleaning";
-  final static String upp5DevName = "sr/d-scr/c5-up";
-  final static String low5DevName = "sr/d-scr/c5-low";
-  final static String upp25DevName = "sr/d-scr/c25-up";
-  final static String low25DevName = "sr/d-scr/c25-low";
-  final static String upp22DevName = "sr/d-scr/c22-up";
+  final static String APP_RELEASE = "1.1";
+  final static String cleaningDevName = "srdiag/mbf/cleaning";
   final static String pllDevName = "sr/d-mfdbk/pll";
     
   private AttributeList attList;
   private CommandList cmdList;
   public static ErrorHistory errWin;
   private boolean runningFromShell;
-  
-  private ScraperPanel upp5Panel;
-  private ScraperPanel low5Panel;
-  private ScraperPanel upp25Panel;
-  private ScraperPanel low25Panel;
-  private ScraperPanel upp22Panel;
+
+  private String[] scrDevNames;  
+  private String[] scrAttNames;
+  private ScraperPanel scrPanels[];
+  private NumberScalarWheelEditor scrEditors[];
+  private JCheckBox scrEnable[];
+  private int nbScrapers;
 
   private Splash splash; 
-  private String lastScraper="";
   private JFrame extShakerFrame = null;
   private ConfigFilePanel configPanel;
-  private PllFrame        pllFrame=null;
-        
+  ///private PllFrame        pllFrame=null;
+  private DeviceProxy cleaningDS;
+  
+  private Database db;
+  
   /**
    * Creates new form MainPanel
    */
@@ -112,60 +116,66 @@ public class MainPanel extends javax.swing.JFrame implements IEnumScalarListener
     cmdList.addErrorListener(errWin);
     cmdList.addErrorListener(ErrorPopup.getInstance());    
     
+    pllPanel.setVisible(false);
+    
     // Scraper Panels
     splash.progress(nbDevice++);
-    upp5Panel = new ScraperPanel(upp5DevName);
-    upp5Panel.setBounds(5,20,235,120);
-    scraperPanel.add(upp5Panel);
-    splash.progress(nbDevice++);
-    low5Panel = new ScraperPanel(low5DevName);
-    low5Panel.setBounds(240,20,235,120);
-    scraperPanel.add(low5Panel);    
-
-    splash.progress(nbDevice++);
-    upp25Panel = new ScraperPanel(upp25DevName);
-    upp25Panel.setBounds(5,20,235,120);
-    scraperPanel.add(upp25Panel);
-    splash.progress(nbDevice++);
-    low25Panel = new ScraperPanel(low25DevName);
-    low25Panel.setBounds(240,20,235,120);
-    scraperPanel.add(low25Panel);    
     
-    splash.progress(nbDevice++);
-    upp22Panel = new ScraperPanel(upp22DevName);
-    upp22Panel.setBounds(5,20,235,120);
-    scraperPanel.add(upp22Panel);
+    try {
+       db = ApiUtil.get_db_obj();
+       scrDevNames = db.get_device_property(cleaningDevName, "ScraperNames").extractStringArray();
+       scrAttNames = db.get_device_property(cleaningDevName, "ScraperAttList").extractStringArray();     
+       cleaningDS = new DeviceProxy(cleaningDevName);
+    } catch(DevFailed e) {
+      ErrorPane.showErrorMessage(null, "Fatal error during database accees", e);
+      System.exit(0);
+    }
+    
+    nbScrapers = scrDevNames.length;
+    scrPanels = new ScraperPanel[nbScrapers];
+    scrEditors = new NumberScalarWheelEditor[nbScrapers];
+    scrEnable = new JCheckBox[nbScrapers];
+    GridBagConstraints gbc = new GridBagConstraints();
+    gbc.fill = GridBagConstraints.BOTH;
+    
+    for(int i=0;i<nbScrapers;i++) {
+      
+      scrPanels[i] = new ScraperPanel(scrDevNames[i]);
+      scraperPanel.add(scrPanels[i]);
+      splash.progress(nbDevice++);
+
+      gbc.gridx = 0;
+      gbc.gridy = i+2;
+      JLabel scrLabel = new JLabel(scrAttNames[i]);
+      scraperSettingsPanel.add(scrLabel,gbc);
+      
+      gbc.gridx = 1;
+      scrEditors[i] = new NumberScalarWheelEditor();
+      scrEditors[i].setBackground(scraperSettingsPanel.getBackground());
+      scrEditors[i].setAlarmEnabled(false);
+      scraperSettingsPanel.add(scrEditors[i],gbc);
+      
+      gbc.gridx = 2;
+      scrEnable[i] = new JCheckBox();
+      scrEnable[i].addActionListener(this);
+      scraperSettingsPanel.add(scrEnable[i],gbc);
+      
+
+      try {      
+        NumberScalar model = (NumberScalar)attList.add(cleaningDevName+"/"+scrAttNames[i]);
+        scrEditors[i].setModel(model);
+      } catch( ConnectionException e) {}
+
+      splash.progress(nbDevice++);
+      
+    }
+    
+    
         
     // Init models
     
     try {
-            
-      NumberScalar upp5 = (NumberScalar)attList.add(cleaningDevName+"/Upp5");
-      upp5Editor.setModel(upp5);
-      splash.progress(nbDevice++);
-      
-      NumberScalar low5 = (NumberScalar)attList.add(cleaningDevName+"/Low5");
-      low5Editor.setModel(low5);
-      splash.progress(nbDevice++);
-      
-      NumberScalar upp25 = (NumberScalar)attList.add(cleaningDevName+"/Upp25");
-      upp25Editor.setModel(upp25);
-      splash.progress(nbDevice++);
-      
-      NumberScalar low25 = (NumberScalar)attList.add(cleaningDevName+"/Low25");
-      low25Editor.setModel(low25);
-      splash.progress(nbDevice++);
-
-      NumberScalar upp22 = (NumberScalar)attList.add(cleaningDevName+"/Upp22");
-      upp22Editor.setModel(upp22);
-      splash.progress(nbDevice++);
-      
-      EnumScalar mode = (EnumScalar)attList.add(cleaningDevName+"/Scrapers");
-      mode.addEnumScalarListener(this);
-      scraperModeEditor.setEnumModel(mode);
-      mode.refresh();
-      splash.progress(nbDevice++);
-      
+                  
       NumberScalar freqMin = (NumberScalar)attList.add(cleaningDevName+"/FreqMin");
       freqMinEditor.setModel(freqMin);
       splash.progress(nbDevice++);
@@ -186,13 +196,13 @@ public class MainPanel extends javax.swing.JFrame implements IEnumScalarListener
       externalSweepEditor.setAttModel(extSweep);
       splash.progress(nbDevice++);
       
-      DevStateScalar pllState = (DevStateScalar)attList.add(pllDevName+"/State");
-      pllStateViewer.setModel(pllState);
-      splash.progress(nbDevice++);
+      //DevStateScalar pllState = (DevStateScalar)attList.add(pllDevName+"/State");
+      //pllStateViewer.setModel(pllState);
+      //splash.progress(nbDevice++);
       
-      StringScalar pllStatus = (StringScalar)attList.add(pllDevName+"/Status");
-      pllStatusViewer.setModel(pllStatus);
-      splash.progress(nbDevice++);
+      //StringScalar pllStatus = (StringScalar)attList.add(pllDevName+"/Status");
+      //pllStatusViewer.setModel(pllStatus);
+      //splash.progress(nbDevice++);
 
       StringScalar cleaningStatus = (StringScalar)attList.add(cleaningDevName+"/Status");
       cleaningStatusViewer.setModel(cleaningStatus);
@@ -227,6 +237,9 @@ public class MainPanel extends javax.swing.JFrame implements IEnumScalarListener
       state.addDevStateScalarListener(this);
       splash.progress(nbDevice++);
       state.refresh();
+      
+      BooleanSpectrum usedScrapers = (BooleanSpectrum)attList.add(cleaningDevName+"/UsedScrapers");
+      usedScrapers.addBooleanSpectrumListener(this);
             
     } catch (ConnectionException e) {
       
@@ -234,9 +247,9 @@ public class MainPanel extends javax.swing.JFrame implements IEnumScalarListener
     
     pllStateViewer.addMouseListener(new MouseAdapter() {
       public void mouseClicked(MouseEvent e) {
-        if(pllFrame==null)
-          pllFrame = new PllFrame(false);
-        pllFrame.setVisible(true);      
+        //if(pllFrame==null)
+        //  pllFrame = new PllFrame(false);
+        //pllFrame.setVisible(true);      
       }      
     });
     
@@ -251,7 +264,7 @@ public class MainPanel extends javax.swing.JFrame implements IEnumScalarListener
     DeviceFactory.getInstance().stopRefresher();
     splash.setVisible(false);
     setTitle("SR Cleaning [" + APP_RELEASE + "]");
-    innerPanel.setPreferredSize(new Dimension(480,640));
+    innerPanel.setPreferredSize(new Dimension(580,640));
     ATKGraphicsUtils.centerFrameOnScreen(this);
     
   }
@@ -290,7 +303,6 @@ public class MainPanel extends javax.swing.JFrame implements IEnumScalarListener
 
     try {
 
-      Database db = ApiUtil.get_db_obj();
       DbDatum dd = db.get_device_property(cleaningDevName, "ExternalShakerDevice");
       String shaker = dd.extractString();
 
@@ -321,35 +333,47 @@ public class MainPanel extends javax.swing.JFrame implements IEnumScalarListener
     }
 
   }
-
+  
   @Override
-  public void enumScalarChange(EnumScalarEvent ese) {
+  public void actionPerformed(ActionEvent e) {
     
-    String scraper = ese.getValue();
-    
-    if( !lastScraper.equalsIgnoreCase(scraper) ) {
-
-      lastScraper = scraper;
-      
-      boolean m5 = lastScraper.equalsIgnoreCase("Use Upp5 and Low5");
-      boolean m25 = lastScraper.equalsIgnoreCase("Use Upp25 and Low25");
-      boolean m22 = lastScraper.equalsIgnoreCase("Use Upp22");
-        
-      upp5Panel.setVisible(m5);
-      low5Panel.setVisible(m5);
-      upp5Editor.setEnabled(m5);
-      low5Editor.setEnabled(m5);
-      
-      upp25Panel.setVisible(m25);
-      low25Panel.setVisible(m25);      
-      upp25Editor.setEnabled(m25);
-      low25Editor.setEnabled(m25);
-      
-      upp22Panel.setVisible(m22);
-      upp22Editor.setEnabled(m22);
-
+    Object src = e.getSource();
+    boolean found = false;
+    int idx = 0;
+    while(!found && idx<nbScrapers) {
+      found = src == scrEnable[idx];
+      if(!found) idx++;
     }
     
+    if(found) {
+      
+      try {
+        short[] argin = new short[2];
+        argin[0] = (short)idx;
+        argin[1] = scrEnable[idx].isSelected()?(short)1:(short)0;
+        DeviceData dd = new DeviceData();
+        dd.insert(argin);
+        cleaningDS.command_inout("SelectScraper",dd);
+      } catch(DevFailed ex) {
+        ErrorPane.showErrorMessage(this, cleaningDevName, ex);
+      }
+      
+    }
+    
+  }
+
+
+  @Override
+  public void booleanSpectrumChange(BooleanSpectrumEvent bse) {
+    
+    boolean[] used = bse.getValue();
+
+    for(int i=0;i<nbScrapers;i++) {    
+      scrEnable[i].setSelected(used[i]);
+      scrPanels[i].setVisible(used[i]);
+    }
+    scraperPanel.revalidate();
+            
   }
   
   @Override
@@ -396,21 +420,14 @@ public class MainPanel extends javax.swing.JFrame implements IEnumScalarListener
     java.awt.GridBagConstraints gridBagConstraints;
 
     innerPanel = new javax.swing.JPanel();
+    scraperTopPanel = new javax.swing.JPanel();
+    jScrollPane1 = new javax.swing.JScrollPane();
     scraperPanel = new javax.swing.JPanel();
     scraperSettingsPanel = new javax.swing.JPanel();
-    scraperModeEditor = new fr.esrf.tangoatk.widget.attribute.EnumScalarComboEditor();
-    upp5Label = new fr.esrf.tangoatk.widget.util.JSmoothLabel();
-    upp5Editor = new fr.esrf.tangoatk.widget.attribute.NumberScalarWheelEditor();
-    low5Label = new fr.esrf.tangoatk.widget.util.JSmoothLabel();
-    low5Editor = new fr.esrf.tangoatk.widget.attribute.NumberScalarWheelEditor();
+    jLabel1 = new javax.swing.JLabel();
+    jLabel2 = new javax.swing.JLabel();
+    jLabel3 = new javax.swing.JLabel();
     jSeparator1 = new javax.swing.JSeparator();
-    upp25Label = new fr.esrf.tangoatk.widget.util.JSmoothLabel();
-    upp25Editor = new fr.esrf.tangoatk.widget.attribute.NumberScalarWheelEditor();
-    low25Label = new fr.esrf.tangoatk.widget.util.JSmoothLabel();
-    low25Editor = new fr.esrf.tangoatk.widget.attribute.NumberScalarWheelEditor();
-    jSeparator2 = new javax.swing.JSeparator();
-    upp22Label = new fr.esrf.tangoatk.widget.util.JSmoothLabel();
-    upp22Editor = new fr.esrf.tangoatk.widget.attribute.NumberScalarWheelEditor();
     shakerSettingsPanel = new javax.swing.JPanel();
     freqMinLabel = new fr.esrf.tangoatk.widget.util.JSmoothLabel();
     freqMinEditor = new fr.esrf.tangoatk.widget.attribute.NumberScalarWheelEditor();
@@ -445,144 +462,63 @@ public class MainPanel extends javax.swing.JFrame implements IEnumScalarListener
 
     innerPanel.setLayout(new java.awt.GridBagLayout());
 
-    scraperPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Scraper Positions"));
-    scraperPanel.setMinimumSize(new java.awt.Dimension(460, 150));
-    scraperPanel.setPreferredSize(new java.awt.Dimension(460, 150));
-    scraperPanel.setLayout(null);
+    scraperTopPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Scraper Positions"));
+    scraperTopPanel.setMinimumSize(new java.awt.Dimension(460, 170));
+    scraperTopPanel.setPreferredSize(new java.awt.Dimension(460, 170));
+    scraperTopPanel.setLayout(new java.awt.BorderLayout());
+
+    jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+    jScrollPane1.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
+    jScrollPane1.setViewportView(scraperPanel);
+
+    scraperTopPanel.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 0;
     gridBagConstraints.gridwidth = 2;
     gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-    innerPanel.add(scraperPanel, gridBagConstraints);
+    innerPanel.add(scraperTopPanel, gridBagConstraints);
 
     scraperSettingsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Sraper Settings"));
     scraperSettingsPanel.setLayout(new java.awt.GridBagLayout());
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridwidth = 2;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-    gridBagConstraints.insets = new java.awt.Insets(5, 3, 5, 3);
-    scraperSettingsPanel.add(scraperModeEditor, gridBagConstraints);
 
-    upp5Label.setHorizontalAlignment(0);
-    upp5Label.setOpaque(false);
-    upp5Label.setText("Upp5 (mm)");
+    jLabel1.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+    jLabel1.setText("Name");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 0;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    scraperSettingsPanel.add(jLabel1, gridBagConstraints);
+
+    jLabel2.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+    jLabel2.setText("Cleaning setpoint");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 1;
+    gridBagConstraints.gridy = 0;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    scraperSettingsPanel.add(jLabel2, gridBagConstraints);
+
+    jLabel3.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+    jLabel3.setText("Use");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 2;
+    gridBagConstraints.gridy = 0;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    scraperSettingsPanel.add(jLabel3, gridBagConstraints);
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 1;
+    gridBagConstraints.gridwidth = 3;
     gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-    gridBagConstraints.weighty = 1.0;
-    gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
-    scraperSettingsPanel.add(upp5Label, gridBagConstraints);
-
-    upp5Editor.setBackground(java.awt.SystemColor.controlHighlight);
-    upp5Editor.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 1;
-    gridBagConstraints.gridy = 1;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-    gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 3);
-    scraperSettingsPanel.add(upp5Editor, gridBagConstraints);
-
-    low5Label.setHorizontalAlignment(0);
-    low5Label.setOpaque(false);
-    low5Label.setText("Low5 (mm)");
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 2;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-    gridBagConstraints.weighty = 1.0;
-    gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
-    scraperSettingsPanel.add(low5Label, gridBagConstraints);
-
-    low5Editor.setBackground(java.awt.SystemColor.controlHighlight);
-    low5Editor.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 1;
-    gridBagConstraints.gridy = 2;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-    gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 3);
-    scraperSettingsPanel.add(low5Editor, gridBagConstraints);
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 3;
-    gridBagConstraints.gridwidth = 2;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-    gridBagConstraints.insets = new java.awt.Insets(10, 0, 10, 0);
     scraperSettingsPanel.add(jSeparator1, gridBagConstraints);
-
-    upp25Label.setHorizontalAlignment(0);
-    upp25Label.setOpaque(false);
-    upp25Label.setText("Upp25 (mm)");
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 4;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-    gridBagConstraints.weighty = 1.0;
-    gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
-    scraperSettingsPanel.add(upp25Label, gridBagConstraints);
-
-    upp25Editor.setBackground(java.awt.SystemColor.controlHighlight);
-    upp25Editor.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 1;
-    gridBagConstraints.gridy = 4;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-    gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 3);
-    scraperSettingsPanel.add(upp25Editor, gridBagConstraints);
-
-    low25Label.setHorizontalAlignment(0);
-    low25Label.setOpaque(false);
-    low25Label.setText("Low25 (mm)");
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 5;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-    gridBagConstraints.weighty = 1.0;
-    gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
-    scraperSettingsPanel.add(low25Label, gridBagConstraints);
-
-    low25Editor.setBackground(java.awt.SystemColor.controlHighlight);
-    low25Editor.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 1;
-    gridBagConstraints.gridy = 5;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-    gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 3);
-    scraperSettingsPanel.add(low25Editor, gridBagConstraints);
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 6;
-    gridBagConstraints.gridwidth = 2;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-    gridBagConstraints.insets = new java.awt.Insets(10, 0, 10, 0);
-    scraperSettingsPanel.add(jSeparator2, gridBagConstraints);
-
-    upp22Label.setHorizontalAlignment(0);
-    upp22Label.setOpaque(false);
-    upp22Label.setText("Upp22 (mm)");
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 7;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-    gridBagConstraints.weighty = 1.0;
-    gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
-    scraperSettingsPanel.add(upp22Label, gridBagConstraints);
-
-    upp22Editor.setBackground(java.awt.SystemColor.controlHighlight);
-    upp22Editor.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 1;
-    gridBagConstraints.gridy = 7;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-    gridBagConstraints.insets = new java.awt.Insets(0, 0, 5, 3);
-    scraperSettingsPanel.add(upp22Editor, gridBagConstraints);
 
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 1;
     gridBagConstraints.gridheight = 2;
     gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.weightx = 1.0;
     innerPanel.add(scraperSettingsPanel, gridBagConstraints);
 
     shakerSettingsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Shaker Settings"));
@@ -695,7 +631,7 @@ public class MainPanel extends javax.swing.JFrame implements IEnumScalarListener
     gridBagConstraints.gridx = 1;
     gridBagConstraints.gridy = 1;
     gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-    gridBagConstraints.weightx = 1.0;
+    gridBagConstraints.weighty = 1.0;
     innerPanel.add(shakerSettingsPanel, gridBagConstraints);
 
     pllPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("PLL"));
@@ -719,7 +655,6 @@ public class MainPanel extends javax.swing.JFrame implements IEnumScalarListener
     gridBagConstraints.gridx = 1;
     gridBagConstraints.gridy = 2;
     gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-    gridBagConstraints.weightx = 1.0;
     innerPanel.add(pllPanel, gridBagConstraints);
 
     commandPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Command"));
@@ -861,32 +796,27 @@ public class MainPanel extends javax.swing.JFrame implements IEnumScalarListener
   private fr.esrf.tangoatk.widget.attribute.NumberScalarWheelEditor gainEditor;
   private fr.esrf.tangoatk.widget.util.JSmoothLabel gainLabel;
   private javax.swing.JPanel innerPanel;
+  private javax.swing.JLabel jLabel1;
+  private javax.swing.JLabel jLabel2;
+  private javax.swing.JLabel jLabel3;
   private javax.swing.JMenuBar jMenuBar1;
+  private javax.swing.JScrollPane jScrollPane1;
   private javax.swing.JSeparator jSeparator1;
-  private javax.swing.JSeparator jSeparator2;
-  private fr.esrf.tangoatk.widget.attribute.NumberScalarWheelEditor low25Editor;
-  private fr.esrf.tangoatk.widget.util.JSmoothLabel low25Label;
-  private fr.esrf.tangoatk.widget.attribute.NumberScalarWheelEditor low5Editor;
-  private fr.esrf.tangoatk.widget.util.JSmoothLabel low5Label;
   private javax.swing.JPanel pllPanel;
   private fr.esrf.tangoatk.widget.attribute.StateViewer pllStateViewer;
   private fr.esrf.tangoatk.widget.attribute.StatusViewer pllStatusViewer;
-  private fr.esrf.tangoatk.widget.attribute.EnumScalarComboEditor scraperModeEditor;
   private javax.swing.JPanel scraperPanel;
   private javax.swing.JPanel scraperSettingsPanel;
+  private javax.swing.JPanel scraperTopPanel;
   private javax.swing.JButton shakerButton;
   private javax.swing.JPanel shakerSettingsPanel;
   private fr.esrf.tangoatk.widget.command.VoidVoidCommandViewer stopCommand;
   private fr.esrf.tangoatk.widget.command.VoidVoidCommandViewer sweepCommand;
   private fr.esrf.tangoatk.widget.attribute.NumberScalarWheelEditor sweepTimeEditor;
   private fr.esrf.tangoatk.widget.util.JSmoothLabel sweepTimeLabel;
-  private fr.esrf.tangoatk.widget.attribute.NumberScalarWheelEditor upp22Editor;
-  private fr.esrf.tangoatk.widget.util.JSmoothLabel upp22Label;
-  private fr.esrf.tangoatk.widget.attribute.NumberScalarWheelEditor upp25Editor;
-  private fr.esrf.tangoatk.widget.util.JSmoothLabel upp25Label;
-  private fr.esrf.tangoatk.widget.attribute.NumberScalarWheelEditor upp5Editor;
-  private fr.esrf.tangoatk.widget.util.JSmoothLabel upp5Label;
   private javax.swing.JMenu viewMenu;
   // End of variables declaration//GEN-END:variables
+
+
   
 }

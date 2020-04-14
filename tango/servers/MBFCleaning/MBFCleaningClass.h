@@ -52,6 +52,34 @@ namespace MBFCleaning_ns
 {
 /*----- PROTECTED REGION ID(MBFCleaningClass::classes for dynamic creation) ENABLED START -----*/
 
+class ScraperAttribute: public Tango::Attr {
+
+public:
+
+    int scrIdx;
+
+    //-----------------------------------------------------------------------------
+    // Constructor
+
+    ScraperAttribute(const char *attName,int scrIdx)
+            :Attr(attName,Tango::DEV_DOUBLE,Tango::READ_WRITE) {
+      this->scrIdx = scrIdx;
+    };
+
+    ~ScraperAttribute() {};
+
+    //-----------------------------------------------------------------------------
+    // Write/Read mehod
+
+    virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att) {
+      (static_cast<MBFCleaning *>(dev))->read_scraper_attribute(att,this);
+    }
+    virtual void write(Tango::DeviceImpl *dev,Tango::WAttribute &att) {
+      (static_cast<MBFCleaning *>(dev))->write_scraper_attribute(att,this);
+    }
+
+};
+
 
 /*----- PROTECTED REGION END -----*/	//	MBFCleaningClass::classes for dynamic creation
 
@@ -131,96 +159,6 @@ public:
 		{return (static_cast<MBFCleaning *>(dev))->is_ConfigFileName_allowed(ty);}
 };
 
-//	Attribute Scrapers class definition
-class ScrapersAttrib: public Tango::Attr
-{
-public:
-	ScrapersAttrib():Attr("Scrapers",
-			Tango::DEV_SHORT, Tango::READ_WRITE) {};
-	~ScrapersAttrib() {};
-	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
-		{(static_cast<MBFCleaning *>(dev))->read_Scrapers(att);}
-	virtual void write(Tango::DeviceImpl *dev,Tango::WAttribute &att)
-		{(static_cast<MBFCleaning *>(dev))->write_Scrapers(att);}
-	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
-		{return (static_cast<MBFCleaning *>(dev))->is_Scrapers_allowed(ty);}
-};
-
-//	Attribute Upp5 class definition
-class Upp5Attrib: public Tango::Attr
-{
-public:
-	Upp5Attrib():Attr("Upp5",
-			Tango::DEV_DOUBLE, Tango::READ_WRITE) {};
-	~Upp5Attrib() {};
-	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
-		{(static_cast<MBFCleaning *>(dev))->read_Upp5(att);}
-	virtual void write(Tango::DeviceImpl *dev,Tango::WAttribute &att)
-		{(static_cast<MBFCleaning *>(dev))->write_Upp5(att);}
-	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
-		{return (static_cast<MBFCleaning *>(dev))->is_Upp5_allowed(ty);}
-};
-
-//	Attribute Low5 class definition
-class Low5Attrib: public Tango::Attr
-{
-public:
-	Low5Attrib():Attr("Low5",
-			Tango::DEV_DOUBLE, Tango::READ_WRITE) {};
-	~Low5Attrib() {};
-	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
-		{(static_cast<MBFCleaning *>(dev))->read_Low5(att);}
-	virtual void write(Tango::DeviceImpl *dev,Tango::WAttribute &att)
-		{(static_cast<MBFCleaning *>(dev))->write_Low5(att);}
-	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
-		{return (static_cast<MBFCleaning *>(dev))->is_Low5_allowed(ty);}
-};
-
-//	Attribute Upp25 class definition
-class Upp25Attrib: public Tango::Attr
-{
-public:
-	Upp25Attrib():Attr("Upp25",
-			Tango::DEV_DOUBLE, Tango::READ_WRITE) {};
-	~Upp25Attrib() {};
-	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
-		{(static_cast<MBFCleaning *>(dev))->read_Upp25(att);}
-	virtual void write(Tango::DeviceImpl *dev,Tango::WAttribute &att)
-		{(static_cast<MBFCleaning *>(dev))->write_Upp25(att);}
-	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
-		{return (static_cast<MBFCleaning *>(dev))->is_Upp25_allowed(ty);}
-};
-
-//	Attribute Low25 class definition
-class Low25Attrib: public Tango::Attr
-{
-public:
-	Low25Attrib():Attr("Low25",
-			Tango::DEV_DOUBLE, Tango::READ_WRITE) {};
-	~Low25Attrib() {};
-	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
-		{(static_cast<MBFCleaning *>(dev))->read_Low25(att);}
-	virtual void write(Tango::DeviceImpl *dev,Tango::WAttribute &att)
-		{(static_cast<MBFCleaning *>(dev))->write_Low25(att);}
-	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
-		{return (static_cast<MBFCleaning *>(dev))->is_Low25_allowed(ty);}
-};
-
-//	Attribute Upp22 class definition
-class Upp22Attrib: public Tango::Attr
-{
-public:
-	Upp22Attrib():Attr("Upp22",
-			Tango::DEV_DOUBLE, Tango::READ_WRITE) {};
-	~Upp22Attrib() {};
-	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
-		{(static_cast<MBFCleaning *>(dev))->read_Upp22(att);}
-	virtual void write(Tango::DeviceImpl *dev,Tango::WAttribute &att)
-		{(static_cast<MBFCleaning *>(dev))->write_Upp22(att);}
-	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
-		{return (static_cast<MBFCleaning *>(dev))->is_Upp22_allowed(ty);}
-};
-
 //	Attribute ExternalSweep class definition
 class ExternalSweepAttrib: public Tango::Attr
 {
@@ -234,6 +172,19 @@ public:
 		{(static_cast<MBFCleaning *>(dev))->write_ExternalSweep(att);}
 	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
 		{return (static_cast<MBFCleaning *>(dev))->is_ExternalSweep_allowed(ty);}
+};
+
+//	Attribute UsedScrapers class definition
+class UsedScrapersAttrib: public Tango::SpectrumAttr
+{
+public:
+	UsedScrapersAttrib():SpectrumAttr("UsedScrapers",
+			Tango::DEV_BOOLEAN, Tango::READ, 16) {};
+	~UsedScrapersAttrib() {};
+	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
+		{(static_cast<MBFCleaning *>(dev))->read_UsedScrapers(att);}
+	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
+		{return (static_cast<MBFCleaning *>(dev))->is_UsedScrapers_allowed(ty);}
 };
 
 
@@ -422,6 +373,29 @@ public:
 	virtual CORBA::Any *execute (Tango::DeviceImpl *dev, const CORBA::Any &any);
 	virtual bool is_allowed (Tango::DeviceImpl *dev, const CORBA::Any &any)
 	{return (static_cast<MBFCleaning *>(dev))->is_Stop_allowed(any);}
+};
+
+//	Command SelectScraper class definition
+class SelectScraperClass : public Tango::Command
+{
+public:
+	SelectScraperClass(const char   *name,
+	               Tango::CmdArgType in,
+				   Tango::CmdArgType out,
+				   const char        *in_desc,
+				   const char        *out_desc,
+				   Tango::DispLevel  level)
+	:Command(name,in,out,in_desc,out_desc, level)	{};
+
+	SelectScraperClass(const char   *name,
+	               Tango::CmdArgType in,
+				   Tango::CmdArgType out)
+	:Command(name,in,out)	{};
+	~SelectScraperClass() {};
+	
+	virtual CORBA::Any *execute (Tango::DeviceImpl *dev, const CORBA::Any &any);
+	virtual bool is_allowed (Tango::DeviceImpl *dev, const CORBA::Any &any)
+	{return (static_cast<MBFCleaning *>(dev))->is_SelectScraper_allowed(any);}
 };
 
 
