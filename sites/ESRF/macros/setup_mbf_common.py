@@ -1,4 +1,4 @@
-from PyTango import *
+from tango import *
 
 DAC_OUT_OFF = 0
 DAC_OUT_FIR = 1

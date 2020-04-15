@@ -1,4 +1,4 @@
-from PyTango import *
+from tango import *
 
 def set_highgain(val):
     dev = DeviceProxy('srdiag/mbf/mfdbk-ctrl')

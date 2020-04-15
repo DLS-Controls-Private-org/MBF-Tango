@@ -1,7 +1,8 @@
 from sardana.macroserver.macro import *
 
-from PyTango import *
+from tango import *
 import time
+from importlib import reload
 
 import setup_mbf_common
 
@@ -17,7 +18,7 @@ class mbf_control(Macro):
                     'MBF global EPICS brige device name'],
                  ['command', Type.String, None,
                     'Command to execute'],
-                 ['attName', Type.String, None,
+                 ['attName', Type.String, 'None',
                     'Attribute changed, All or None']]
     
     def run(self, mbfDevName, mbfCtrlDevName, mbfGDevName, command, attName):

@@ -1,6 +1,7 @@
-from PyTango import *
+from tango import *
 from numpy import *
 from time import *
+from importlib import reload
 
 import setup_mbf_common as smc
 import external_devices
