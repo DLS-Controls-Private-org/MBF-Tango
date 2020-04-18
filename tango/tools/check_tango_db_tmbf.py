@@ -1,5 +1,4 @@
-#!/usr/bin/env python2
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python3
 
 import sys
 import os
@@ -35,7 +34,7 @@ otherwise delete the file.
         if file_is_empty:
             os.remove(self.filename)
         else:
-            print self.not_empty_msg
+            print(self.not_empty_msg)
 
 
 # Make dico_tango from Tango db
@@ -80,15 +79,15 @@ def cmp_dico(dico1_name, dico2_name, pv_name):
         if key in no_check_key:
             continue
         if key not in dico2[pv_name]:
-            print key + " not in " + dico2_name + "['", pv_name, "']"
-            print ""
+            print(key + " not in " + dico2_name + "['", pv_name, "']")
+            print("")
             continue
         val1 = dico1[pv_name][key]
         val2 = dico2[pv_name][key]
         if not equal_list(val1, val2):
-            print dico2_name + "['", pv_name, "']['", key, "'] != " + dico1_name + "['", pv_name, "']['", key, "']"
-            print val2, "!=", val1
-            print ""
+            print(dico2_name + "['", pv_name, "']['", key, "'] != " + dico1_name + "['", pv_name, "']['", key, "']")
+            print(val2, "!=", val1)
+            print("")
 
 def cmp_dico2(dico_tango, dico_tango_make, pv_name):
     d = {}
@@ -110,11 +109,11 @@ filename = 'epics_not_in_tango.log'
 msg = "At least one EPICS PV is not associated with a Tango attribute.\n" \
         + "See '" + filename + "' for more information.\n"
 with stdout_to_file(filename, msg):
-    keys = dico_tango_make.keys()
+    keys = list(dico_tango_make.keys())
     keys.sort()
     for pv_name in keys:
         if pv_name not in dico_tango:
-            print pv_name
+            print(pv_name)
         else:
             pv_in_common += [pv_name]
 
@@ -123,11 +122,11 @@ filename = 'tango_not_in_epics.log'
 msg = "At least one Tango attribute point to a non-existing EPICS PV.\n" \
         + "See '" + filename + "' for more information.\n"
 with stdout_to_file(filename, msg):
-    keys = dico_tango.keys()
+    keys = list(dico_tango.keys())
     keys.sort()
     for pv_name in keys:
         if pv_name not in dico_tango_make:
-            print pv_name
+            print(pv_name)
 
 # Check differences between current Tango db and generated one
 filename = 'diff_tango_epics.log'
@@ -148,5 +147,5 @@ with stdout_to_file(filename, msg):
         o = cmp_dico2(dico_tango, dico_tango_make, pv_name)
         if len(o) > 0:
             pv_short_suffix = dico_tango_make[pv_name]['pv_short_suffix']
-            print "'{}':".format(pv_short_suffix)
-            print '    ' + repr(o) + ','
+            print("'{}':".format(pv_short_suffix))
+            print('    ' + repr(o) + ',')

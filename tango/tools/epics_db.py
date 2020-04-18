@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python3
 
 import sys
 import re
@@ -29,7 +29,7 @@ def replace_vars(my_str, vars_defs):
             if var_name in vars_defs:
                 new_str = vars_defs[var_name]
             else:
-                print >> sys.stderr, "Variable", rout.group(1), "not defined"
+                print("Variable", rout.group(1), "not defined", file=sys.stderr)
                 new_str = ""
             my_str = my_str.replace(rout.group(1), new_str)
         else:
@@ -37,7 +37,7 @@ def replace_vars(my_str, vars_defs):
     return my_str
 
 def print_res_file(dico_tango_make, instance_name, dev_name):
-    keys = dico_tango_make.keys()
+    keys = list(dico_tango_make.keys())
     keys.sort()
     server_name = 'Tango2Epics'
 
@@ -62,7 +62,7 @@ def print_res_file(dico_tango_make, instance_name, dev_name):
     args += [instance_name]
     args += [server_name]
     args += [dev_name]*3
-    print my_str.format(*args)
+    print(my_str.format(*args))
     tab = []
     for pv_name in keys:
         d = dico_tango_make[pv_name]
@@ -74,11 +74,11 @@ def print_res_file(dico_tango_make, instance_name, dev_name):
         t += ["ATTRIBUTE"]
         t += [d['tango_att_name']]
         tab += ["{}*{}*{}*{}*{}*{}".format(*t)]
-    print ",\\ \n".join(tab)
+    print(",\\ \n".join(tab))
 
-    print ""
-    print "# --- {} attribute properties".format(dev_name)
-    print ""
+    print("")
+    print("# --- {} attribute properties".format(dev_name))
+    print("")
 
     # Define Attribute Properties
     #
@@ -97,7 +97,7 @@ def print_res_file(dico_tango_make, instance_name, dev_name):
                 else:
                     lst = d[att_prop]
                     my_str += ', '.join('"{}"'.format(elem) for elem in lst)
-                print my_str
+                print(my_str)
 
 class EPICS_db:
     def __init__(self, filename, vars_defs):
@@ -143,12 +143,12 @@ class EPICS_db:
             else:
                 break
         if len(lst) == 0:
-            print >> sys.stderr, "Error with Enum"
+            print("Error with Enum", file=sys.stderr)
         return lst
     
     def build_tango_dico(self, pv_dot_PROC, pv_dot_SCAN, e2t_exceptions):
         dico = {}
-        for pv in self.dico_db.iterkeys():
+        for pv in self.dico_db:
             pv_short = self.dico_db[pv]['__pv_short__']
             d = None
             if pv_short in pv_dot_PROC:
@@ -175,8 +175,8 @@ class EPICS_db:
             elif dico_db[pv]['FTVL'] in ['CHAR', 'SHORT', 'LONG']:
                 pv_type = 'Int'
             else:
-                print >> sys.stderr, "Type waveform with field ", \
-                        dico_db[pv]['FTVL'], " not supported"
+                print("Type waveform with field ", \
+                        dico_db[pv]['FTVL'], " not supported", file=sys.stderr)
         elif dico_db[pv]['__type__'] in ['bi', 'bo']:
             if 'ZNAM' in dico_db[pv]:
                 pv_type = 'Enum'
@@ -258,7 +258,7 @@ class EPICS_db:
         
         if pv_short_suffix in e2t_exceptions:
             e = e2t_exceptions[pv_short_suffix]
-            for kw, item in e.iteritems():
+            for kw, item in e.items():
                 d[kw] = item
         
         return pv_name_abs, d

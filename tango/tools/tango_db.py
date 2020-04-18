@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python3
 
 import PyTango
 import re
@@ -44,8 +44,8 @@ def Tango_db(dev_name, scope=''):
             
             for att_prop in att_prop_dic.keys():
                 if att_prop not in att_prop_known_list:
-                    print >> sys.stderr, "Attribute property {} not known"\
-                            .format(att_prop)
+                    print("Attribute property {} not known"\
+                            .format(att_prop), file=sys.stderr)
             
             for att_prop in att_prop_list:
                 if att_prop in att_prop_dic:

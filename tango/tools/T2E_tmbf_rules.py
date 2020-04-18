@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python3
 
 import re
 from config import horizontal_axis_number
@@ -23,7 +23,7 @@ def add_scope_field(dico_tango):
         d['scope'] = get_scope(pv)
 
 def keep_one_scope(dico_tango, current_scope):
-    keys = dico_tango.keys()
+    keys = list(dico_tango.keys())
     for pv_name in keys:
         if dico_tango[pv_name]['scope'] != current_scope:
             dico_tango.pop(pv_name)
