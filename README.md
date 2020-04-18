@@ -43,18 +43,18 @@ Tango servers can only be installed once the EPICS layer on MBF crate is working
   * epics lmbf: [SR-LMBF.config](https://github.com/DLS-Controls-Private-org/DLS-MBF/blob/Elettra/sites/Elettra/iocs/SR-LMBF.config "SR-LMBF.config")
   * tune_fit: [SR-TFIT.config](https://github.com/DLS-Controls-Private-org/DLS-MBF/blob/ESRF/sites/ESRF/iocs/SR-TFIT.config "SR-TFIT.config")
 * Create a `$MBF_TANGO_HOME/tango/tools/config.py` (this file is crate-dependant).  
-as an example, the ESRF file can be use:  
-`ln -s ../../sites/ESRF/tango/config.py.l-c31-3 $MBF_TANGO_HOME/tango/tools/config.py`
+as an example, the generic config file can be use:  
+`ln -s ../../sites/generic/tango/config.py $MBF_TANGO_HOME/tango/tools/config.py`
 * Create a `$MBF_TANGO_HOME/tango/tools/config_lmbf.py` (this file is crate-dependant).  
 as an example, the Elettra file can be use:  
 `ln -s ../../sites/Elettra/tango/config_lmbf.py $MBF_TANGO_HOME/tango/tools/config_lmbf.py`
 * Create a `$MBF_TANGO_HOME/CONFIG` (this one is site-dependant).  
-as an example, the ESRF file can be use:  
-`ln -s sites/ESRF/CONFIG $MBF_TANGO_HOME/CONFIG`
+as an example, the generic `CONFIG` file can be use:  
+`ln -s sites/generic/CONFIG $MBF_TANGO_HOME/CONFIG`
 * Copy the .db files from `$MBF_HOME` in `$MBF_TANGO_HOME/epics/db/` (or a different path depending on the settings in `$MBF_TANGO_HOME/CONFIG`)  
   * `tmbf.db` and `lmbf.db` are creating by the MBF `make` command, and can be found in `$MBF_HOME/epics/db/`
-  * `tfit.db` can be created by calling tfit's IOC with the -d option:  
-  `$MBF_HOME/iocs/my_TFIT_IOC -d tfit.db`
+  * `tune_fit.db` can be created by calling tfit's IOC with the -d option:  
+  `$MBF_HOME/iocs/my_TFIT_IOC -d tune_fit.db`
 * Copy the .config files from the `$MBF_HOME/sites/$MY_SITE/iocs/` in `$MBF_TANGO_HOME/epics/iocs/` (or a different path depending on the settings in `$MBF_TANGO_HOME/CONFIG`)  
 
 3. Make the resources files to create Tango devices.  

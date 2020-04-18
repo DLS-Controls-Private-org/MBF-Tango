@@ -1,0 +1,24 @@
+# Generic config settings
+
+# folder where the db files must be located
+# it should contain:
+#  * lmbf.db
+#  * tmbf.db
+#  * tune_fit.db
+DB_FILES_DIR = $(TOP)/epics/db
+
+# The output directory for resources files
+RESOURCE_DIR = $(TOP)/tango/servers/resources
+
+# Directory where config file for the IOCS are located
+# it can be a link to $MBF_HOME/sites/$SITE/iocs
+CONFIG_DIR = $(TOP)/epics/iocs
+
+# Directory where Python macros will be stored
+MACRO_DIR = $(TOP)/sites/ESRF/macros
+
+# Path of the MBF home directory on the server
+# where Tango Devices will be started
+MBF_HOME = /home/dserver/mbf
+
+# vim: set filetype=make:
