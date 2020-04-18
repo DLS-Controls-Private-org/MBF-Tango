@@ -8,7 +8,7 @@
 DB_FILES_DIR = /home/dserver/mbf/epics/db
 
 # The output directory for resources files
-RESOURCE_DIR = $(TOP)/tango/servers/resources
+RESOURCE_DIR = $(TOP)/sites/ESRF/resources
 
 # Directory where config file for the IOCS are located
 # it can be a link to $MBF_HOME/sites/$SITE/iocs
