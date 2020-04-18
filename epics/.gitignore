@@ -1,3 +1,2 @@
 /iocs/
-/db/lmbf.db
-/db/tmbf.db
+/db/*.db

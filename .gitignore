@@ -9,8 +9,5 @@
 *~
 *.state
 
-# Default folder where MBF config file should be copied
-/epics
-
 # Put stuff we want to ignore here
 /ignore
