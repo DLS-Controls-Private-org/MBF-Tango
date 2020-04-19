@@ -161,27 +161,31 @@ class MBF_HL():
         outwf_sweep = smc.DAC_OUT_SWEEP*sweep_bunch_enables
         gainwf_clean = cleaning_fine_gain*clean_pattern
         gainwf_fb = feedback_fine_gain*fb_pattern
-        gainwf_fb_sweep = feedback_fine_gain*all_bucket
+        gainwf_sweep = feedback_fine_gain*all_bucket
+
+        # For all banks:
+        #  - set FIR #0
+        #  - all 5 gains at 1
+        for bank in range(4):
+            prefix = 'BUN:{:d}'.format(bank)
+            Mbf.put(prefix + ':FIRWF_S', BUNCH_ZEROS)
+            Mbf.put(prefix + ':FIR_GAIN_S', gainwf_fb)
+            Mbf.put(prefix + ':NCO1:GAIN_S', gainwf_clean)
+            Mbf.put(prefix + ':NCO2:GAIN_S', 0*all_bucket)
+            Mbf.put(prefix + ':SEQ:GAIN_S', gainwf_sweep)
+            Mbf.put(prefix + ':PLL:GAIN_S', 0*all_bucket)
 
         # Bank1: Tune sweep
-        Mbf.put('BUN:0:FIRWF_S', BUNCH_ZEROS)
         Mbf.put('BUN:0:OUTWF_S', outwf_sweep.astype(int))
-        Mbf.put('BUN:0:GAINWF_S', gainwf_fb_sweep)
 
         # Bank2: Idle + Cleaning 
-        Mbf.put('BUN:1:FIRWF_S', BUNCH_ZEROS)
         Mbf.put('BUN:1:OUTWF_S', outwf_clean.astype(int))
-        Mbf.put('BUN:1:GAINWF_S', gainwf_clean)
 
         # Bank3: Feedback + Tune sweep
-        Mbf.put('BUN:2:FIRWF_S', BUNCH_ZEROS)
         Mbf.put('BUN:2:OUTWF_S', (outwf_fb + outwf_sweep).astype(int))
-        Mbf.put('BUN:2:GAINWF_S', gainwf_fb_sweep)
 
         # Bank4: Feedback + Cleaning
-        Mbf.put('BUN:3:FIRWF_S', BUNCH_ZEROS)
         Mbf.put('BUN:3:OUTWF_S', (outwf_fb + outwf_clean).astype(int))
-        Mbf.put('BUN:3:GAINWF_S', gainwf_fb + gainwf_clean)
 
 
     def gen_sweep_pattern(self):

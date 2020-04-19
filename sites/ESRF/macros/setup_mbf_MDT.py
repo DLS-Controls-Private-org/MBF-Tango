@@ -37,24 +37,24 @@ class MBF_HL_NCO1B(MBF_HL_USM, object):
         # Bank0
         Mbf.put('BUN:0:FIRWF_S', 0*all_buckets)
         Mbf.put('BUN:0:OUTWF_S', DAC_OUT_NCO1 * one_bucket)
-        Mbf.put('BUN:0:GAINWF_S', feedback_fine_gain*all_buckets)
+        Mbf.put('BUN:0:FIR:GAIN_S', feedback_fine_gain*all_buckets)
 
         # Bank1
         Mbf.put('BUN:1:FIRWF_S', 0*all_buckets)
         Mbf.put('BUN:1:OUTWF_S', DAC_OUT_NCO1 * one_bucket)
-        Mbf.put('BUN:1:GAINWF_S', feedback_fine_gain*all_buckets)
+        Mbf.put('BUN:1:FIR:GAIN_S', feedback_fine_gain*all_buckets)
 
         # Bank2
         Mbf.put('BUN:2:FIRWF_S', 0*all_buckets)
         Mbf.put('BUN:2:OUTWF_S', DAC_OUT_FIR * all_buckets_minus_one
                 + DAC_OUT_NCO1 * one_bucket)
-        Mbf.put('BUN:2:GAINWF_S', feedback_fine_gain*all_buckets)
+        Mbf.put('BUN:2:FIR:GAIN_S', feedback_fine_gain*all_buckets)
 
         # Bank3
         Mbf.put('BUN:3:FIRWF_S', 0*all_buckets)
         Mbf.put('BUN:3:OUTWF_S', DAC_OUT_FIR * all_buckets_minus_one
                 + DAC_OUT_NCO1 * one_bucket)
-        Mbf.put('BUN:3:GAINWF_S', feedback_fine_gain*all_buckets)
+        Mbf.put('BUN:3:FIR:GAIN_S', feedback_fine_gain*all_buckets)
 
     def comm_set_sweep_on(self, state=True):
         Mbf = self.Mbf
@@ -103,22 +103,22 @@ class MBF_HL_GROW_DAMP(MBF_HL_USM, object):
         # Bank0
         Mbf.put('BUN:0:FIRWF_S', 0*all_buckets)
         Mbf.put('BUN:0:OUTWF_S', DAC_OUT_SWEEP*all_buckets)
-        Mbf.put('BUN:0:GAINWF_S', feedback_fine_gain*all_buckets)
+        Mbf.put('BUN:0:FIR:GAIN_S', feedback_fine_gain*all_buckets)
 
         # Bank1
         Mbf.put('BUN:1:FIRWF_S', 0*all_buckets)
         Mbf.put('BUN:1:OUTWF_S', DAC_OUT_OFF*all_buckets)
-        Mbf.put('BUN:1:GAINWF_S', all_buckets)
+        Mbf.put('BUN:1:FIR:GAIN_S', all_buckets)
 
         # Bank2
         Mbf.put('BUN:2:FIRWF_S', 0*all_buckets)
         Mbf.put('BUN:2:OUTWF_S', (DAC_OUT_FIR+DAC_OUT_SWEEP)*all_buckets)
-        Mbf.put('BUN:2:GAINWF_S', feedback_fine_gain*all_buckets)
+        Mbf.put('BUN:2:FIR:GAIN_S', feedback_fine_gain*all_buckets)
 
         # Bank3
         Mbf.put('BUN:3:FIRWF_S', 0*all_buckets)
         Mbf.put('BUN:3:OUTWF_S', DAC_OUT_FIR*all_buckets)
-        Mbf.put('BUN:3:GAINWF_S', feedback_fine_gain*all_buckets)
+        Mbf.put('BUN:3:FIR:GAIN_S', feedback_fine_gain*all_buckets)
 
 
     def growdamp_end(self, sweep_state=False):
