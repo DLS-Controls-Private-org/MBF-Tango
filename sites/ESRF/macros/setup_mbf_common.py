@@ -2,8 +2,10 @@ from tango import *
 
 DAC_OUT_OFF = 0
 DAC_OUT_FIR = 1
-DAC_OUT_NCO = 2
+DAC_OUT_NCO1 = 2
 DAC_OUT_SWEEP = 4
+DAC_OUT_TUNEPLL = 8
+DAC_OUT_NCO2 = 16
 
 mbfCtrl_d = {}
 Mbf_d = {}

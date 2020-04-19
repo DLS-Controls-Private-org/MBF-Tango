@@ -36,32 +36,32 @@ class MBF_HL_NCO1B(MBF_HL_USM, object):
         
         # Bank0
         Mbf.put('BUN:0:FIRWF_S', 0*all_buckets)
-        Mbf.put('BUN:0:OUTWF_S', DAC_OUT_NCO * one_bucket)
+        Mbf.put('BUN:0:OUTWF_S', DAC_OUT_NCO1 * one_bucket)
         Mbf.put('BUN:0:GAINWF_S', feedback_fine_gain*all_buckets)
 
         # Bank1
         Mbf.put('BUN:1:FIRWF_S', 0*all_buckets)
-        Mbf.put('BUN:1:OUTWF_S', DAC_OUT_NCO * one_bucket)
+        Mbf.put('BUN:1:OUTWF_S', DAC_OUT_NCO1 * one_bucket)
         Mbf.put('BUN:1:GAINWF_S', feedback_fine_gain*all_buckets)
 
         # Bank2
         Mbf.put('BUN:2:FIRWF_S', 0*all_buckets)
         Mbf.put('BUN:2:OUTWF_S', DAC_OUT_FIR * all_buckets_minus_one
-                + DAC_OUT_NCO * one_bucket)
+                + DAC_OUT_NCO1 * one_bucket)
         Mbf.put('BUN:2:GAINWF_S', feedback_fine_gain*all_buckets)
 
         # Bank3
         Mbf.put('BUN:3:FIRWF_S', 0*all_buckets)
         Mbf.put('BUN:3:OUTWF_S', DAC_OUT_FIR * all_buckets_minus_one
-                + DAC_OUT_NCO * one_bucket)
+                + DAC_OUT_NCO1 * one_bucket)
         Mbf.put('BUN:3:GAINWF_S', feedback_fine_gain*all_buckets)
 
     def comm_set_sweep_on(self, state=True):
         Mbf = self.Mbf
         if state == True:
-            Mbf.put('NCO:ENABLE_S', 'On')
+            Mbf.put('NCO1:ENABLE_S', 'On')
         else:
-            Mbf.put('NCO:ENABLE_S', 'Off')
+            Mbf.put('NCO1:ENABLE_S', 'Off')
 
     def set_param(self, cleaning, attName):
         Mbf = self.Mbf
@@ -71,10 +71,10 @@ class MBF_HL_NCO1B(MBF_HL_USM, object):
         mode = modeList[mbfCtrl.mode]
         
         if attName in ['All', 'Mode', 'SweepGainAllBunches']:
-            Mbf.put('NCO:GAIN_S', mbfCtrl.SweepGainAllBunches)
+            Mbf.put('NCO1:GAIN_S', mbfCtrl.SweepGainAllBunches)
 
         if attName in ['All', 'Mode', 'Tune']:
-            Mbf.put('NCO:FREQ_S', mbfCtrl.Tune%1)
+            Mbf.put('NCO1:FREQ_S', mbfCtrl.Tune%1)
         
         return super(MBF_HL_NCO1B, self).set_param(cleaning, attName)
 
@@ -181,8 +181,8 @@ class MBF_HL_GROW_DAMP(MBF_HL_USM, object):
         # Ensure super sequencer isn't in a strange state
         Mbf.put('SEQ:SUPER:RESET_S', 0)
         
-        # Ensure NCO is stopped
-        Mbf.put('NCO:ENABLE_S', 0)
+        # Ensure NCO1 is stopped
+        Mbf.put('NCO1:ENABLE_S', 0)
 
         # Prepare Soft trig for One Shot only
         Mbf.gput('TRG:SOFT_S', 'Passive')

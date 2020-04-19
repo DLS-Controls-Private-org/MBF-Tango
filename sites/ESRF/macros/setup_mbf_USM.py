@@ -63,25 +63,25 @@ class Cleaning():
                 feedback_fine_gain, sweep_bunch_enables)
 
         # Set Cleaning Gain
-        Mbf.put('NCO:GAIN_S', '0dB')
+        Mbf.put('NCO1:GAIN_S', '0dB')
 
         # Generate frequency list
         freq_list = linspace(freq_min, freq_max,
                 round(freq_sweeptime/dt)-1, endpoint=True)
 
-        # Start NCO and sweep frequency
+        # Start NCO1 and sweep frequency
         output_fct("Cleaning in progress, sweep from {:.6f} to {:.6f}"
                 .format(freq_min,freq_max))
-        Mbf.put('NCO:FREQ_S', freq_list[0])
+        Mbf.put('NCO1:FREQ_S', freq_list[0])
         sleep(dt)
-        Mbf.put('NCO:ENABLE_S', 1)
+        Mbf.put('NCO1:ENABLE_S', 1)
         for freq in freq_list:
-            Mbf.put('NCO:FREQ_S', freq)
+            Mbf.put('NCO1:FREQ_S', freq)
             output_fct("Cleaning in progress, currently at %.6f" % (freq))
             sleep(dt)
 
-        # Stop NCO
-        Mbf.put('NCO:ENABLE_S', 0)
+        # Stop NCO1
+        Mbf.put('NCO1:ENABLE_S', 0)
         # Rearm sequence for tune sweep
         Mbf.put('TRG:SEQ:ARM_S', 0)
 
@@ -90,8 +90,8 @@ class Cleaning():
         # to stop it
         #
         Mbf = self.mbf_hl.Mbf
-        # Stop NCO
-        Mbf.put('NCO:ENABLE_S', 0)
+        # Stop NCO1
+        Mbf.put('NCO1:ENABLE_S', 0)
         # Rearm sequence for tune sweep
         Mbf.put('TRG:SEQ:ARM_S', 0)
 
@@ -157,7 +157,7 @@ class MBF_HL():
         bunches = clean_pattern == 0
 
         outwf_fb = smc.DAC_OUT_FIR*fb_pattern
-        outwf_clean = smc.DAC_OUT_NCO*logical_not(bunches)
+        outwf_clean = smc.DAC_OUT_NCO1*logical_not(bunches)
         outwf_sweep = smc.DAC_OUT_SWEEP*sweep_bunch_enables
         gainwf_clean = cleaning_fine_gain*clean_pattern
         gainwf_fb = feedback_fine_gain*fb_pattern
@@ -313,8 +313,8 @@ class MBF_HL():
             # Ensure the blanking interval is right (this is not axis specific)
             Mbf.gput('TRG:BLANKING_S', blanking_interval)
 
-            # Ensure NCO is stopped
-            Mbf.put('NCO:ENABLE_S', 0)
+            # Ensure NCO1 is stopped
+            Mbf.put('NCO1:ENABLE_S', 0)
 
             # Configure bank selection
             self.comm_set_feedback_on(fb_state == 'ON')
