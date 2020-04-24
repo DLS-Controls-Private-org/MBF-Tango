@@ -181,13 +181,15 @@ class Cleaning(Cleaning_legacy):
         # Send soft trig during requested time
         tic = time.time()
         ii = 1
-        while (time.time() - tic) <= freq_sweeptime:
+        while True:
             output_fct("Cleaning cycle #{}".format(ii))
             Mbf.gput('TRG:SOFT_S', 0)
             seq_dt = Mbf.get('SEQ:TOTAL:DURATION:S')
             # wait for bunches to calm down after a sweep
             time.sleep(seq_dt + 0.01)
             ii += 1
+            if (time.time() - tic) > freq_sweeptime:
+                break
         
         # restore PV changed for the cleaning
         for pv_name, val in self.bk_dict.items():
@@ -201,6 +203,7 @@ class Cleaning(Cleaning_legacy):
             Mbf.put('SEQ:RESET_S', 0)
             for pv_name, val in self.bk_dict.items():
                 Mbf.put(pv_name, val)
+            self.bk_dict = {}
 
 
 class MBF_HL():
