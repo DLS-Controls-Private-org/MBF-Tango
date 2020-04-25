@@ -8,6 +8,7 @@ import external_devices
 
 TRIGGER_SOURCES = ['SOFT', 'EXT', 'PM', 'ADC0', 'ADC1', 'SEQ0', 'SEQ1', 'DAC0',
         'DAC1']
+sweep_holdoff = 0
 
 
 class Cleaning_legacy():
@@ -358,6 +359,41 @@ class MBF_HL():
         Mbf.put('TRG:SEQ:MODE_S', 'Rearm')
         Mbf.put('TRG:SEQ:DELAY_S', 0)
 
+    def set_sweep(self):
+        Mbf = self.Mbf
+        mbfCtrl = self.mbfCtrl
+
+        # Ensure no triggers are running and the sequencer is stopped
+        Mbf.put('TRG:SEQ:DISARM_S', 0)
+        Mbf.put('SEQ:RESET_S', 0)
+        # Ensure super sequencer isn't in a strange state
+        Mbf.put('SEQ:SUPER:COUNT_S', 1)
+        Mbf.put('SEQ:SUPER:RESET_S', 0)
+        # Configure sequencer for tune measurement
+        Harmonic = mbfCtrl.Harmonic
+        tune_sweep = mbfCtrl.Tune
+        if Harmonic < 0:
+            Harmonic = abs(Harmonic)
+            tune_sweep += 0.5
+        sweep_range = mbfCtrl.SweepRange
+        sweep_start = Harmonic + tune_sweep - sweep_range
+        sweep_end = sweep_start + 2 * sweep_range
+        sweep_gain = mbfCtrl.SweepGainSingleBunch if mbfCtrl.TuneOnSingleBunch \
+                else mbfCtrl.SweepGainAllBunches
+        Mbf.put('SEQ:1:COUNT_S', 4096)
+        Mbf.put('SEQ:1:START_FREQ_S', sweep_start)
+        Mbf.put('SEQ:1:END_FREQ_S', sweep_end)
+        Mbf.put('SEQ:1:CAPTURE_S', 'Capture')
+        Mbf.put('SEQ:1:HOLDOFF_S', sweep_holdoff)
+        Mbf.put('SEQ:1:DWELL_S', mbfCtrl.SweepDwellTime)
+        Mbf.put('SEQ:1:GAIN_S', sweep_gain)
+        Mbf.put('SEQ:1:ENWIN_S', 'Windowed')
+        Mbf.put('SEQ:1:BLANK_S', 'Blanking')
+
+        Mbf.put('SEQ:PC_S', 1)
+        # Arm has to be done after all configuration
+        Mbf.put('TRG:SEQ:ARM_S', 0)
+
     def set_param(self, cleaning, attName):
         Mbf = self.Mbf
         mbfCtrl = self.mbfCtrl
@@ -366,7 +402,6 @@ class MBF_HL():
         modeList = mbfCtrl.ModeList
         mode = modeList[mbfCtrl.mode]
         feedback_fine_gain = mbfCtrl.FeedbackFineGain
-        sweep_on_SB = mbfCtrl.TuneOnSingleBunch
         sweep_bunch_enables = self.gen_sweep_pattern()
         mbfDevName = Mbf.mbfDevName
 
@@ -391,13 +426,10 @@ class MBF_HL():
         
         sweep_state = self.get_sweep_state()
         fb_state = self.get_feedback_state()
-        sweep_holdoff = 0
         detector_input = 0      # Detector input is ADC (0)
         det_gain = 0            # Don't use the -48 dB scaling (0)
         
         tune_fb = mbfCtrl.Tune
-        tune_sweep = mbfCtrl.Tune
-        tune_reverse = False
         blanking_interval = mbfCtrl.BlankingInterval
 
         # Configure external devices
@@ -469,37 +501,7 @@ class MBF_HL():
             Mbf.put('DET:0:BUNCHES_S', sweep_bunch_enables)
 
         if 'set_sweep' in actions:
-            # Ensure no triggers are running and the sequencer is stopped
-            Mbf.put('TRG:SEQ:DISARM_S', 0)
-            Mbf.put('SEQ:RESET_S', 0)
-            # Ensure super sequencer isn't in a strange state
-            Mbf.put('SEQ:SUPER:COUNT_S', 1)
-            Mbf.put('SEQ:SUPER:RESET_S', 0)
-            # Configure sequencer for tune measurement
-            Harmonic = mbfCtrl.Harmonic
-            if Harmonic < 0:
-                Harmonic = abs(Harmonic)
-                tune_sweep += 0.5
-            sweep_range = mbfCtrl.SweepRange
-            sweep_start = Harmonic + tune_sweep - sweep_range
-            sweep_end = sweep_start + 2 * sweep_range
-            if tune_reverse:
-                sweep_start, sweep_end = sweep_end, sweep_start
-            sweep_gain = mbfCtrl.SweepGainSingleBunch if sweep_on_SB \
-                    else mbfCtrl.SweepGainAllBunches
-            Mbf.put('SEQ:1:COUNT_S', 4096)
-            Mbf.put('SEQ:1:START_FREQ_S', sweep_start)
-            Mbf.put('SEQ:1:END_FREQ_S', sweep_end)
-            Mbf.put('SEQ:1:CAPTURE_S', 'Capture')
-            Mbf.put('SEQ:1:HOLDOFF_S', sweep_holdoff)
-            Mbf.put('SEQ:1:DWELL_S', mbfCtrl.SweepDwellTime)
-            Mbf.put('SEQ:1:GAIN_S', sweep_gain)
-            Mbf.put('SEQ:1:ENWIN_S', 'Windowed')
-            Mbf.put('SEQ:1:BLANK_S', 'Blanking')
-
-            Mbf.put('SEQ:PC_S', 1)
-            # Arm has to be done after all configuration
-            Mbf.put('TRG:SEQ:ARM_S', 0)
+            self.set_sweep()
 
         if 'reset_mbf' in actions:
             # Now we can go!
