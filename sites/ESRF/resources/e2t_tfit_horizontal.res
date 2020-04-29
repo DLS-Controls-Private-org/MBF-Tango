@@ -1,14 +1,14 @@
 #---------------------------------------------------------
-# SERVER Tango2Epics/t-mfdbk-tuneh, Tango2Epics device declaration
+# SERVER Tango2Epics/mbf-tuneh, Tango2Epics device declaration
 #---------------------------------------------------------
 
-Tango2Epics/t-mfdbk-tuneh/DEVICE/Tango2Epics: "test/d-mtune/h"
+Tango2Epics/mbf-tuneh/DEVICE/Tango2Epics: "srdiag/mtune/h"
 
 
-# --- test/d-mtune/h properties
+# --- srdiag/mtune/h properties
 
-test/d-mtune/h->Variables: \ 
+srdiag/mtune/h->Variables: \ 
 
 
-# --- test/d-mtune/h attribute properties
+# --- srdiag/mtune/h attribute properties
 
