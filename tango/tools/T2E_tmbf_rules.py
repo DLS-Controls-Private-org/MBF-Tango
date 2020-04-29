@@ -88,6 +88,11 @@ e2t_exceptions = {
 'INFO:VERSION':
     {'tango_att_name': 'VERSION'},
 
+'SEQ:PC_S':
+    {'EnumLabels': ["0", "1", "2", "3" ,"4", "5", "6", "7"]},
+'SEQ:TRIGGER_S':
+    {'EnumLabels': ["0", "1", "2", "3" ,"4", "5", "6", "7"]},
+
 'DLY:DAC:COARSE_DELAY_S':
     {'format': '%3d'},
 'DLY:TURN:OFFSET_S':
