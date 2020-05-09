@@ -40,28 +40,29 @@ class TangoMBF():
         pv = pv.replace(':', '_')
         return self.mbf.__getattr__(pv)
 
-    def _put(self, mbf_dev, pv, value):
-        pv_tango = pv.replace(':', '_')
+    def _put(self, mbf_dev, pv, value, tango_attr=None):
+        if tango_attr is None:
+            tango_attr = pv.replace(':', '_')
         dev_name = mbf_dev.dev_name()
-        att_config = mbf_dev.get_attribute_config_ex(pv_tango)
+        att_config = mbf_dev.get_attribute_config_ex(tango_attr)
         if att_config[0].data_type in [CmdArgType.DevUShort,
                 CmdArgType.DevLong]:
             if type(value) is str:
                 att_properties = self.db.get_device_attribute_property(
-                        dev_name, pv_tango)
-                if pv_tango in att_properties:
-                    if 'EnumLabels' in att_properties[pv_tango]:
-                        value = list(att_properties[pv_tango]['EnumLabels'])\
+                        dev_name, tango_attr)
+                if tango_attr in att_properties:
+                    if 'EnumLabels' in att_properties[tango_attr]:
+                        value = list(att_properties[tango_attr]['EnumLabels'])\
                             .index(value)
         elif att_config[0].data_type == CmdArgType.DevEnum:
             value = list(att_config[0].enum_labels).index(value)
-        mbf_dev.__setattr__(pv_tango, value)
+        mbf_dev.__setattr__(tango_attr, value)
 
-    def put(self, pv, value):
-        self._put(self.mbf, pv, value)
+    def put(self, pv, value, tango_attr=None):
+        self._put(self.mbf, pv, value, tango_attr=tango_attr)
 
-    def gput(self, pv, value):
-        self._put(self.mbfG, pv, value)
+    def gput(self, pv, value, tango_attr=None):
+        self._put(self.mbfG, pv, value, tango_attr=tango_attr)
 
     def put_axes(self, pv, value):
         if self.lmbf_mode:

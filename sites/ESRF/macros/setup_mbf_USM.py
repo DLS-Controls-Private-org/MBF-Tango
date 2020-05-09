@@ -184,7 +184,7 @@ class Cleaning(Cleaning_legacy):
         ii = 1
         while True:
             output_fct("Cleaning cycle #{}".format(ii))
-            Mbf.gput('TRG:SOFT_S', 0)
+            Mbf.gput('TRG:SOFT.PROC', 0, tango_attr="TRG_SOFT_CMD")
             seq_dt = Mbf.get('SEQ:TOTAL:DURATION:S')
             # wait for bunches to calm down after a sweep
             time.sleep(seq_dt + 0.01)
