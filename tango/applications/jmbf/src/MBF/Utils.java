@@ -276,10 +276,15 @@ public class Utils {
       
       switch(ai.data_type) {
         case TangoConst.Tango_DEV_DOUBLE:
-          double[] vd = da.extractDoubleArray();          
+          double[] vd = da.extractDoubleArray();       
+          if(vd.length!=MainPanel.NB_BUCKET) {
+            System.out.println("Warning, invalid pattern lenght, reseting to " + MainPanel.NB_BUCKET);
+            vd = new double[MainPanel.NB_BUCKET];
+            for(int i=0;i<vd.length;i++) vd[i]=0.0;
+          }
           for(int i=0;i<ids.size();i++)
             vd[ids.get(i)] = value;
-          double[] nvd = new double[da.getNbRead()];
+          double[] nvd = new double[MainPanel.NB_BUCKET];
           for(int i=0;i<nvd.length;i++)
             nvd[i] = vd[i];
           da.insert(nvd);
@@ -287,9 +292,14 @@ public class Utils {
           break;
         case TangoConst.Tango_DEV_LONG:
           int[] vi = da.extractLongArray();
+          if(vi.length!=MainPanel.NB_BUCKET) {
+            System.out.println("Warning, invalid pattern lenght, reseting to " + MainPanel.NB_BUCKET);
+            vi = new int[MainPanel.NB_BUCKET];
+            for(int i=0;i<vi.length;i++) vi[i]=0;
+          }
           for(int i=0;i<ids.size();i++)
             vi[ids.get(i)] = (int)value;
-          int[] nvi = new int[da.getNbRead()];
+          int[] nvi = new int[MainPanel.NB_BUCKET];
           for(int i=0;i<nvi.length;i++)
             nvi[i] = vi[i];
           da.insert(nvi);
@@ -297,9 +307,14 @@ public class Utils {
           break;
         case TangoConst.Tango_DEV_SHORT:
           short[] vs = da.extractShortArray();
+          if(vs.length!=MainPanel.NB_BUCKET) {
+            System.out.println("Warning, invalid pattern lenght, reseting to " + MainPanel.NB_BUCKET);
+            vs = new short[MainPanel.NB_BUCKET];
+            for(int i=0;i<vs.length;i++) vs[i]=0;
+          }
           for(int i=0;i<ids.size();i++)
             vs[ids.get(i)] = (short)value;
-          short[] nvs = new short[da.getNbRead()];
+          short[] nvs = new short[MainPanel.NB_BUCKET];
           for(int i=0;i<nvs.length;i++)
             nvs[i] = vs[i];
           da.insert(nvs);

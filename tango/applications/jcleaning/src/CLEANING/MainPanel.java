@@ -49,7 +49,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-//import jpll.PllFrame;
+import MBF.PatternEditorFrame;
 
 /**
  *
@@ -57,9 +57,8 @@ import javax.swing.JPanel;
  */
 public class MainPanel extends javax.swing.JFrame implements IBooleanSpectrumListener,IDevStateScalarListener,ActionListener {
   
-  final static String APP_RELEASE = "1.1";
+  final static String APP_RELEASE = "1.2";
   final static String cleaningDevName = "srdiag/mbf/cleaning";
-  final static String pllDevName = "sr/d-mfdbk/pll";
     
   private AttributeList attList;
   private CommandList cmdList;
@@ -76,7 +75,7 @@ public class MainPanel extends javax.swing.JFrame implements IBooleanSpectrumLis
   private Splash splash; 
   private JFrame extShakerFrame = null;
   private ConfigFilePanel configPanel;
-  ///private PllFrame        pllFrame=null;
+  private PatternEditorFrame  patternFrame=null;
   private DeviceProxy cleaningDS;
   
   private Database db;
@@ -196,14 +195,6 @@ public class MainPanel extends javax.swing.JFrame implements IBooleanSpectrumLis
       externalSweepEditor.setAttModel(extSweep);
       splash.progress(nbDevice++);
       
-      //DevStateScalar pllState = (DevStateScalar)attList.add(pllDevName+"/State");
-      //pllStateViewer.setModel(pllState);
-      //splash.progress(nbDevice++);
-      
-      //StringScalar pllStatus = (StringScalar)attList.add(pllDevName+"/Status");
-      //pllStatusViewer.setModel(pllStatus);
-      //splash.progress(nbDevice++);
-
       StringScalar cleaningStatus = (StringScalar)attList.add(cleaningDevName+"/Status");
       cleaningStatusViewer.setModel(cleaningStatus);
       splash.progress(nbDevice++);
@@ -455,6 +446,7 @@ public class MainPanel extends javax.swing.JFrame implements IBooleanSpectrumLis
     fileMenu = new javax.swing.JMenu();
     exitMenuItem = new javax.swing.JMenuItem();
     viewMenu = new javax.swing.JMenu();
+    jMenuItem1 = new javax.swing.JMenuItem();
     errorMenuItem = new javax.swing.JMenuItem();
     diagMenuItem = new javax.swing.JMenuItem();
 
@@ -725,6 +717,14 @@ public class MainPanel extends javax.swing.JFrame implements IBooleanSpectrumLis
 
     viewMenu.setText("Edit");
 
+    jMenuItem1.setText("Edit Pattern...");
+    jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        jMenuItem1ActionPerformed(evt);
+      }
+    });
+    viewMenu.add(jMenuItem1);
+
     errorMenuItem.setText("Errors...");
     errorMenuItem.addActionListener(new java.awt.event.ActionListener() {
       public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -769,6 +769,14 @@ public class MainPanel extends javax.swing.JFrame implements IBooleanSpectrumLis
     fr.esrf.tangoatk.widget.util.ATKDiagnostic.showDiagnostic();
   }//GEN-LAST:event_diagMenuItemActionPerformed
 
+  private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    // TODO add your handling code here:
+    if( patternFrame==null ) {
+      patternFrame = new PatternEditorFrame(PatternEditorFrame.SHORTINT_TYPE,"srdiag/mbf/vertical/CleaningPattern");
+    }
+    patternFrame.setVisible(true);    
+  }//GEN-LAST:event_jMenuItem1ActionPerformed
+
   /**
    * @param args the command line arguments
    */
@@ -800,6 +808,7 @@ public class MainPanel extends javax.swing.JFrame implements IBooleanSpectrumLis
   private javax.swing.JLabel jLabel2;
   private javax.swing.JLabel jLabel3;
   private javax.swing.JMenuBar jMenuBar1;
+  private javax.swing.JMenuItem jMenuItem1;
   private javax.swing.JScrollPane jScrollPane1;
   private javax.swing.JSeparator jSeparator1;
   private javax.swing.JPanel pllPanel;

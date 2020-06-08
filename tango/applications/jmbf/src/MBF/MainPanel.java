@@ -37,7 +37,7 @@ public class MainPanel extends javax.swing.JFrame implements SynopticProgressLis
 
   final static String APP_RELEASE = "1.6";
 
-  static int NB_BUCKET;
+  static int NB_BUCKET = 992;
   static String mfdbkHDevName;
   static String mfdbkVDevName;
   static String mfdbkHEpicsDevName;

@@ -26,8 +26,9 @@ import java.util.Vector;
  */
 public class PatternEditorFrame extends JFrame implements ActionListener {
 
-  static int DOUBLE_TYPE = 0;
-  static int INT_TYPE = 1;  
+  public final static int DOUBLE_TYPE = 0;
+  public final static int INT_TYPE = 1;  
+  public final static int SHORTINT_TYPE = 2;  
   
   private Vector patterns = new Vector();
   private boolean hasError;
@@ -451,6 +452,19 @@ public class PatternEditorFrame extends JFrame implements ActionListener {
 
   }
   
+  private short[] buildPatternShort() {
+
+    short[] data = new short[NB_BUCKET];
+    for(int i=0;i<patterns.size();i++) {
+      PatternInfo pi = (PatternInfo)patterns.get(i);
+      for(int j=0;j<pi.length;j++) {
+        data[pi.startBucket+j]=(short)pi.value;
+      }
+    }
+    return data;
+
+  }
+  
   private double[] buildPatternDouble() {
 
     double[] data = new double[NB_BUCKET];
@@ -473,10 +487,18 @@ public class PatternEditorFrame extends JFrame implements ActionListener {
       // Write the pattern
       ds = new DeviceProxy(deviceName);
       DeviceAttribute argin = new DeviceAttribute(attributeName);
-      if(type==DOUBLE_TYPE)
+      switch(type) {
+        case DOUBLE_TYPE:
         argin.insert(buildPatternDouble());
-      else
+        break;
+        case INT_TYPE:
         argin.insert(buildPatternInt());
+        break;
+        case SHORTINT_TYPE:
+        argin.insert(buildPatternShort());
+        break;
+        
+      }
       ds.write_attribute(argin);
 
     } catch (DevFailed e) {
@@ -575,6 +597,46 @@ public class PatternEditorFrame extends JFrame implements ActionListener {
 
   }
   
+  private void initPatterns(short[] data) {
+
+    patterns.clear();
+    if(data.length==0)
+      return;
+
+    // Build pattern info from the pattern
+    int lastValue = data[0];
+    int length = 1;
+    for(int i=1;i<NB_BUCKET;i++) {
+      while(i<NB_BUCKET && data[i]==lastValue) {
+        length++;
+        i++;
+      }
+      // Add new pattern
+      PatternInfo pi = new PatternInfo();
+      pi.startBucket = i-length;
+      pi.length = length;
+      pi.value = lastValue;
+      patterns.add(pi);
+
+      if(i<NB_BUCKET) {
+        lastValue = data[i];
+        length = 1;
+      } else {
+        length = 0;
+      }
+    }
+
+    // Last pattern
+    if(length>0) {
+      PatternInfo pi = new PatternInfo();
+      pi.startBucket = NB_BUCKET-length;
+      pi.length = length;
+      pi.value = lastValue;
+      patterns.add(pi);
+    }
+
+  }
+  
   private void initPatterns(double[] data) {
 
     patterns.clear();
@@ -618,6 +680,7 @@ public class PatternEditorFrame extends JFrame implements ActionListener {
     DeviceProxy ds;
     double[] datad;
     int[] datai;
+    short[] datasi;
 
     try {
 
@@ -631,14 +694,23 @@ public class PatternEditorFrame extends JFrame implements ActionListener {
         return;
       }
       
-      if(type==DOUBLE_TYPE) {
+      switch(type) {
+        case DOUBLE_TYPE:
         datad = argout.extractDoubleArray();
         initPatterns(datad);
-      } else {
+        break;
+        case INT_TYPE:
         datai = argout.extractLongArray();
         initPatterns(datai);
+        break;
+        case SHORTINT_TYPE:
+        datasi = argout.extractShortArray();
+        initPatterns(datasi);
+        break;
+        default:
+         JOptionPane.showMessageDialog(null,"Type not supported : " + type);          
       }
-      
+            
     } catch (DevFailed e) {
       ErrorPane.showErrorMessage(null, deviceName, e);
     }
