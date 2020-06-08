@@ -52,9 +52,12 @@ public class SEQSetupPanel extends javax.swing.JFrame {
     NumberScalar capture;
     SimpleScalarViewer captureViewer;
     JButton captureBtn;
-    NumberScalar holdoff;
-    SimpleScalarViewer holdoffViewer;
-    JButton holdoffBtn;
+    NumberScalar holdoffState;
+    SimpleScalarViewer holdoffStateViewer;
+    JButton holdoffStateBtn;
+    NumberScalar holdoffDwell;
+    SimpleScalarViewer holdoffDwellViewer;
+    JButton holdoffDwellBtn;
     NumberScalar dwellTime;
     SimpleScalarViewer dwellTimeViewer;
     JButton dwellTimeBtn;
@@ -70,6 +73,8 @@ public class SEQSetupPanel extends javax.swing.JFrame {
     EnumScalarComboEditor dataWindowEditor;
     EnumScalar dataCapture;
     EnumScalarComboEditor dataCaptureEditor;
+    EnumScalar tunePLL;
+    EnumScalarComboEditor tunePLLEditor;
     
     SeqLine(int idx,Color background,JPanel parentPanel) {
 
@@ -178,26 +183,48 @@ public class SEQSetupPanel extends javax.swing.JFrame {
       parentPanel.add(captureBtn,gbc);
 
       // -------------------
-      holdoffViewer = new SimpleScalarViewer();
-      holdoffViewer.setText("-----");
-      holdoffViewer.setBackgroundColor(background);
+      holdoffStateViewer = new SimpleScalarViewer();
+      holdoffStateViewer.setText("-----");
+      holdoffStateViewer.setBackgroundColor(background);
       gbc.ipadx = 20;
       gbc.insets.left = 5;
       gbc.gridx = 9;
-      parentPanel.add(holdoffViewer,gbc);
+      parentPanel.add(holdoffStateViewer,gbc);
       
-      holdoffBtn = new JButton("...");
-      holdoffBtn.setMargin(noMargin);
-      holdoffBtn.setFont(ATKConstant.labelFont);      
-      holdoffBtn.addActionListener(new ActionListener() {
+      holdoffStateBtn = new JButton("...");
+      holdoffStateBtn.setMargin(noMargin);
+      holdoffStateBtn.setFont(ATKConstant.labelFont);      
+      holdoffStateBtn.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
-          showSetter(holdoff);
+          showSetter(holdoffState);
         }
       });      
       gbc.ipadx = 0;
       gbc.insets.left = 0;
       gbc.gridx = 10;
-      parentPanel.add(holdoffBtn,gbc);
+      parentPanel.add(holdoffStateBtn,gbc);
+      
+      // -------------------
+      holdoffDwellViewer = new SimpleScalarViewer();
+      holdoffDwellViewer.setText("-----");
+      holdoffDwellViewer.setBackgroundColor(background);
+      gbc.ipadx = 20;
+      gbc.insets.left = 5;
+      gbc.gridx = 11;
+      parentPanel.add(holdoffDwellViewer,gbc);
+      
+      holdoffDwellBtn = new JButton("...");
+      holdoffDwellBtn.setMargin(noMargin);
+      holdoffDwellBtn.setFont(ATKConstant.labelFont);      
+      holdoffDwellBtn.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+          showSetter(holdoffDwell);
+        }
+      });      
+      gbc.ipadx = 0;
+      gbc.insets.left = 0;
+      gbc.gridx = 12;
+      parentPanel.add(holdoffDwellBtn,gbc);
       
       // -------------------
       
@@ -207,7 +234,7 @@ public class SEQSetupPanel extends javax.swing.JFrame {
       dwellTimeViewer.setUnitVisible(false);
       gbc.ipadx = 20;
       gbc.insets.left = 5;
-      gbc.gridx = 11;
+      gbc.gridx = 13;
       parentPanel.add(dwellTimeViewer,gbc);
       
       dwellTimeBtn = new JButton("...");
@@ -220,7 +247,7 @@ public class SEQSetupPanel extends javax.swing.JFrame {
       });      
       gbc.ipadx = 0;
       gbc.insets.left = 0;
-      gbc.gridx = 12;
+      gbc.gridx = 14;
       parentPanel.add(dwellTimeBtn,gbc);
       
       // -------------------
@@ -229,39 +256,45 @@ public class SEQSetupPanel extends javax.swing.JFrame {
       
       magnitudeEditor = new EnumScalarComboEditor();
       magnitudeEditor.setFont(ATKConstant.labelFont);
-      gbc.gridx = 13;
+      gbc.gridx = 15;
       parentPanel.add(magnitudeEditor,gbc);
 
       // -------------------
       magnitudeEnaEditor = new EnumScalarComboEditor();
       magnitudeEnaEditor.setFont(ATKConstant.labelFont);      
-      gbc.gridx = 14;
+      gbc.gridx = 16;
       parentPanel.add(magnitudeEnaEditor,gbc);
 
       // -------------------
       bunchBankEditor = new EnumScalarComboEditor();
       bunchBankEditor.setFont(ATKConstant.labelFont);
-      gbc.gridx = 15;
+      gbc.gridx = 17;
       parentPanel.add(bunchBankEditor,gbc);
 
       // -------------------
       blankingEditor = new EnumScalarComboEditor();
       blankingEditor.setFont(ATKConstant.labelFont);
-      gbc.gridx = 16;
+      gbc.gridx = 18;
       parentPanel.add(blankingEditor,gbc);
 
       // -------------------
       dataWindowEditor = new EnumScalarComboEditor();
       dataWindowEditor.setFont(ATKConstant.labelFont);
-      gbc.gridx = 17;
+      gbc.gridx = 19;
       parentPanel.add(dataWindowEditor,gbc);
 
       // -------------------
       dataCaptureEditor = new EnumScalarComboEditor();
       dataCaptureEditor.setFont(ATKConstant.labelFont);
-      gbc.insets.right = 5;
-      gbc.gridx = 18;
+      gbc.gridx = 20;
       parentPanel.add(dataCaptureEditor,gbc);
+
+      // -------------------
+      tunePLLEditor = new EnumScalarComboEditor();
+      tunePLLEditor.setFont(ATKConstant.labelFont);
+      gbc.insets.right = 5;
+      gbc.gridx = 21;
+      parentPanel.add(tunePLLEditor,gbc);
       
         
     }
@@ -277,23 +310,13 @@ public class SEQSetupPanel extends javax.swing.JFrame {
       sweepEndViewer.setModel(sweepEnd);
       capture = (NumberScalar)attList.add(devName+"/SEQ_"+idx+"_COUNT_S");
       captureViewer.setModel(capture);
-      holdoff = (NumberScalar)attList.add(devName+"/SEQ_"+idx+"_HOLDOFF_S");
-      holdoffViewer.setModel(holdoff);
-
-      if(idx==1 )      
-        // Pass via the high level class (this param is saved in config file)
-        dwellTime = (NumberScalar)attList.add(gDevName+"/SweepDwellTime");
-      else
-        dwellTime = (NumberScalar)attList.add(devName+"/SEQ_"+idx+"_DWELL_S");
-
+      holdoffState = (NumberScalar)attList.add(devName+"/SEQ_"+idx+"_STATE_HOLDOFF_S");
+      holdoffStateViewer.setModel(holdoffState);
+      holdoffDwell = (NumberScalar)attList.add(devName+"/SEQ_"+idx+"_HOLDOFF_S");
+      holdoffDwellViewer.setModel(holdoffDwell);
+      dwellTime = (NumberScalar)attList.add(devName+"/SEQ_"+idx+"_DWELL_S");
       dwellTimeViewer.setModel(dwellTime);
-
-      if(idx==1 )      
-        // Pass via the high level class (this param is saved in config file)
-        magnitude = (EnumScalar)attList.add(gDevName+"/SweepGain");
-      else
-        magnitude = (EnumScalar)attList.add(devName+"/SEQ_"+idx+"_GAIN_S");
-
+      magnitude = (EnumScalar)attList.add(devName+"/SEQ_"+idx+"_GAIN_S");
       magnitudeEditor.setEnumModel(magnitude);
       magnitudeEna = (EnumScalar)attList.add(devName+"/SEQ_"+idx+"_ENABLE_S");
       magnitudeEnaEditor.setEnumModel(magnitudeEna);
@@ -305,7 +328,8 @@ public class SEQSetupPanel extends javax.swing.JFrame {
       dataWindowEditor.setEnumModel(dataWindow);
       dataCapture = (EnumScalar)attList.add(devName+"/SEQ_"+idx+"_CAPTURE_S");
       dataCaptureEditor.setEnumModel(dataCapture);
-      
+      tunePLL = (EnumScalar)attList.add(devName+"/SEQ_"+idx+"_TUNE_PLL_S");
+      tunePLLEditor.setEnumModel(tunePLL);
       
     }
     
@@ -343,22 +367,26 @@ public class SEQSetupPanel extends javax.swing.JFrame {
       gbc.gridx = 7;
       tablePanel.add(Utils.createLabel("Capture",""),gbc);              
       gbc.gridx = 9;
-      tablePanel.add(Utils.createLabel("Holdoff", ""),gbc);              
+      tablePanel.add(Utils.createLabel("Holdoff", "State"),gbc);              
       gbc.gridx = 11;
+      tablePanel.add(Utils.createLabel("Holdoff", "Dwell"),gbc);              
+      gbc.gridx = 13;
       tablePanel.add(Utils.createLabel("Dwell Time", "turns"),gbc);              
       gbc.gridwidth = 1;
-      gbc.gridx = 13;
-      tablePanel.add(Utils.createLabel("Magnitude", ""),gbc);              
-      gbc.gridx = 14;
-      tablePanel.add(Utils.createLabel("Enable", ""),gbc);              
       gbc.gridx = 15;
-      tablePanel.add(Utils.createLabel("Bunch Bank", ""),gbc);              
+      tablePanel.add(Utils.createLabel("Magnitude", ""),gbc);              
       gbc.gridx = 16;
-      tablePanel.add(Utils.createLabel("Blanking", ""),gbc);              
+      tablePanel.add(Utils.createLabel("Enable", ""),gbc);              
       gbc.gridx = 17;
-      tablePanel.add(Utils.createLabel("Window", ""),gbc);              
+      tablePanel.add(Utils.createLabel("Bunch Bank", ""),gbc);              
       gbc.gridx = 18;
+      tablePanel.add(Utils.createLabel("Blanking", ""),gbc);              
+      gbc.gridx = 19;
+      tablePanel.add(Utils.createLabel("Window", ""),gbc);              
+      gbc.gridx = 20;
       tablePanel.add(Utils.createLabel("Data Capture", ""),gbc);              
+      gbc.gridx = 21;
+      tablePanel.add(Utils.createLabel("Tune PLL", ""),gbc);              
       
       
       for(int i=1;i<8;i++) {
@@ -366,8 +394,8 @@ public class SEQSetupPanel extends javax.swing.JFrame {
         l.setModel(devName,gDevName, attList, i);
       }
       
-      NumberScalar startW = (NumberScalar)attList.add(devName+"/SEQ_PC_S");
-      startEditor.setModel(startW);
+      EnumScalar startW = (EnumScalar)attList.add(devName+"/SEQ_PC_S");
+      startEditor.setEnumModel(startW);
       NumberScalar startR = (NumberScalar)attList.add(devName+"/SEQ_PC");      
       startViewer.setModel(startR);
       startViewer.setBackgroundColor(getBackground());
@@ -391,8 +419,8 @@ public class SEQSetupPanel extends javax.swing.JFrame {
       offsetViewer.setBackground(getBackground());
       offsetViewer.setBackgroundColor(getBackground());
 
-      NumberScalar eventW = (NumberScalar)attList.add(devName+"/SEQ_TRIGGER_S");      
-      eventEditor.setModel(eventW);
+      EnumScalar eventW = (EnumScalar)attList.add(devName+"/SEQ_TRIGGER_S");      
+      eventEditor.setEnumModel(eventW);
       
       EnumScalar steadyState = (EnumScalar)attList.add(devName+"/SEQ_0_BANK_S");
       steadyStateEditor.setEnumModel(steadyState);
@@ -442,7 +470,6 @@ public class SEQSetupPanel extends javax.swing.JFrame {
     jSmoothLabel12 = new fr.esrf.tangoatk.widget.util.JSmoothLabel();
     steadyStateEditor = new fr.esrf.tangoatk.widget.attribute.EnumScalarComboEditor();
     jSmoothLabel13 = new fr.esrf.tangoatk.widget.util.JSmoothLabel();
-    startEditor = new fr.esrf.tangoatk.widget.attribute.NumberScalarWheelEditor();
     startViewer = new fr.esrf.tangoatk.widget.attribute.SimpleScalarViewer();
     jSmoothLabel14 = new fr.esrf.tangoatk.widget.util.JSmoothLabel();
     superEditor = new fr.esrf.tangoatk.widget.attribute.NumberScalarWheelEditor();
@@ -457,7 +484,8 @@ public class SEQSetupPanel extends javax.swing.JFrame {
     jSmoothLabel17 = new fr.esrf.tangoatk.widget.util.JSmoothLabel();
     offsetViewer = new fr.esrf.tangoatk.widget.attribute.SimpleScalarViewer();
     jSmoothLabel16 = new fr.esrf.tangoatk.widget.util.JSmoothLabel();
-    eventEditor = new fr.esrf.tangoatk.widget.attribute.NumberScalarWheelEditor();
+    startEditor = new fr.esrf.tangoatk.widget.attribute.EnumScalarComboEditor();
+    eventEditor = new fr.esrf.tangoatk.widget.attribute.EnumScalarComboEditor();
     btnPanel = new javax.swing.JPanel();
     trigButton = new javax.swing.JButton();
     superButton = new javax.swing.JButton();
@@ -494,13 +522,6 @@ public class SEQSetupPanel extends javax.swing.JFrame {
     gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
     seqPanel.add(jSmoothLabel13, gridBagConstraints);
 
-    startEditor.setOpaque(false);
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 1;
-    gridBagConstraints.gridy = 1;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-    seqPanel.add(startEditor, gridBagConstraints);
-
     startViewer.setBorder(null);
     startViewer.setText("-----");
     gridBagConstraints = new java.awt.GridBagConstraints();
@@ -513,7 +534,7 @@ public class SEQSetupPanel extends javax.swing.JFrame {
     jSmoothLabel14.setFocusable(false);
     jSmoothLabel14.setHorizontalAlignment(0);
     jSmoothLabel14.setOpaque(false);
-    jSmoothLabel14.setText("Super");
+    jSmoothLabel14.setText("Super count");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 3;
     gridBagConstraints.gridy = 1;
@@ -652,8 +673,10 @@ public class SEQSetupPanel extends javax.swing.JFrame {
     gridBagConstraints.weighty = 1.0;
     gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
     seqPanel.add(jSmoothLabel16, gridBagConstraints);
-
-    eventEditor.setOpaque(false);
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 1;
+    gridBagConstraints.gridy = 1;
+    seqPanel.add(startEditor, gridBagConstraints);
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 7;
     gridBagConstraints.gridy = 1;
@@ -736,7 +759,7 @@ public class SEQSetupPanel extends javax.swing.JFrame {
   private fr.esrf.tangoatk.widget.attribute.SimpleScalarViewer captureViewer;
   private javax.swing.JButton dismissButton;
   private fr.esrf.tangoatk.widget.attribute.SimpleScalarViewer durationViewer;
-  private fr.esrf.tangoatk.widget.attribute.NumberScalarWheelEditor eventEditor;
+  private fr.esrf.tangoatk.widget.attribute.EnumScalarComboEditor eventEditor;
   private javax.swing.JPanel freePanel;
   private fr.esrf.tangoatk.widget.util.JSmoothLabel jSmoothLabel12;
   private fr.esrf.tangoatk.widget.util.JSmoothLabel jSmoothLabel13;
@@ -747,7 +770,7 @@ public class SEQSetupPanel extends javax.swing.JFrame {
   private fr.esrf.tangoatk.widget.util.JSmoothLabel jSmoothLabel4;
   private fr.esrf.tangoatk.widget.attribute.SimpleScalarViewer offsetViewer;
   private javax.swing.JPanel seqPanel;
-  private fr.esrf.tangoatk.widget.attribute.NumberScalarWheelEditor startEditor;
+  private fr.esrf.tangoatk.widget.attribute.EnumScalarComboEditor startEditor;
   private fr.esrf.tangoatk.widget.attribute.SimpleScalarViewer startViewer;
   private fr.esrf.tangoatk.widget.attribute.EnumScalarComboEditor steadyStateEditor;
   private javax.swing.JButton stopButton;

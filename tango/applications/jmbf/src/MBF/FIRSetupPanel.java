@@ -29,7 +29,6 @@ public class FIRSetupPanel extends javax.swing.JFrame {
 
   private AttributePolledList attList;
   private String devName;
-  private BunchControlPanel bunchControlPanel = null;
   
   class FIRLine {
     
@@ -187,7 +186,6 @@ public class FIRSetupPanel extends javax.swing.JFrame {
 
     centerPanel = new javax.swing.JPanel();
     btnPanel = new javax.swing.JPanel();
-    controlButton = new javax.swing.JButton();
     dismissButton = new javax.swing.JButton();
 
     setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -197,14 +195,6 @@ public class FIRSetupPanel extends javax.swing.JFrame {
     getContentPane().add(centerPanel, java.awt.BorderLayout.CENTER);
 
     btnPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
-
-    controlButton.setText("Bunch Control");
-    controlButton.addActionListener(new java.awt.event.ActionListener() {
-      public void actionPerformed(java.awt.event.ActionEvent evt) {
-        controlButtonActionPerformed(evt);
-      }
-    });
-    btnPanel.add(controlButton);
 
     dismissButton.setText("Dismiss");
     dismissButton.addActionListener(new java.awt.event.ActionListener() {
@@ -223,17 +213,10 @@ public class FIRSetupPanel extends javax.swing.JFrame {
     setVisible(false);
   }//GEN-LAST:event_dismissButtonActionPerformed
 
-  private void controlButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_controlButtonActionPerformed
-    if( bunchControlPanel==null )
-      bunchControlPanel = new BunchControlPanel(devName);
-    bunchControlPanel.setVisible(true);    
-  }//GEN-LAST:event_controlButtonActionPerformed
-
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
   private javax.swing.JPanel btnPanel;
   private javax.swing.JPanel centerPanel;
-  private javax.swing.JButton controlButton;
   private javax.swing.JButton dismissButton;
   // End of variables declaration//GEN-END:variables
 }

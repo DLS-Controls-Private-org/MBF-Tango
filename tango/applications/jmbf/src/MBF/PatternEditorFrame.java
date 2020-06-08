@@ -51,6 +51,11 @@ public class PatternEditorFrame extends JFrame implements ActionListener {
   private JPanel            errorPanel;
   private JScrollPane       errorView;
   private JTextArea         errorText;
+  private JPanel            setPanel;
+  private JTextField        setText;
+  private JTextField        setRangeText;
+  private JLabel            helpLabel;
+  private JButton           setButton;  
   private JButton           removeBtn;
   private JButton           insertBtn;
   private JButton           clearBtn;
@@ -158,6 +163,45 @@ public class PatternEditorFrame extends JFrame implements ActionListener {
     bucketText = new JTextField();
     bucketText.setEditable(false);
     infoPanel.add(bucketText);
+    
+    setPanel = new JPanel();
+    setPanel.setBorder( BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Set by range",
+                                            TitledBorder.LEFT, TitledBorder.DEFAULT_POSITION,
+                                            ATKConstant.labelFont, Color.BLACK) );
+    setPanel.setLayout(new GridBagLayout());
+    GridBagConstraints gbc = new GridBagConstraints();
+    gbc.fill = GridBagConstraints.BOTH;
+    gbc.gridx = 0;
+    gbc.gridy = 0;
+    gbc.insets.left = 2;
+    gbc.insets.right = 2;
+            
+    setText = new JTextField();
+    setText.setText("0");
+    gbc.ipadx = 20;
+    setPanel.add(setText,gbc);
+    
+    setRangeText = new JTextField();
+    setRangeText.setText("0:"+Integer.toString(MainPanel.NB_BUCKET-1));
+    gbc.ipadx = 100;
+    gbc.gridx = 1;
+    setPanel.add(setRangeText,gbc);
+
+    helpLabel = new JLabel("Ex: 0:99,121,130:135,200");    
+    helpLabel.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+    helpLabel.setHorizontalAlignment(SwingConstants.LEFT);
+    gbc.gridx = 2;
+    gbc.ipadx = 0;
+    gbc.weightx = 1.0;
+    setPanel.add(helpLabel,gbc);
+    setButton = new JButton("Set");
+    setButton.addActionListener(this);
+    gbc.gridx = 3;
+    gbc.weightx = 0.0;
+    setPanel.add(setButton,gbc);
+    infoPanel.add(setPanel);
+    
+    
     errorPanel = new JPanel();
     errorPanel.setBorder( BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Errors",
                                             TitledBorder.LEFT, TitledBorder.DEFAULT_POSITION,
@@ -207,7 +251,7 @@ public class PatternEditorFrame extends JFrame implements ActionListener {
     });
 
     refresh();
-    setTitle("Pattern editor");
+    setTitle("Pattern editor [" + fullAttributeName + "]");
     ATKGraphicsUtils.centerFrameOnScreen(this);
   }
   
@@ -288,6 +332,16 @@ public class PatternEditorFrame extends JFrame implements ActionListener {
         applyPatternToDevice();
       }
 
+    } else if (src==setButton) {
+      
+      try {
+        double value = Double.parseDouble(setText.getText());
+        Utils.applyToDevice(this,deviceName+"/"+attributeName,setRangeText.getText(),value);        
+        refresh();        
+      } catch(NumberFormatException ex) {
+        JOptionPane.showMessageDialog(this,setText.getText() + " : " + ex.getMessage());        
+      }
+
     } else if (src==dismissBtn ) {
       
       setVisible(false);
@@ -313,7 +367,14 @@ public class PatternEditorFrame extends JFrame implements ActionListener {
     bunchText.setBounds(250,10,50,25);
     bucketLabel.setBounds(305,10,100,25);
     bucketText.setBounds(410,10,50,25);
-    errorPanel.setBounds(5,40,d.width-10,d.height-105);
+
+    int  hP  = (int)((d.height-105)/2.5);
+    int  hP2 = (int)((d.height-105)*(1.0-1.0/2.5));
+    
+    setPanel.setBounds(5,40,d.width-10,hP);
+    setPanel.revalidate();
+
+    errorPanel.setBounds(5,42+hP,d.width-10,hP2);
     errorPanel.revalidate();
 
     removeBtn.setBounds(10,d.height-60,90,25);
@@ -664,7 +725,9 @@ public class PatternEditorFrame extends JFrame implements ActionListener {
   
   // Test function
   public static void main(String[] args) {
-    final PatternEditorFrame fr = new PatternEditorFrame(INT_TYPE,"sr/d-mfdbk/utca-horizontal/BUN_1_FIRWF_S");
+    NB_BUCKET = 992;
+    final PatternEditorFrame fr = new PatternEditorFrame(INT_TYPE,"srdiag/mbf/utca-horizontal/BUN_1_FIRWF_S");
+    fr.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     fr.setVisible(true);
   }
 

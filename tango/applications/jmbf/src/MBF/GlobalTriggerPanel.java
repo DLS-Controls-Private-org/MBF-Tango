@@ -62,10 +62,10 @@ public class GlobalTriggerPanel extends javax.swing.JFrame implements IEnumScala
       adc0LimitEditor.setModel(adc0Limit);
       NumberScalar adc1Limit = (NumberScalar)attList.add(MainPanel.mfdbkHEpicsDevName+"/ADC_EVENT_LIMIT_S");
       adc1LimitEditor.setModel(adc1Limit);
-      NumberScalar seq0State = (NumberScalar)attList.add(MainPanel.mfdbkVEpicsDevName+"/SEQ_TRIGGER_S");
-      seq0StateEditor.setModel(seq0State);
-      NumberScalar seq1State = (NumberScalar)attList.add(MainPanel.mfdbkHEpicsDevName+"/SEQ_TRIGGER_S");
-      seq1StateEditor.setModel(seq1State);
+      EnumScalar seq0State = (EnumScalar)attList.add(MainPanel.mfdbkVEpicsDevName+"/SEQ_TRIGGER_S");
+      seq0StateEditor.setEnumModel(seq0State);
+      EnumScalar seq1State = (EnumScalar)attList.add(MainPanel.mfdbkHEpicsDevName+"/SEQ_TRIGGER_S");
+      seq1StateEditor.setEnumModel(seq1State);
       
       EnumScalar hMode = (EnumScalar)attList.add(MainPanel.mfdbkHEpicsDevName+"/TRG_SEQ_MODE_S");
       hSeqModeEditor.setEnumModel(hMode);
@@ -162,9 +162,9 @@ public class GlobalTriggerPanel extends javax.swing.JFrame implements IEnumScala
     jSmoothLabel3 = new fr.esrf.tangoatk.widget.util.JSmoothLabel();
     adc1LimitEditor = new fr.esrf.tangoatk.widget.attribute.NumberScalarWheelEditor();
     jSmoothLabel4 = new fr.esrf.tangoatk.widget.util.JSmoothLabel();
-    seq0StateEditor = new fr.esrf.tangoatk.widget.attribute.NumberScalarWheelEditor();
+    seq0StateEditor = new fr.esrf.tangoatk.widget.attribute.EnumScalarComboEditor();
     jSmoothLabel5 = new fr.esrf.tangoatk.widget.util.JSmoothLabel();
-    seq1StateEditor = new fr.esrf.tangoatk.widget.attribute.NumberScalarWheelEditor();
+    seq1StateEditor = new fr.esrf.tangoatk.widget.attribute.EnumScalarComboEditor();
     blankingPanel = new javax.swing.JPanel();
     jSmoothLabel6 = new fr.esrf.tangoatk.widget.util.JSmoothLabel();
     blankPanel = new javax.swing.JPanel();
@@ -477,20 +477,16 @@ public class GlobalTriggerPanel extends javax.swing.JFrame implements IEnumScala
     eventPanel.add(adc1LimitEditor, gridBagConstraints);
 
     jSmoothLabel4.setOpaque(false);
-    jSmoothLabel4.setText("Seq0 state");
+    jSmoothLabel4.setText("H Seq start");
     eventPanel.add(jSmoothLabel4, new java.awt.GridBagConstraints());
-
-    seq0StateEditor.setOpaque(false);
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 2;
     gridBagConstraints.gridy = 1;
     eventPanel.add(seq0StateEditor, gridBagConstraints);
 
     jSmoothLabel5.setOpaque(false);
-    jSmoothLabel5.setText("Seq1 state");
+    jSmoothLabel5.setText("V Seq start");
     eventPanel.add(jSmoothLabel5, new java.awt.GridBagConstraints());
-
-    seq1StateEditor.setOpaque(false);
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 3;
     gridBagConstraints.gridy = 1;
@@ -697,8 +693,8 @@ public class GlobalTriggerPanel extends javax.swing.JFrame implements IEnumScala
   private fr.esrf.tangoatk.widget.attribute.SimpleEnumScalarViewer memStatusViewer;
   private fr.esrf.tangoatk.widget.attribute.EnumScalarComboEditor modeEditor;
   private fr.esrf.tangoatk.widget.attribute.EnumScalarComboEditor scanEditor;
-  private fr.esrf.tangoatk.widget.attribute.NumberScalarWheelEditor seq0StateEditor;
-  private fr.esrf.tangoatk.widget.attribute.NumberScalarWheelEditor seq1StateEditor;
+  private fr.esrf.tangoatk.widget.attribute.EnumScalarComboEditor seq0StateEditor;
+  private fr.esrf.tangoatk.widget.attribute.EnumScalarComboEditor seq1StateEditor;
   private javax.swing.JButton softButton;
   private javax.swing.JPanel softTrigPanel;
   private fr.esrf.tangoatk.widget.attribute.SimpleEnumScalarViewer statusViewer;

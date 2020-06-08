@@ -54,19 +54,24 @@ public class MemoryPanel extends javax.swing.JFrame implements IEnumScalarListen
       channel1Editor.setEnumModel(channel1);
       EnumScalar select = (EnumScalar)attList.add(MainPanel.mfdbkGEpicsDevName+"/MEM_SELECT_S");
       selectEditor.setEnumModel(select);
-      
-      EnumScalar hGain = (EnumScalar)attList.add(MainPanel.mfdbkGEpicsDevName+"/MEM_FIR1_GAIN_S");
-      hGainEditor.setEnumModel(hGain);
-      fir1Overflow = (EnumScalar)attList.add(MainPanel.mfdbkGEpicsDevName+"/MEM_FIR1_OVF");
-      hGainViewer.setModel(fir1Overflow);
-      fir1Overflow.addEnumScalarListener(this);
-              
-      EnumScalar vGain = (EnumScalar)attList.add(MainPanel.mfdbkGEpicsDevName+"/MEM_FIR0_GAIN_S");
-      vGainEditor.setEnumModel(vGain);
-      fir0Overflow = (EnumScalar)attList.add(MainPanel.mfdbkGEpicsDevName+"/MEM_FIR0_OVF");
-      vGainViewer.setModel(fir0Overflow);
-      fir0Overflow.addEnumScalarListener(this);
-      
+
+      EnumScalar hAdcSrc = (EnumScalar)attList.add(MainPanel.mfdbkHEpicsDevName+"/ADC_DRAM_SOURCE_S");
+      hAdcSourceEditor.setEnumModel(hAdcSrc);
+
+      EnumScalar vAdcSrc = (EnumScalar)attList.add(MainPanel.mfdbkVEpicsDevName+"/ADC_DRAM_SOURCE_S");
+      vAdcSourceEditor.setEnumModel(vAdcSrc);
+
+      EnumScalar fillRejectH = (EnumScalar)attList.add(MainPanel.mfdbkHEpicsDevName+"/ADC_REJECT_COUNT_S");
+      fillRejectHEditor.setEnumModel(fillRejectH);
+
+      EnumScalar fillRejectV = (EnumScalar)attList.add(MainPanel.mfdbkVEpicsDevName+"/ADC_REJECT_COUNT_S");
+      fillRejectVEditor.setEnumModel(fillRejectV);
+
+      EnumScalar hDacSrc = (EnumScalar)attList.add(MainPanel.mfdbkHEpicsDevName+"/DAC_DRAM_SOURCE_S");
+      hDacSourceEditor.setEnumModel(hDacSrc);
+
+      EnumScalar vDacSrc = (EnumScalar)attList.add(MainPanel.mfdbkVEpicsDevName+"/DAC_DRAM_SOURCE_S");
+      vDacSourceEditor.setEnumModel(vDacSrc);
       
       NumberScalar offset = (NumberScalar)attList.add(MainPanel.mfdbkGEpicsDevName+"/MEM_OFFSET_S");
       offsetEditor.setModel(offset);
@@ -124,17 +129,20 @@ public class MemoryPanel extends javax.swing.JFrame implements IEnumScalarListen
     channel1Editor = new fr.esrf.tangoatk.widget.attribute.EnumScalarComboEditor();
     jSmoothLabel4 = new fr.esrf.tangoatk.widget.util.JSmoothLabel();
     selectEditor = new fr.esrf.tangoatk.widget.attribute.EnumScalarComboEditor();
-    jPanel2 = new javax.swing.JPanel();
-    firPanel = new javax.swing.JPanel();
+    adcSrcPanel = new javax.swing.JPanel();
     jSmoothLabel1 = new fr.esrf.tangoatk.widget.util.JSmoothLabel();
-    hGainEditor = new fr.esrf.tangoatk.widget.attribute.EnumScalarComboEditor();
-    hGainStatusPanel = new javax.swing.JPanel();
+    hAdcSourceEditor = new fr.esrf.tangoatk.widget.attribute.EnumScalarComboEditor();
     jSmoothLabel5 = new fr.esrf.tangoatk.widget.util.JSmoothLabel();
-    hGainViewer = new fr.esrf.tangoatk.widget.attribute.SimpleEnumScalarViewer();
-    vGainEditor = new fr.esrf.tangoatk.widget.attribute.EnumScalarComboEditor();
-    vGainStatusPanel = new javax.swing.JPanel();
-    jPanel1 = new javax.swing.JPanel();
-    vGainViewer = new fr.esrf.tangoatk.widget.attribute.SimpleEnumScalarViewer();
+    vAdcSourceEditor = new fr.esrf.tangoatk.widget.attribute.EnumScalarComboEditor();
+    jSmoothLabel10 = new fr.esrf.tangoatk.widget.util.JSmoothLabel();
+    fillRejectHEditor = new fr.esrf.tangoatk.widget.attribute.EnumScalarComboEditor();
+    jSmoothLabel11 = new fr.esrf.tangoatk.widget.util.JSmoothLabel();
+    fillRejectVEditor = new fr.esrf.tangoatk.widget.attribute.EnumScalarComboEditor();
+    dacSrcPanel = new javax.swing.JPanel();
+    jSmoothLabel12 = new fr.esrf.tangoatk.widget.util.JSmoothLabel();
+    hDacSourceEditor = new fr.esrf.tangoatk.widget.attribute.EnumScalarComboEditor();
+    jSmoothLabel13 = new fr.esrf.tangoatk.widget.util.JSmoothLabel();
+    vDacSourceEditor = new fr.esrf.tangoatk.widget.attribute.EnumScalarComboEditor();
     memoryPanel = new javax.swing.JPanel();
     jSmoothLabel6 = new fr.esrf.tangoatk.widget.util.JSmoothLabel();
     offsetEditor = new fr.esrf.tangoatk.widget.attribute.NumberScalarWheelEditor();
@@ -154,7 +162,7 @@ public class MemoryPanel extends javax.swing.JFrame implements IEnumScalarListen
 
     wf0Viewer.setBackground(java.awt.SystemColor.control);
     gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridwidth = 3;
+    gridBagConstraints.gridwidth = 4;
     gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
     gridBagConstraints.weightx = 1.0;
     gridBagConstraints.weighty = 1.0;
@@ -164,7 +172,7 @@ public class MemoryPanel extends javax.swing.JFrame implements IEnumScalarListen
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 1;
-    gridBagConstraints.gridwidth = 3;
+    gridBagConstraints.gridwidth = 4;
     gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
     gridBagConstraints.weightx = 1.0;
     gridBagConstraints.weighty = 1.0;
@@ -217,154 +225,116 @@ public class MemoryPanel extends javax.swing.JFrame implements IEnumScalarListen
     gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
     selectionPanel.add(selectEditor, gridBagConstraints);
 
-    javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-    jPanel2.setLayout(jPanel2Layout);
-    jPanel2Layout.setHorizontalGroup(
-      jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGap(0, 0, Short.MAX_VALUE)
-    );
-    jPanel2Layout.setVerticalGroup(
-      jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGap(0, 0, Short.MAX_VALUE)
-    );
-
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 3;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-    gridBagConstraints.weighty = 1.0;
-    selectionPanel.add(jPanel2, gridBagConstraints);
-
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 2;
     gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
     getContentPane().add(selectionPanel, gridBagConstraints);
 
-    firPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("FIR Gain"));
-    firPanel.setLayout(new java.awt.GridBagLayout());
+    adcSrcPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("ADC source"));
+    adcSrcPanel.setLayout(new java.awt.GridBagLayout());
 
     jSmoothLabel1.setOpaque(false);
-    jSmoothLabel1.setText("Channel H");
+    jSmoothLabel1.setText("ADC H");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridy = 0;
     gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
     gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
-    firPanel.add(jSmoothLabel1, gridBagConstraints);
+    adcSrcPanel.add(jSmoothLabel1, gridBagConstraints);
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 1;
     gridBagConstraints.gridy = 0;
     gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
     gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
-    firPanel.add(hGainEditor, gridBagConstraints);
-
-    hGainStatusPanel.setBackground(new java.awt.Color(153, 153, 153));
-    hGainStatusPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-    hGainStatusPanel.setPreferredSize(new java.awt.Dimension(25, 20));
-
-    javax.swing.GroupLayout hGainStatusPanelLayout = new javax.swing.GroupLayout(hGainStatusPanel);
-    hGainStatusPanel.setLayout(hGainStatusPanelLayout);
-    hGainStatusPanelLayout.setHorizontalGroup(
-      hGainStatusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGap(0, 0, Short.MAX_VALUE)
-    );
-    hGainStatusPanelLayout.setVerticalGroup(
-      hGainStatusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGap(0, 22, Short.MAX_VALUE)
-    );
-
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 2;
-    gridBagConstraints.gridy = 0;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-    gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
-    firPanel.add(hGainStatusPanel, gridBagConstraints);
+    adcSrcPanel.add(hAdcSourceEditor, gridBagConstraints);
 
     jSmoothLabel5.setOpaque(false);
-    jSmoothLabel5.setText("Channel V");
+    jSmoothLabel5.setText("ADC V");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
     gridBagConstraints.gridy = 1;
     gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
     gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
-    firPanel.add(jSmoothLabel5, gridBagConstraints);
-
-    hGainViewer.setBorder(null);
-    hGainViewer.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-    hGainViewer.setText("-----");
-    hGainViewer.setOpaque(false);
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 3;
-    gridBagConstraints.gridy = 0;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-    gridBagConstraints.ipadx = 40;
-    gridBagConstraints.weightx = 1.0;
-    firPanel.add(hGainViewer, gridBagConstraints);
+    adcSrcPanel.add(jSmoothLabel5, gridBagConstraints);
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 1;
     gridBagConstraints.gridy = 1;
     gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
     gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
-    firPanel.add(vGainEditor, gridBagConstraints);
+    adcSrcPanel.add(vAdcSourceEditor, gridBagConstraints);
 
-    vGainStatusPanel.setBackground(new java.awt.Color(153, 153, 153));
-    vGainStatusPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-    vGainStatusPanel.setPreferredSize(new java.awt.Dimension(25, 20));
+    jSmoothLabel10.setOpaque(false);
+    jSmoothLabel10.setText("Fill reject H");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridy = 2;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+    adcSrcPanel.add(jSmoothLabel10, gridBagConstraints);
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 1;
+    gridBagConstraints.gridy = 2;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+    adcSrcPanel.add(fillRejectHEditor, gridBagConstraints);
 
-    javax.swing.GroupLayout vGainStatusPanelLayout = new javax.swing.GroupLayout(vGainStatusPanel);
-    vGainStatusPanel.setLayout(vGainStatusPanelLayout);
-    vGainStatusPanelLayout.setHorizontalGroup(
-      vGainStatusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGap(0, 0, Short.MAX_VALUE)
-    );
-    vGainStatusPanelLayout.setVerticalGroup(
-      vGainStatusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGap(0, 22, Short.MAX_VALUE)
-    );
+    jSmoothLabel11.setOpaque(false);
+    jSmoothLabel11.setText("Fill reject V");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 3;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+    adcSrcPanel.add(jSmoothLabel11, gridBagConstraints);
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 1;
+    gridBagConstraints.gridy = 3;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+    adcSrcPanel.add(fillRejectVEditor, gridBagConstraints);
+
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 1;
+    gridBagConstraints.gridy = 2;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    getContentPane().add(adcSrcPanel, gridBagConstraints);
+
+    dacSrcPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("ADC source"));
+    dacSrcPanel.setLayout(new java.awt.GridBagLayout());
+
+    jSmoothLabel12.setOpaque(false);
+    jSmoothLabel12.setText("DAC H");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridy = 0;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+    dacSrcPanel.add(jSmoothLabel12, gridBagConstraints);
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 1;
+    gridBagConstraints.gridy = 0;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+    dacSrcPanel.add(hDacSourceEditor, gridBagConstraints);
+
+    jSmoothLabel13.setOpaque(false);
+    jSmoothLabel13.setText("DAC V");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 1;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+    dacSrcPanel.add(jSmoothLabel13, gridBagConstraints);
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 1;
+    gridBagConstraints.gridy = 1;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
+    dacSrcPanel.add(vDacSourceEditor, gridBagConstraints);
 
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 2;
-    gridBagConstraints.gridy = 1;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-    gridBagConstraints.insets = new java.awt.Insets(2, 2, 2, 2);
-    firPanel.add(vGainStatusPanel, gridBagConstraints);
-
-    javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-    jPanel1.setLayout(jPanel1Layout);
-    jPanel1Layout.setHorizontalGroup(
-      jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGap(0, 140, Short.MAX_VALUE)
-    );
-    jPanel1Layout.setVerticalGroup(
-      jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGap(0, 52, Short.MAX_VALUE)
-    );
-
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 2;
-    gridBagConstraints.gridwidth = 3;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-    gridBagConstraints.weighty = 1.0;
-    firPanel.add(jPanel1, gridBagConstraints);
-
-    vGainViewer.setBorder(null);
-    vGainViewer.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-    vGainViewer.setText("-----");
-    vGainViewer.setOpaque(false);
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 3;
-    gridBagConstraints.gridy = 1;
-    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-    gridBagConstraints.ipadx = 40;
-    gridBagConstraints.weightx = 1.0;
-    firPanel.add(vGainViewer, gridBagConstraints);
-
-    gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 1;
     gridBagConstraints.gridy = 2;
     gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-    getContentPane().add(firPanel, gridBagConstraints);
+    getContentPane().add(dacSrcPanel, gridBagConstraints);
 
     memoryPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Memory"));
     memoryPanel.setLayout(new java.awt.GridBagLayout());
@@ -453,7 +423,7 @@ public class MemoryPanel extends javax.swing.JFrame implements IEnumScalarListen
     capturePanel.setLayout(capturePanelLayout);
     capturePanelLayout.setHorizontalGroup(
       capturePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGap(0, 23, Short.MAX_VALUE)
+      .addGap(0, 0, Short.MAX_VALUE)
     );
     capturePanelLayout.setVerticalGroup(
       capturePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -484,7 +454,7 @@ public class MemoryPanel extends javax.swing.JFrame implements IEnumScalarListen
     memoryPanel.add(captureGroupPanel, gridBagConstraints);
 
     gridBagConstraints = new java.awt.GridBagConstraints();
-    gridBagConstraints.gridx = 2;
+    gridBagConstraints.gridx = 3;
     gridBagConstraints.gridy = 2;
     gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
     getContentPane().add(memoryPanel, gridBagConstraints);
@@ -523,6 +493,7 @@ public class MemoryPanel extends javax.swing.JFrame implements IEnumScalarListen
   }//GEN-LAST:event_dismissButtonActionPerformed
 
   // Variables declaration - do not modify//GEN-BEGIN:variables
+  private javax.swing.JPanel adcSrcPanel;
   private javax.swing.JPanel btnPanel;
   private javax.swing.JButton captureButton;
   private javax.swing.JPanel captureGroupPanel;
@@ -530,14 +501,17 @@ public class MemoryPanel extends javax.swing.JFrame implements IEnumScalarListen
   private fr.esrf.tangoatk.widget.attribute.SimpleEnumScalarViewer captureStatusViewer;
   private fr.esrf.tangoatk.widget.attribute.EnumScalarComboEditor channel0Editor;
   private fr.esrf.tangoatk.widget.attribute.EnumScalarComboEditor channel1Editor;
+  private javax.swing.JPanel dacSrcPanel;
   private javax.swing.JButton dismissButton;
-  private javax.swing.JPanel firPanel;
-  private fr.esrf.tangoatk.widget.attribute.EnumScalarComboEditor hGainEditor;
-  private javax.swing.JPanel hGainStatusPanel;
-  private fr.esrf.tangoatk.widget.attribute.SimpleEnumScalarViewer hGainViewer;
-  private javax.swing.JPanel jPanel1;
-  private javax.swing.JPanel jPanel2;
+  private fr.esrf.tangoatk.widget.attribute.EnumScalarComboEditor fillRejectHEditor;
+  private fr.esrf.tangoatk.widget.attribute.EnumScalarComboEditor fillRejectVEditor;
+  private fr.esrf.tangoatk.widget.attribute.EnumScalarComboEditor hAdcSourceEditor;
+  private fr.esrf.tangoatk.widget.attribute.EnumScalarComboEditor hDacSourceEditor;
   private fr.esrf.tangoatk.widget.util.JSmoothLabel jSmoothLabel1;
+  private fr.esrf.tangoatk.widget.util.JSmoothLabel jSmoothLabel10;
+  private fr.esrf.tangoatk.widget.util.JSmoothLabel jSmoothLabel11;
+  private fr.esrf.tangoatk.widget.util.JSmoothLabel jSmoothLabel12;
+  private fr.esrf.tangoatk.widget.util.JSmoothLabel jSmoothLabel13;
   private fr.esrf.tangoatk.widget.util.JSmoothLabel jSmoothLabel2;
   private fr.esrf.tangoatk.widget.util.JSmoothLabel jSmoothLabel3;
   private fr.esrf.tangoatk.widget.util.JSmoothLabel jSmoothLabel4;
@@ -552,9 +526,8 @@ public class MemoryPanel extends javax.swing.JFrame implements IEnumScalarListen
   private fr.esrf.tangoatk.widget.attribute.EnumScalarComboEditor selectEditor;
   private javax.swing.JPanel selectionPanel;
   private javax.swing.JButton triggerButton;
-  private fr.esrf.tangoatk.widget.attribute.EnumScalarComboEditor vGainEditor;
-  private javax.swing.JPanel vGainStatusPanel;
-  private fr.esrf.tangoatk.widget.attribute.SimpleEnumScalarViewer vGainViewer;
+  private fr.esrf.tangoatk.widget.attribute.EnumScalarComboEditor vAdcSourceEditor;
+  private fr.esrf.tangoatk.widget.attribute.EnumScalarComboEditor vDacSourceEditor;
   private fr.esrf.tangoatk.widget.attribute.NumberSpectrumViewer wf0Viewer;
   private fr.esrf.tangoatk.widget.attribute.NumberSpectrumViewer wf1Viewer;
   // End of variables declaration//GEN-END:variables
@@ -564,19 +537,7 @@ public class MemoryPanel extends javax.swing.JFrame implements IEnumScalarListen
 
     Object src = ese.getSource();
     
-    if( src==fir0Overflow ) {
-      int value = fir0Overflow.getShortValueFromEnumScalar(ese.getValue());
-      if(value==0)
-        vGainStatusPanel.setBackground(ATKConstant.getColor4State("ON"));
-      else
-        vGainStatusPanel.setBackground(ATKConstant.getColor4State("FAULT"));              
-    } else if ( src==fir1Overflow ) {
-      int value = fir1Overflow.getShortValueFromEnumScalar(ese.getValue());
-      if(value==0)
-        hGainStatusPanel.setBackground(ATKConstant.getColor4State("ON"));
-      else
-        hGainStatusPanel.setBackground(ATKConstant.getColor4State("FAULT"));      
-    } else if ( src==captureStatus ) {
+    if ( src==captureStatus ) {
       int value = captureStatus.getShortValueFromEnumScalar(ese.getValue());
       if(value==0)
         capturePanel.setBackground(ATKConstant.getColor4State("ON"));
@@ -593,11 +554,7 @@ public class MemoryPanel extends javax.swing.JFrame implements IEnumScalarListen
   @Override
   public void errorChange(ErrorEvent ee) {
     Object src = ee.getSource();
-    if( src==fir0Overflow ) {
-      vGainStatusPanel.setBackground(ATKConstant.getColor4State("UNKNOWN"));              
-    } else if ( src==fir1Overflow ) {
-      hGainStatusPanel.setBackground(ATKConstant.getColor4State("UNKNOWN"));      
-    } else if ( src==captureStatus ) {
+    if ( src==captureStatus ) {
       capturePanel.setBackground(ATKConstant.getColor4State("UNKNOWN"));      
     }
   }

@@ -50,14 +50,6 @@
         <Property name="alignment" type="int" value="2"/>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JButton" name="controlButton">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Bunch Control"/>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="controlButtonActionPerformed"/>
-          </Events>
-        </Component>
         <Component class="javax.swing.JButton" name="dismissButton">
           <Properties>
             <Property name="text" type="java.lang.String" value="Dismiss"/>

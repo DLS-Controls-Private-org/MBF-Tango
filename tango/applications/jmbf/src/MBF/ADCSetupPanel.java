@@ -56,7 +56,7 @@ public class ADCSetupPanel extends OptionPanel implements IEnumScalarListener {
       dramInputComboEditor.setEnumModel(dramInput);
       NumberSpectrum filter = (NumberSpectrum)attList.add(devName+"/ADC_FILTER_S");
       filterViewer.setModel(filter);
-      EnumScalar status = (EnumScalar)attList.add(devName+"/ADC_MMS_OVERFLOW");
+      EnumScalar status = (EnumScalar)attList.add(devName+"/ADC_OVF");
       statusViewer.setModel(status);
       statusViewer.setBackgroundColor(Color.WHITE);
       event = (EnumScalar)attList.add(devName+"/ADC_EVENT");

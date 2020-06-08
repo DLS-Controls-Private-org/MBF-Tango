@@ -35,7 +35,7 @@ import javax.swing.JOptionPane;
  */
 public class MainPanel extends javax.swing.JFrame implements SynopticProgressListener {
 
-  final static String APP_RELEASE = "1.4";
+  final static String APP_RELEASE = "1.6";
 
   static int NB_BUCKET;
   static String mfdbkHDevName;
@@ -64,10 +64,10 @@ public class MainPanel extends javax.swing.JFrame implements SynopticProgressLis
     mfdbkVDevName = vName;
     mfdbkHEpicsDevName = epicsHNane;
     mfdbkVEpicsDevName = epicsVNane;
-    mfdbkGEpicsDevName = epicsGNane;    
+    mfdbkGEpicsDevName = epicsGNane;
     
     this.runningFromShell = runningFromShell;
-    
+        
     // Handle windowClosing (Close from the system menu)
     addWindowListener(new WindowAdapter() {
       public void windowClosing(WindowEvent e) {
@@ -196,7 +196,7 @@ public class MainPanel extends javax.swing.JFrame implements SynopticProgressLis
       new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-          Utils.showHDetPanel();
+          Utils.showhDetChartPanel();
         }
       }
     );
@@ -206,11 +206,70 @@ public class MainPanel extends javax.swing.JFrame implements SynopticProgressLis
       new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-          Utils.showVDetPanel();
+          Utils.showvDetChartPanel();
         }
       }
     );
     
+    JDSwingObject btncontrolh = (JDSwingObject)theSynoptic.getObjectsByName("HControlBtn",false).get(0);
+    ((JButton) btncontrolh.getComponent()).addActionListener(
+      new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          Utils.showHControlPanel();
+        }
+      }
+    );
+    
+    JDSwingObject btnseqh = (JDSwingObject)theSynoptic.getObjectsByName("HSequencerBtn",false).get(0);
+    ((JButton) btnseqh.getComponent()).addActionListener(
+      new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          Utils.showhSEQPanel();
+        }
+      }
+    );
+
+    JDSwingObject btndeth = (JDSwingObject)theSynoptic.getObjectsByName("HDetectorBtn",false).get(0);
+    ((JButton) btndeth.getComponent()).addActionListener(
+      new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          Utils.showhDETPanel();
+        }
+      }
+    );
+    
+    JDSwingObject btncontrolv= (JDSwingObject)theSynoptic.getObjectsByName("VControlBtn",false).get(0);
+    ((JButton) btncontrolv.getComponent()).addActionListener(
+      new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          Utils.showVControlPanel();
+        }
+      }
+    );
+    
+    JDSwingObject btnseqv = (JDSwingObject)theSynoptic.getObjectsByName("VSequencerBtn",false).get(0);
+    ((JButton) btnseqv.getComponent()).addActionListener(
+      new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          Utils.showvSEQPanel();
+        }
+      }
+    );
+
+    JDSwingObject btndetv = (JDSwingObject)theSynoptic.getObjectsByName("VDetectorBtn",false).get(0);
+    ((JButton) btndetv.getComponent()).addActionListener(
+      new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+          Utils.showvDETPanel();
+        }
+      }
+    );
     
     attList.setRefreshInterval(1000);
     attList.startRefresher();

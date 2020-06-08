@@ -19,6 +19,12 @@ import static MBF.MainPanel.mfdbkVEpicsDevName;
 import static MBF.MainPanel.mfdbkGEpicsDevName;
 import static MBF.MainPanel.mfdbkHDevName;
 import static MBF.MainPanel.mfdbkVDevName;
+import fr.esrf.TangoApi.AttributeInfo;
+import fr.esrf.TangoDs.TangoConst;
+import java.io.IOException;
+import java.util.ArrayList;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 public class Utils {
   
@@ -32,6 +38,8 @@ public class Utils {
   private static ChartPanel    vDACChartPanel = null;
   private static FIRSetupPanel hFIRPanel = null;
   private static FIRSetupPanel vFIRPanel = null;
+  private static BunchControlPanel hControlPanel = null;
+  private static BunchControlPanel vControlPanel = null;
   private static SEQSetupPanel hSEQPanel = null;
   private static SEQSetupPanel vSEQPanel = null;
   private static DETSetupPanel hDETPanel = null;
@@ -130,11 +138,11 @@ public class Utils {
     if( vSEQTrigPanel==null ) vSEQTrigPanel = new TriggerPanel(mfdbkVEpicsDevName,"SEQ");
     vSEQTrigPanel.setVisible(true);      
   }
-  public static void showHDetPanel() {
+  public static void showhDetChartPanel() {
     if( hWaveformPanel==null ) hWaveformPanel = new DETWaveformPanel(mfdbkHEpicsDevName,0);
     hWaveformPanel.setVisible(true);      
   }
-  public static void showVDetPanel() {
+  public static void showvDetChartPanel() {
     if( vWaveformPanel==null ) vWaveformPanel = new DETWaveformPanel(mfdbkVEpicsDevName,0);
     vWaveformPanel.setVisible(true);      
   }
@@ -150,7 +158,17 @@ public class Utils {
     if( memoryPanel==null ) memoryPanel = new MemoryPanel();
     memoryPanel.setVisible(true);      
   }
-  
+  public static void showHControlPanel() {
+      if( hControlPanel==null )
+      hControlPanel = new BunchControlPanel(mfdbkHEpicsDevName);
+    hControlPanel.setVisible(true);    
+  }
+  public static void showVControlPanel() {
+      if( vControlPanel==null )
+      vControlPanel = new BunchControlPanel(mfdbkVEpicsDevName);
+    vControlPanel.setVisible(true);    
+  }
+
   public static JComponent createLabel(String l,String unit) {
     
     JEditorPane ret = new JEditorPane();
@@ -166,5 +184,181 @@ public class Utils {
     return ret;
     
   }
+  
+  private static ArrayList<Integer> parseSelectionText(String text) throws IOException {
+    
+    ArrayList<Integer> retIDs = new ArrayList<Integer>();
+    String[] idDef = text.split(",");
+    
+    try {
+      
+      for(int i=0;i<idDef.length;i++) {
+        int mIdx = idDef[i].indexOf(':');
+        if(mIdx!=-1) {
+          
+          // Range x-y
+          String sR = idDef[i].substring(0,mIdx);
+          String eR = idDef[i].substring(mIdx+1,idDef[i].length());
+          int s = Integer.parseInt(sR);
+          int e = Integer.parseInt(eR);
+          if( s>e )
+            throw new IOException("Invalid range definition " + idDef[i]);
+          
+          for(int j=s;j<=e;j++) {
+            if(retIDs.contains(j))
+              throw new IOException("Invalid bunch list. Overlap detected");
+            retIDs.add(j);
+          }
+          
+        } else {
+          
+          // Simple value
+          int j = Integer.parseInt(idDef[i]);
+          if(retIDs.contains(j))
+              throw new IOException("Invalid bunch list. Overlap detected");
+            retIDs.add(j);
+          
+        }
+      
+      }
+    
+    } catch (NumberFormatException e) {
+      throw new IOException("Invalid bunch list. Invalid number " + e.getMessage());
+    }
+    
+    return retIDs;
+    
+  }
+  
+  public static String getAttName(String fullName) {
+    int idx = fullName.lastIndexOf('/');
+    if(idx==-1)
+      return fullName;
+    return fullName.substring(idx+1);
+  }
+
+  public static String getDevName(String fullName) {
+    int idx = fullName.lastIndexOf('/');
+    if(idx==-1)
+      return fullName;
+    return fullName.substring(0,idx);
+  }
+  
+  public static void applyToDevice(JFrame parent,String attributeName,
+                                    String selection,double value) {
+
+    ArrayList<Integer> ids = null;
+        
+    try {
+      ids = parseSelectionText(selection);
+    } catch (IOException e) {
+      JOptionPane.showMessageDialog(parent, e.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
+      return;
+    }
+        
+    DeviceProxy ds;
+    int idx = attributeName.lastIndexOf('/');
+    if(idx==-1) {
+      JOptionPane.showMessageDialog(parent, attributeName + " malformed name","Error",JOptionPane.ERROR_MESSAGE);
+      return;
+    }
+    
+    String attName = getAttName(attributeName);
+    String devName = getDevName(attributeName);
+
+    try {
+
+      // Write the pattern
+      ds = new DeviceProxy(devName);
+      AttributeInfo ai = ds.get_attribute_info(attName);
+      DeviceAttribute argin = new DeviceAttribute(attName);
+      DeviceAttribute da = ds.read_attribute(attName);
+      
+      switch(ai.data_type) {
+        case TangoConst.Tango_DEV_DOUBLE:
+          double[] vd = da.extractDoubleArray();          
+          for(int i=0;i<ids.size();i++)
+            vd[ids.get(i)] = value;
+          double[] nvd = new double[da.getNbRead()];
+          for(int i=0;i<nvd.length;i++)
+            nvd[i] = vd[i];
+          da.insert(nvd);
+          ds.write_attribute(da);
+          break;
+        case TangoConst.Tango_DEV_LONG:
+          int[] vi = da.extractLongArray();
+          for(int i=0;i<ids.size();i++)
+            vi[ids.get(i)] = (int)value;
+          int[] nvi = new int[da.getNbRead()];
+          for(int i=0;i<nvi.length;i++)
+            nvi[i] = vi[i];
+          da.insert(nvi);
+          ds.write_attribute(da);
+          break;
+        case TangoConst.Tango_DEV_SHORT:
+          short[] vs = da.extractShortArray();
+          for(int i=0;i<ids.size();i++)
+            vs[ids.get(i)] = (short)value;
+          short[] nvs = new short[da.getNbRead()];
+          for(int i=0;i<nvs.length;i++)
+            nvs[i] = vs[i];
+          da.insert(nvs);
+          ds.write_attribute(da);
+          break;
+        default:
+          JOptionPane.showMessageDialog(parent, "applyPatternToDevice(): Unsuported type","Error",JOptionPane.ERROR_MESSAGE);
+          return;
+      }
+        
+    } catch (DevFailed e) {
+      ErrorPane.showErrorMessage(null, devName, e);
+    }
+
+  }
+  
+  public static void applyToDevice(JFrame parent,String attributeName,double value) {
+        
+    DeviceProxy ds;
+    int idx = attributeName.lastIndexOf('/');
+    if(idx==-1) {
+      JOptionPane.showMessageDialog(parent, attributeName + " malformed name","Error",JOptionPane.ERROR_MESSAGE);
+      return;
+    }
+    
+    String attName = getAttName(attributeName);
+    String devName = getDevName(attributeName);
+
+    try {
+
+      // Write the pattern
+      ds = new DeviceProxy(devName);
+      AttributeInfo ai = ds.get_attribute_info(attName);
+      DeviceAttribute argin = new DeviceAttribute(attName);
+      DeviceAttribute da = ds.read_attribute(attName);
+      
+      switch(ai.data_type) {
+        case TangoConst.Tango_DEV_DOUBLE:
+          da.insert(value);
+          ds.write_attribute(da);
+          break;
+        case TangoConst.Tango_DEV_LONG:
+          da.insert((int)value);
+          ds.write_attribute(da);
+          break;
+        case TangoConst.Tango_DEV_SHORT:
+          da.insert((short)value);
+          ds.write_attribute(da);
+          break;
+        default:
+          JOptionPane.showMessageDialog(parent, "applyToDevice(): Unsuported type","Error",JOptionPane.ERROR_MESSAGE);
+          return;
+      }
+        
+    } catch (DevFailed e) {
+      ErrorPane.showErrorMessage(null, devName, e);
+    }
+
+  }
+
   
 }

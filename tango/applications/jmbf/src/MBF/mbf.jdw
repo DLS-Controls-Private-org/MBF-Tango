@@ -24,8 +24,8 @@ JDFile v11 {
     etchedBorder:false
   }
   JDTitledRect {
-    summit:410,47,566,137
-    origin:454,57
+    summit:410,25,566,115
+    origin:454,35
     foreground:100,100,100
     background:205,205,205
     fillStyle:1
@@ -35,8 +35,8 @@ JDFile v11 {
     etchedBorder:false
   }
   JDTitledRect {
-    summit:575,47,637,137
-    origin:619,57
+    summit:575,25,637,115
+    origin:619,35
     foreground:100,100,100
     background:205,205,205
     fillStyle:1
@@ -46,8 +46,8 @@ JDFile v11 {
     etchedBorder:false
   }
   JDTitledRect {
-    summit:644,47,851,137
-    origin:688,57
+    summit:644,25,851,115
+    origin:688,35
     foreground:100,100,100
     background:205,205,205
     fillStyle:1
@@ -57,8 +57,8 @@ JDFile v11 {
     etchedBorder:false
   }
   JDTitledRect {
-    summit:643,199,850,289
-    origin:687,209
+    summit:643,186,850,276
+    origin:687,196
     foreground:100,100,100
     background:205,205,205
     fillStyle:1
@@ -68,8 +68,8 @@ JDFile v11 {
     etchedBorder:false
   }
   JDTitledRect {
-    summit:574,199,636,289
-    origin:618,209
+    summit:574,186,636,276
+    origin:618,196
     foreground:100,100,100
     background:205,205,205
     fillStyle:1
@@ -79,8 +79,8 @@ JDFile v11 {
     etchedBorder:false
   }
   JDTitledRect {
-    summit:409,199,566,289
-    origin:453,209
+    summit:409,186,566,276
+    origin:453,196
     foreground:100,100,100
     background:205,205,205
     fillStyle:1
@@ -124,35 +124,35 @@ JDFile v11 {
     font:"SansSerif",0,12
   }
   JDLabel {
-    summit:417,64,457,85
-    origin:437,75
+    summit:417,42,457,63
+    origin:437,53
     lineWidth:0
     name:"Label"
     text:"Loop"
   }
   JDLabel {
-    summit:468,64,510,85
-    origin:492,75
+    summit:468,42,510,63
+    origin:492,53
     lineWidth:0
     name:"Label"
     text:"Input"
   }
   JDLabel {
-    summit:524,64,551,85
-    origin:548,75
+    summit:524,42,551,63
+    origin:548,53
     lineWidth:0
     name:"Label"
     text:"FIR"
   }
   JDLine {
-    summit:403,94,859,94
-    origin:711,94
+    summit:403,72,859,72
+    origin:711,72
     lineWidth:2
     name:"Line"
   }
   JDRectangle {
-    summit:423,85,445,104
-    origin:432,94
+    summit:423,63,445,82
+    origin:432,72
     fillStyle:1
     initvalue:-1
     name:"mfdbkHEpicsDevName/ADC_LOOPBACK_S"
@@ -165,8 +165,8 @@ JDFile v11 {
     }
   }
   JDRectangle {
-    summit:477,85,499,104
-    origin:486,94
+    summit:477,63,499,82
+    origin:486,72
     fillStyle:1
     initvalue:-1
     name:"mfdbkHEpicsDevName/ADC_INP_OVF"
@@ -179,8 +179,8 @@ JDFile v11 {
     }
   }
   JDRectangle {
-    summit:526,85,548,104
-    origin:535,94
+    summit:526,63,548,82
+    origin:535,72
     fillStyle:1
     initvalue:-1
     name:"mfdbkHEpicsDevName/ADC_FIR_OVF"
@@ -193,16 +193,16 @@ JDFile v11 {
     }
   }
   JDLabel {
-    summit:581,64,633,83
-    origin:599,75
+    summit:581,42,633,61
+    origin:599,53
     background:229,229,229
     lineWidth:0
     name:"Label"
     text:"BB FIR"
   }
   JDRectangle {
-    summit:594,84,616,103
-    origin:603,93
+    summit:594,62,616,81
+    origin:603,71
     fillStyle:1
     initvalue:-1
     name:"mfdbkHEpicsDevName/FIR_OVF"
@@ -215,8 +215,8 @@ JDFile v11 {
     }
   }
   JDRectangle {
-    summit:655,85,677,104
-    origin:664,94
+    summit:655,63,677,82
+    origin:664,72
     fillStyle:1
     initvalue:-1
     name:"mfdbkHEpicsDevName/DAC_BUN_OVF"
@@ -229,8 +229,8 @@ JDFile v11 {
     }
   }
   JDRectangle {
-    summit:705,85,727,104
-    origin:714,94
+    summit:705,63,727,82
+    origin:714,72
     fillStyle:1
     initvalue:-1
     name:"mfdbkHEpicsDevName/DAC_MUX_OVF"
@@ -243,8 +243,8 @@ JDFile v11 {
     }
   }
   JDRectangle {
-    summit:751,85,773,104
-    origin:760,94
+    summit:751,63,773,82
+    origin:760,72
     fillStyle:1
     initvalue:-1
     name:"mfdbkHEpicsDevName/DAC_FIR_OVF"
@@ -257,36 +257,36 @@ JDFile v11 {
     }
   }
   JDLabel {
-    summit:645,64,693,85
-    origin:669,75
+    summit:645,42,693,63
+    origin:669,53
     lineWidth:0
     name:"Label"
     text:"Bunch"
   }
   JDLabel {
-    summit:699,64,735,85
-    origin:717,75
+    summit:699,42,735,63
+    origin:717,53
     lineWidth:0
     name:"Label"
     text:"Mux"
   }
   JDLabel {
-    summit:748,64,775,85
-    origin:762,75
+    summit:748,42,775,63
+    origin:762,53
     lineWidth:0
     name:"Label"
     text:"FIR"
   }
   JDLabel {
-    summit:795,64,846,85
-    origin:821,75
+    summit:795,42,846,63
+    origin:821,53
     lineWidth:0
     name:"Label"
     text:"Enable"
   }
   JDRectangle {
-    summit:810,85,832,104
-    origin:819,94
+    summit:810,63,832,82
+    origin:819,72
     fillStyle:1
     initvalue:-1
     name:"mfdbkHEpicsDevName/DAC_ENABLE_S"
@@ -299,14 +299,14 @@ JDFile v11 {
     }
   }
   JDLine {
-    summit:402,248,858,248
-    origin:710,248
+    summit:402,235,858,235
+    origin:710,235
     lineWidth:2
     name:"Line"
   }
   JDRectangle {
-    summit:422,239,444,258
-    origin:431,248
+    summit:422,226,444,245
+    origin:431,235
     fillStyle:1
     initvalue:-1
     name:"mfdbkVEpicsDevName/ADC_LOOPBACK_S"
@@ -319,8 +319,8 @@ JDFile v11 {
     }
   }
   JDRectangle {
-    summit:477,239,499,258
-    origin:486,248
+    summit:477,226,499,245
+    origin:486,235
     fillStyle:1
     initvalue:-1
     name:"mfdbkVEpicsDevName/ADC_INP_OVF"
@@ -333,8 +333,8 @@ JDFile v11 {
     }
   }
   JDRectangle {
-    summit:524,239,546,258
-    origin:533,248
+    summit:524,226,546,245
+    origin:533,235
     fillStyle:1
     initvalue:-1
     name:"mfdbkVEpicsDevName/ADC_FIR_OVF"
@@ -347,8 +347,8 @@ JDFile v11 {
     }
   }
   JDRectangle {
-    summit:594,238,616,257
-    origin:603,247
+    summit:594,225,616,244
+    origin:603,234
     fillStyle:1
     initvalue:-1
     name:"mfdbkVEpicsDevName/FIR_OVF"
@@ -361,8 +361,8 @@ JDFile v11 {
     }
   }
   JDRectangle {
-    summit:653,239,675,258
-    origin:662,248
+    summit:653,226,675,245
+    origin:662,235
     fillStyle:1
     initvalue:-1
     name:"mfdbkVEpicsDevName/DAC_BUN_OVF"
@@ -375,8 +375,8 @@ JDFile v11 {
     }
   }
   JDRectangle {
-    summit:703,239,725,258
-    origin:712,248
+    summit:703,226,725,245
+    origin:712,235
     fillStyle:1
     initvalue:-1
     name:"mfdbkVEpicsDevName/DAC_MUX_OVF"
@@ -389,8 +389,8 @@ JDFile v11 {
     }
   }
   JDRectangle {
-    summit:749,239,771,258
-    origin:758,248
+    summit:749,226,771,245
+    origin:758,235
     fillStyle:1
     initvalue:-1
     name:"mfdbkVEpicsDevName/DAC_FIR_OVF"
@@ -403,8 +403,8 @@ JDFile v11 {
     }
   }
   JDRectangle {
-    summit:808,239,830,258
-    origin:817,248
+    summit:808,226,830,245
+    origin:817,235
     fillStyle:1
     initvalue:-1
     name:"mfdbkVEpicsDevName/DAC_ENABLE_S"
@@ -417,8 +417,8 @@ JDFile v11 {
     }
   }
   JDSwingObject {
-    summit:486,112,558,127
-    origin:517,120
+    summit:486,90,558,105
+    origin:517,98
     fillStyle:1
     lineWidth:0
     name:"mfdbkHEpicsDevName/ADC_MMS_STD_MEAN_DB"
@@ -433,24 +433,24 @@ JDFile v11 {
     font:"SansSerif",0,11
   }
   JDLabel {
-    summit:419,109,489,130
-    origin:454,120
+    summit:419,87,489,108
+    origin:454,98
     lineWidth:0
     name:"Label"
     font:"Dialog",0,12
     text:"Std mean"
   }
   JDLabel {
-    summit:666,108,736,129
-    origin:701,119
+    summit:666,86,736,107
+    origin:701,97
     lineWidth:0
     name:"Label"
     font:"Dialog",0,12
     text:"Std mean"
   }
   JDSwingObject {
-    summit:735,111,807,126
-    origin:766,119
+    summit:735,89,807,104
+    origin:766,97
     fillStyle:1
     lineWidth:0
     name:"mfdbkHEpicsDevName/DAC_MMS_STD_MEAN_DB"
@@ -465,16 +465,16 @@ JDFile v11 {
     font:"SansSerif",0,11
   }
   JDLabel {
-    summit:418,262,488,283
-    origin:453,273
+    summit:418,249,488,270
+    origin:453,260
     lineWidth:0
     name:"Label"
     font:"Dialog",0,12
     text:"Std mean"
   }
   JDSwingObject {
-    summit:485,265,557,280
-    origin:516,273
+    summit:485,252,557,267
+    origin:516,260
     fillStyle:1
     lineWidth:0
     name:"mfdbkVEpicsDevName/ADC_MMS_STD_MEAN_DB"
@@ -489,16 +489,16 @@ JDFile v11 {
     font:"SansSerif",0,11
   }
   JDLabel {
-    summit:663,262,733,283
-    origin:698,273
+    summit:663,249,733,270
+    origin:698,260
     lineWidth:0
     name:"Label"
     font:"Dialog",0,12
     text:"Std mean"
   }
   JDSwingObject {
-    summit:732,265,804,280
-    origin:763,273
+    summit:732,252,804,267
+    origin:763,260
     fillStyle:1
     lineWidth:0
     name:"mfdbkVEpicsDevName/DAC_MMS_STD_MEAN_DB"
@@ -783,58 +783,58 @@ JDFile v11 {
     border:3
   }
   JDLabel {
-    summit:417,216,457,237
-    origin:437,227
+    summit:417,203,457,224
+    origin:437,214
     lineWidth:0
     name:"Label"
     text:"Loop"
   }
   JDLabel {
-    summit:468,216,510,237
-    origin:492,227
+    summit:468,203,510,224
+    origin:492,214
     lineWidth:0
     name:"Label"
     text:"Input"
   }
   JDLabel {
-    summit:522,216,549,237
-    origin:546,227
+    summit:522,203,549,224
+    origin:546,214
     lineWidth:0
     name:"Label"
     text:"FIR"
   }
   JDLabel {
-    summit:580,216,632,235
-    origin:598,227
+    summit:580,203,632,222
+    origin:598,214
     background:229,229,229
     lineWidth:0
     name:"Label"
     text:"BB FIR"
   }
   JDLabel {
-    summit:644,216,692,237
-    origin:668,227
+    summit:644,203,692,224
+    origin:668,214
     lineWidth:0
     name:"Label"
     text:"Bunch"
   }
   JDLabel {
-    summit:698,216,734,237
-    origin:716,227
+    summit:698,203,734,224
+    origin:716,214
     lineWidth:0
     name:"Label"
     text:"Mux"
   }
   JDLabel {
-    summit:747,216,774,237
-    origin:761,227
+    summit:747,203,774,224
+    origin:761,214
     lineWidth:0
     name:"Label"
     text:"FIR"
   }
   JDLabel {
-    summit:794,216,845,237
-    origin:820,227
+    summit:794,203,845,224
+    origin:820,214
     lineWidth:0
     name:"Label"
     text:"Enable"
@@ -1131,6 +1131,96 @@ JDFile v11 {
     name:"mfdbkVDevName/reload"
     extensions:{
       text:"Reset"
+    }
+    className:"fr.esrf.tangoatk.widget.command.VoidVoidCommandViewer"
+    font:"Dialog",0,11
+    border:3
+  }
+  JDSwingObject {
+    summit:410,127,499,149
+    origin:456,139
+    foreground:51,51,51
+    background:238,238,238
+    fillStyle:11
+    lineWidth:0
+    name:"HControlBtn"
+    extensions:{
+      text:"Control"
+    }
+    className:"fr.esrf.tangoatk.widget.command.VoidVoidCommandViewer"
+    font:"Dialog",0,11
+    border:3
+  }
+  JDSwingObject {
+    summit:503,127,592,149
+    origin:549,139
+    foreground:51,51,51
+    background:238,238,238
+    fillStyle:11
+    lineWidth:0
+    name:"HSequencerBtn"
+    extensions:{
+      text:"Seqeuencer"
+    }
+    className:"fr.esrf.tangoatk.widget.command.VoidVoidCommandViewer"
+    font:"Dialog",0,11
+    border:3
+  }
+  JDSwingObject {
+    summit:596,127,685,149
+    origin:642,139
+    foreground:51,51,51
+    background:238,238,238
+    fillStyle:11
+    lineWidth:0
+    name:"HDetectorBtn"
+    extensions:{
+      text:"Detector"
+    }
+    className:"fr.esrf.tangoatk.widget.command.VoidVoidCommandViewer"
+    font:"Dialog",0,11
+    border:3
+  }
+  JDSwingObject {
+    summit:411,289,500,311
+    origin:457,301
+    foreground:51,51,51
+    background:238,238,238
+    fillStyle:11
+    lineWidth:0
+    name:"VControlBtn"
+    extensions:{
+      text:"Control"
+    }
+    className:"fr.esrf.tangoatk.widget.command.VoidVoidCommandViewer"
+    font:"Dialog",0,11
+    border:3
+  }
+  JDSwingObject {
+    summit:504,289,593,311
+    origin:550,301
+    foreground:51,51,51
+    background:238,238,238
+    fillStyle:11
+    lineWidth:0
+    name:"VSequencerBtn"
+    extensions:{
+      text:"Seqeuencer"
+    }
+    className:"fr.esrf.tangoatk.widget.command.VoidVoidCommandViewer"
+    font:"Dialog",0,11
+    border:3
+  }
+  JDSwingObject {
+    summit:597,289,686,311
+    origin:643,301
+    foreground:51,51,51
+    background:238,238,238
+    fillStyle:11
+    lineWidth:0
+    name:"VDetectorBtn"
+    extensions:{
+      text:"Detector"
     }
     className:"fr.esrf.tangoatk.widget.command.VoidVoidCommandViewer"
     font:"Dialog",0,11
