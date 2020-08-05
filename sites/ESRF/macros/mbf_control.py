@@ -55,8 +55,8 @@ class mbf_control(Macro):
 
             # Create cleaning object if necessary
             if command in ['set_param', 'clean', 'reset']:
-                cleaning = setup_mbf.Cleaning(mbf_hl)
-                str_warning += cleaning.init()
+                self.cleaning = setup_mbf.Cleaning(mbf_hl)
+                str_warning += self.cleaning.init()
 
             if command=="on":
                 mbf_hl.comm_set_feedback_on(True)
@@ -71,7 +71,7 @@ class mbf_control(Macro):
                 mbf_hl.comm_set_sweep_on(False)
 
             elif command=="clean":
-                cleaning.clean(self.output)
+                self.cleaning.clean(self.output)
 
             elif command=="growdamp_start":
                 # attName holds mbfGrowDampDevName
@@ -105,10 +105,10 @@ class mbf_control(Macro):
                 self.output("TuneOnSingleBunch=%d" % mbfCtrl.TuneOnSingleBunch)
                 self.output("TuneBunch=%d" % mbfCtrl.TuneBunch)
                 
-                str_warning += mbf_hl.set_param(cleaning, attName)
+                str_warning += mbf_hl.set_param(self.cleaning, attName)
 
             elif command=="reset":
-                cleaning.stop(self.output)
+                self.cleaning.stop(self.output)
 
             else:
                 raise ValueError("%s %s Unknown command" %
@@ -128,7 +128,8 @@ class mbf_control(Macro):
     def on_abort(self):
         """Hook executed when an abort occurs. Overwrite as necessary"""
         self.output("[mbf_control] Abort macro")
-        pass
+        if hasattr(self, 'cleaning'):
+            self.cleaning.stop(self.output)
     
     def on_pause(self):
         """Hook executed when an pause occurs. Overwrite as necessary"""
