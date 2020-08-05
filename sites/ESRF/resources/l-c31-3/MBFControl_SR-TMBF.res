@@ -8,7 +8,7 @@ MBFControl/mfdbk/DEVICE/MBFControl: "srdiag/mbf/horizontal",\
 
 # --- srdiag/mbf/horizontal properties
 
-srdiag/mbf/horizontal->ConfigFilePath: "/operation/common/appli/mbf/horizontal"
+srdiag/mbf/horizontal->ConfigFilePath: "/opt/infra_rw/settings/mfdbk/horizontal"
 srdiag/mbf/horizontal->DoorDevice: "srdiag/mbf/door-horizontal"
 srdiag/mbf/horizontal->GMBFDevice: "srdiag/mbf/utca-global"
 srdiag/mbf/horizontal->MacroServerDevice: "srdiag/mbf/macro"
@@ -19,7 +19,8 @@ srdiag/mbf/horizontal->ModeList: "7/8+1",\
                                   Hybrid,\ 
                                   Uniform,\ 
                                   MDT_grow_damp,\ 
-                                  MDT_NCO1b
+                                  MDT_NCO1b,\
+                                  ARB_Pattern
 
 # --- srdiag/mbf/horizontal attribute properties
 
@@ -52,7 +53,8 @@ srdiag/mbf/horizontal/Mode->enum_labels: "7/8+1",\
                                           Hybrid,\ 
                                           Uniform,\ 
                                           MDT_grow_damp,\ 
-                                          MDT_NCO1b
+                                          MDT_NCO1b,\
+                                          ARB_Pattern
 srdiag/mbf/horizontal/Mode->__value: 0
 srdiag/mbf/horizontal/SweepDwellTime->__value: 100
 srdiag/mbf/horizontal/SweepGainSingleBunch->EnumLabels: 0dB,\ 
@@ -96,7 +98,7 @@ srdiag/mbf/horizontal/TuneOnSingleBunch->__value: false
 
 # --- srdiag/mbf/vertical properties
 
-srdiag/mbf/vertical->ConfigFilePath: "/operation/common/appli/mbf/vertical"
+srdiag/mbf/vertical->ConfigFilePath: "/opt/infra_rw/settings/mfdbk/vertical"
 srdiag/mbf/vertical->DoorDevice: "srdiag/mbf/door-vertical"
 srdiag/mbf/vertical->GMBFDevice: "srdiag/mbf/utca-global"
 srdiag/mbf/vertical->MacroServerDevice: "srdiag/mbf/macro"
@@ -107,7 +109,8 @@ srdiag/mbf/vertical->ModeList: "7/8+1",\
                                 Hybrid,\ 
                                 Uniform,\ 
                                 MDT_grow_damp,\ 
-                                MDT_NCO1b
+                                MDT_NCO1b,\
+                                ARB_Pattern
 
 # --- srdiag/mbf/vertical attribute properties
 
@@ -140,7 +143,8 @@ srdiag/mbf/vertical/Mode->enum_labels: "7/8+1",\
                                         Hybrid,\ 
                                         Uniform,\ 
                                         MDT_grow_damp,\ 
-                                        MDT_NCO1b
+                                        MDT_NCO1b,\
+                                        ARB_Pattern
 srdiag/mbf/vertical/Mode->__value: 5
 srdiag/mbf/vertical/SweepDwellTime->__value: 100
 srdiag/mbf/vertical/SweepGainSingleBunch->EnumLabels: 0dB,\ 
