@@ -19,8 +19,7 @@ srdiag/mbf/horizontal->ModeList: "7/8+1",\
                                   Hybrid,\ 
                                   Uniform,\ 
                                   MDT_grow_damp,\ 
-                                  MDT_NCO1b,\
-                                  ARB_Pattern
+                                  MDT_NCO1b
 
 # --- srdiag/mbf/horizontal attribute properties
 
@@ -53,8 +52,7 @@ srdiag/mbf/horizontal/Mode->enum_labels: "7/8+1",\
                                           Hybrid,\ 
                                           Uniform,\ 
                                           MDT_grow_damp,\ 
-                                          MDT_NCO1b,\
-                                          ARB_Pattern
+                                          MDT_NCO1b
 srdiag/mbf/horizontal/Mode->__value: 0
 srdiag/mbf/horizontal/SweepDwellTime->__value: 100
 srdiag/mbf/horizontal/SweepGainSingleBunch->EnumLabels: 0dB,\ 
@@ -109,8 +107,7 @@ srdiag/mbf/vertical->ModeList: "7/8+1",\
                                 Hybrid,\ 
                                 Uniform,\ 
                                 MDT_grow_damp,\ 
-                                MDT_NCO1b,\
-                                ARB_Pattern
+                                MDT_NCO1b
 
 # --- srdiag/mbf/vertical attribute properties
 
@@ -143,8 +140,7 @@ srdiag/mbf/vertical/Mode->enum_labels: "7/8+1",\
                                         Hybrid,\ 
                                         Uniform,\ 
                                         MDT_grow_damp,\ 
-                                        MDT_NCO1b,\
-                                        ARB_Pattern
+                                        MDT_NCO1b
 srdiag/mbf/vertical/Mode->__value: 5
 srdiag/mbf/vertical/SweepDwellTime->__value: 100
 srdiag/mbf/vertical/SweepGainSingleBunch->EnumLabels: 0dB,\ 

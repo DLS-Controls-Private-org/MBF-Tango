@@ -19,8 +19,7 @@ MBFControl/@@INSTANCE@@/DEVICE/MBFControl: "@@DEVICE_NAME_H@@",\
                                   Hybrid,\ 
                                   Uniform,\ 
                                   MDT_grow_damp,\ 
-                                  MDT_NCO1b,\
-                                  ARB_Pattern
+                                  MDT_NCO1b
 
 # --- @@DEVICE_NAME_H@@ attribute properties
 
@@ -53,8 +52,7 @@ MBFControl/@@INSTANCE@@/DEVICE/MBFControl: "@@DEVICE_NAME_H@@",\
                                           Hybrid,\ 
                                           Uniform,\ 
                                           MDT_grow_damp,\ 
-                                          MDT_NCO1b,\
-                                          ARB_Pattern
+                                          MDT_NCO1b
 @@DEVICE_NAME_H@@/Mode->__value: 0
 @@DEVICE_NAME_H@@/SweepDwellTime->__value: 100
 @@DEVICE_NAME_H@@/SweepGainSingleBunch->EnumLabels: 0dB,\ 
@@ -109,8 +107,7 @@ MBFControl/@@INSTANCE@@/DEVICE/MBFControl: "@@DEVICE_NAME_H@@",\
                                 Hybrid,\ 
                                 Uniform,\ 
                                 MDT_grow_damp,\ 
-                                MDT_NCO1b,\
-                                ARB_Pattern
+                                MDT_NCO1b
 
 # --- @@DEVICE_NAME_V@@ attribute properties
 
@@ -143,8 +140,7 @@ MBFControl/@@INSTANCE@@/DEVICE/MBFControl: "@@DEVICE_NAME_H@@",\
                                         Hybrid,\ 
                                         Uniform,\ 
                                         MDT_grow_damp,\ 
-                                        MDT_NCO1b,\
-                                        ARB_Pattern
+                                        MDT_NCO1b
 @@DEVICE_NAME_V@@/Mode->__value: 5
 @@DEVICE_NAME_V@@/SweepDwellTime->__value: 100
 @@DEVICE_NAME_V@@/SweepGainSingleBunch->EnumLabels: 0dB,\ 
