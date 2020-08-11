@@ -235,7 +235,7 @@ void CleaningTask::sweep(bool updateState) {
 
       // Sweep ---------------------------------------------------------------------------------
 
-      int nb_step = (int) (ds->attr_SweepTime_read[0] / 0.05);
+      int nb_step = (int) (ds->attr_CleaningTime_read[0] / 0.05);
       int count = 20;
 
       cout << "SweepThread: Sweep from " << freqMin << "Hz to " << freqMax << "Hz" << endl;
@@ -270,7 +270,7 @@ void CleaningTask::sweep(bool updateState) {
 
       // Use MBF NCO
 
-      // Launch clening
+      // Launch cleaning macro
       ds->mbfDS->command_inout("Clean");
       sleep(1);
 

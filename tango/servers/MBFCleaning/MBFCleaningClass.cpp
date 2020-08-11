@@ -609,30 +609,55 @@ void MBFCleaningClass::attribute_factory(vector<Tango::Attr *> &att_list)
 	freqmax->set_memorized_init(true);
 	att_list.push_back(freqmax);
 
-	//	Attribute : SweepTime
-	SweepTimeAttrib	*sweeptime = new SweepTimeAttrib();
-	Tango::UserDefaultAttrProp	sweeptime_prop;
-	//	description	not set for SweepTime
-	//	label	not set for SweepTime
-	sweeptime_prop.set_unit("s");
-	//	standard_unit	not set for SweepTime
-	//	display_unit	not set for SweepTime
-	sweeptime_prop.set_format("%3.1f");
-	//	max_value	not set for SweepTime
-	//	min_value	not set for SweepTime
-	//	max_alarm	not set for SweepTime
-	//	min_alarm	not set for SweepTime
-	//	max_warning	not set for SweepTime
-	//	min_warning	not set for SweepTime
-	//	delta_t	not set for SweepTime
-	//	delta_val	not set for SweepTime
+	//	Attribute : SweepPeriod
+	SweepPeriodAttrib	*sweepperiod = new SweepPeriodAttrib();
+	Tango::UserDefaultAttrProp	sweepperiod_prop;
+	//	description	not set for SweepPeriod
+	//	label	not set for SweepPeriod
+	sweepperiod_prop.set_unit("ms");
+	//	standard_unit	not set for SweepPeriod
+	//	display_unit	not set for SweepPeriod
+	sweepperiod_prop.set_format("%3.1f");
+	//	max_value	not set for SweepPeriod
+	//	min_value	not set for SweepPeriod
+	//	max_alarm	not set for SweepPeriod
+	//	min_alarm	not set for SweepPeriod
+	//	max_warning	not set for SweepPeriod
+	//	min_warning	not set for SweepPeriod
+	//	delta_t	not set for SweepPeriod
+	//	delta_val	not set for SweepPeriod
 	
-	sweeptime->set_default_properties(sweeptime_prop);
+	sweepperiod->set_default_properties(sweepperiod_prop);
 	//	Not Polled
-	sweeptime->set_disp_level(Tango::OPERATOR);
-	sweeptime->set_memorized();
-	sweeptime->set_memorized_init(true);
-	att_list.push_back(sweeptime);
+	sweepperiod->set_disp_level(Tango::OPERATOR);
+	sweepperiod->set_memorized();
+	sweepperiod->set_memorized_init(true);
+	att_list.push_back(sweepperiod);
+
+	//	Attribute : CleaningTime
+	CleaningTimeAttrib	*cleaningtime = new CleaningTimeAttrib();
+	Tango::UserDefaultAttrProp	cleaningtime_prop;
+	//	description	not set for CleaningTime
+	//	label	not set for CleaningTime
+	cleaningtime_prop.set_unit("s");
+	//	standard_unit	not set for CleaningTime
+	//	display_unit	not set for CleaningTime
+	cleaningtime_prop.set_format("%3.1f");
+	//	max_value	not set for CleaningTime
+	//	min_value	not set for CleaningTime
+	//	max_alarm	not set for CleaningTime
+	//	min_alarm	not set for CleaningTime
+	//	max_warning	not set for CleaningTime
+	//	min_warning	not set for CleaningTime
+	//	delta_t	not set for CleaningTime
+	//	delta_val	not set for CleaningTime
+	
+	cleaningtime->set_default_properties(cleaningtime_prop);
+	//	Not Polled
+	cleaningtime->set_disp_level(Tango::OPERATOR);
+	cleaningtime->set_memorized();
+	cleaningtime->set_memorized_init(true);
+	att_list.push_back(cleaningtime);
 
 	//	Attribute : Gain
 	GainAttrib	*gain = new GainAttrib();

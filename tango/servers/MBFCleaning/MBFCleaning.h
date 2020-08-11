@@ -111,7 +111,8 @@ public:
 public:
 	Tango::DevDouble	*attr_FreqMin_read;
 	Tango::DevDouble	*attr_FreqMax_read;
-	Tango::DevDouble	*attr_SweepTime_read;
+	Tango::DevDouble	*attr_SweepPeriod_read;
+	Tango::DevDouble	*attr_CleaningTime_read;
 	Tango::DevDouble	*attr_Gain_read;
 	Tango::DevString	*attr_ConfigFileName_read;
 	Tango::DevBoolean	*attr_ExternalSweep_read;
@@ -205,15 +206,25 @@ public:
 	virtual void write_FreqMax(Tango::WAttribute &attr);
 	virtual bool is_FreqMax_allowed(Tango::AttReqType type);
 /**
- *	Attribute SweepTime related methods
+ *	Attribute SweepPeriod related methods
  *	Description: 
  *
  *	Data type:	Tango::DevDouble
  *	Attr type:	Scalar
  */
-	virtual void read_SweepTime(Tango::Attribute &attr);
-	virtual void write_SweepTime(Tango::WAttribute &attr);
-	virtual bool is_SweepTime_allowed(Tango::AttReqType type);
+	virtual void read_SweepPeriod(Tango::Attribute &attr);
+	virtual void write_SweepPeriod(Tango::WAttribute &attr);
+	virtual bool is_SweepPeriod_allowed(Tango::AttReqType type);
+/**
+ *	Attribute CleaningTime related methods
+ *	Description: 
+ *
+ *	Data type:	Tango::DevDouble
+ *	Attr type:	Scalar
+ */
+	virtual void read_CleaningTime(Tango::Attribute &attr);
+	virtual void write_CleaningTime(Tango::WAttribute &attr);
+	virtual bool is_CleaningTime_allowed(Tango::AttReqType type);
 /**
  *	Attribute Gain related methods
  *	Description: 

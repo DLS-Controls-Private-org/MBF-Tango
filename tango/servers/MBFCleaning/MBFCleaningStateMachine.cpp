@@ -90,21 +90,41 @@ bool MBFCleaning::is_FreqMax_allowed(TANGO_UNUSED(Tango::AttReqType type))
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFCleaning::is_SweepTime_allowed()
- *	Description : Execution allowed for SweepTime attribute
+ *	Method      : MBFCleaning::is_SweepPeriod_allowed()
+ *	Description : Execution allowed for SweepPeriod attribute
  */
 //--------------------------------------------------------
-bool MBFCleaning::is_SweepTime_allowed(TANGO_UNUSED(Tango::AttReqType type))
+bool MBFCleaning::is_SweepPeriod_allowed(TANGO_UNUSED(Tango::AttReqType type))
 {
-	//	Not any excluded states for SweepTime attribute in Write access.
-	/*----- PROTECTED REGION ID(MBFCleaning::SweepTimeStateAllowed_WRITE) ENABLED START -----*/
+	//	Not any excluded states for SweepPeriod attribute in Write access.
+	/*----- PROTECTED REGION ID(MBFCleaning::SweepPeriodStateAllowed_WRITE) ENABLED START -----*/
 	
-	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::SweepTimeStateAllowed_WRITE
+	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::SweepPeriodStateAllowed_WRITE
 
-	//	Not any excluded states for SweepTime attribute in read access.
-	/*----- PROTECTED REGION ID(MBFCleaning::SweepTimeStateAllowed_READ) ENABLED START -----*/
+	//	Not any excluded states for SweepPeriod attribute in read access.
+	/*----- PROTECTED REGION ID(MBFCleaning::SweepPeriodStateAllowed_READ) ENABLED START -----*/
 	
-	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::SweepTimeStateAllowed_READ
+	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::SweepPeriodStateAllowed_READ
+	return true;
+}
+
+//--------------------------------------------------------
+/**
+ *	Method      : MBFCleaning::is_CleaningTime_allowed()
+ *	Description : Execution allowed for CleaningTime attribute
+ */
+//--------------------------------------------------------
+bool MBFCleaning::is_CleaningTime_allowed(TANGO_UNUSED(Tango::AttReqType type))
+{
+	//	Not any excluded states for CleaningTime attribute in Write access.
+	/*----- PROTECTED REGION ID(MBFCleaning::CleaningTimeStateAllowed_WRITE) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::CleaningTimeStateAllowed_WRITE
+
+	//	Not any excluded states for CleaningTime attribute in read access.
+	/*----- PROTECTED REGION ID(MBFCleaning::CleaningTimeStateAllowed_READ) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::CleaningTimeStateAllowed_READ
 	return true;
 }
 

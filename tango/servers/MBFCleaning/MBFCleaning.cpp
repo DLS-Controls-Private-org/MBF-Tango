@@ -76,7 +76,8 @@
 //================================================================
 //  FreqMin         |  Tango::DevDouble	Scalar
 //  FreqMax         |  Tango::DevDouble	Scalar
-//  SweepTime       |  Tango::DevDouble	Scalar
+//  SweepPeriod     |  Tango::DevDouble	Scalar
+//  CleaningTime    |  Tango::DevDouble	Scalar
 //  Gain            |  Tango::DevDouble	Scalar
 //  ConfigFileName  |  Tango::DevString	Scalar
 //  ExternalSweep   |  Tango::DevBoolean	Scalar
@@ -148,7 +149,8 @@ void MBFCleaning::delete_device()
 	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::delete_device
 	delete[] attr_FreqMin_read;
 	delete[] attr_FreqMax_read;
-	delete[] attr_SweepTime_read;
+	delete[] attr_SweepPeriod_read;
+	delete[] attr_CleaningTime_read;
 	delete[] attr_Gain_read;
 	delete[] attr_ConfigFileName_read;
 	delete[] attr_ExternalSweep_read;
@@ -180,7 +182,8 @@ void MBFCleaning::init_device()
 	
 	attr_FreqMin_read = new Tango::DevDouble[1];
 	attr_FreqMax_read = new Tango::DevDouble[1];
-	attr_SweepTime_read = new Tango::DevDouble[1];
+	attr_SweepPeriod_read = new Tango::DevDouble[1];
+	attr_CleaningTime_read = new Tango::DevDouble[1];
 	attr_Gain_read = new Tango::DevDouble[1];
 	attr_ConfigFileName_read = new Tango::DevString[1];
 	attr_ExternalSweep_read = new Tango::DevBoolean[1];
@@ -225,7 +228,6 @@ void MBFCleaning::init_device()
     }
   }
 
-
 	// Connect to scrapers
   for(int i=0;i<nbScrapers;i++) {
     try {
@@ -240,7 +242,8 @@ void MBFCleaning::init_device()
 	// Initialise default value
   attr_FreqMin_read[0] = 0.0;
   attr_FreqMax_read[0] = 0.0;
-  attr_SweepTime_read[0] = 0.0;
+  attr_SweepPeriod_read[0] = 0.0;
+  attr_CleaningTime_read[0] = 0.0;
   attr_Gain_read[0] = 0;
   configFile = "No file loaded";
   memset(attr_UsedScrapers_read,0,16*sizeof(Tango::DevBoolean));
@@ -494,44 +497,85 @@ void MBFCleaning::write_FreqMax(Tango::WAttribute &attr)
 }
 //--------------------------------------------------------
 /**
- *	Read attribute SweepTime related method
+ *	Read attribute SweepPeriod related method
  *	Description: 
  *
  *	Data type:	Tango::DevDouble
  *	Attr type:	Scalar
  */
 //--------------------------------------------------------
-void MBFCleaning::read_SweepTime(Tango::Attribute &attr)
+void MBFCleaning::read_SweepPeriod(Tango::Attribute &attr)
 {
-	DEBUG_STREAM << "MBFCleaning::read_SweepTime(Tango::Attribute &attr) entering... " << endl;
-	/*----- PROTECTED REGION ID(MBFCleaning::read_SweepTime) ENABLED START -----*/
-
-	attr.set_value(attr_SweepTime_read);
+	DEBUG_STREAM << "MBFCleaning::read_SweepPeriod(Tango::Attribute &attr) entering... " << endl;
+	/*----- PROTECTED REGION ID(MBFCleaning::read_SweepPeriod) ENABLED START -----*/
+	//	Set the attribute value
+	attr.set_value(attr_SweepPeriod_read);
 	
-	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::read_SweepTime
+	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::read_SweepPeriod
 }
 //--------------------------------------------------------
 /**
- *	Write attribute SweepTime related method
+ *	Write attribute SweepPeriod related method
  *	Description: 
  *
  *	Data type:	Tango::DevDouble
  *	Attr type:	Scalar
  */
 //--------------------------------------------------------
-void MBFCleaning::write_SweepTime(Tango::WAttribute &attr)
+void MBFCleaning::write_SweepPeriod(Tango::WAttribute &attr)
 {
-	DEBUG_STREAM << "MBFCleaning::write_SweepTime(Tango::WAttribute &attr) entering... " << endl;
+	DEBUG_STREAM << "MBFCleaning::write_SweepPeriod(Tango::WAttribute &attr) entering... " << endl;
 	//	Retrieve write value
 	Tango::DevDouble	w_val;
 	attr.get_write_value(w_val);
-	/*----- PROTECTED REGION ID(MBFCleaning::write_SweepTime) ENABLED START -----*/
+	/*----- PROTECTED REGION ID(MBFCleaning::write_SweepPeriod) ENABLED START -----*/
 
   if( get_state()==Tango::MOVING )
     RAISE_EXCEPTION("Parameter change not allowed while moving.");
-  attr_SweepTime_read[0] = w_val;
+  attr_SweepPeriod_read[0] = w_val;
 
-	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::write_SweepTime
+	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::write_SweepPeriod
+}
+//--------------------------------------------------------
+/**
+ *	Read attribute CleaningTime related method
+ *	Description: 
+ *
+ *	Data type:	Tango::DevDouble
+ *	Attr type:	Scalar
+ */
+//--------------------------------------------------------
+void MBFCleaning::read_CleaningTime(Tango::Attribute &attr)
+{
+	DEBUG_STREAM << "MBFCleaning::read_CleaningTime(Tango::Attribute &attr) entering... " << endl;
+	/*----- PROTECTED REGION ID(MBFCleaning::read_CleaningTime) ENABLED START -----*/
+	//	Set the attribute value
+	attr.set_value(attr_CleaningTime_read);
+	
+	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::read_CleaningTime
+}
+//--------------------------------------------------------
+/**
+ *	Write attribute CleaningTime related method
+ *	Description: 
+ *
+ *	Data type:	Tango::DevDouble
+ *	Attr type:	Scalar
+ */
+//--------------------------------------------------------
+void MBFCleaning::write_CleaningTime(Tango::WAttribute &attr)
+{
+	DEBUG_STREAM << "MBFCleaning::write_CleaningTime(Tango::WAttribute &attr) entering... " << endl;
+	//	Retrieve write value
+	Tango::DevDouble	w_val;
+	attr.get_write_value(w_val);
+	/*----- PROTECTED REGION ID(MBFCleaning::write_CleaningTime) ENABLED START -----*/
+
+  if( get_state()==Tango::MOVING )
+    RAISE_EXCEPTION("Parameter change not allowed while moving.");
+  attr_CleaningTime_read[0] = w_val;
+	
+	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::write_CleaningTime
 }
 //--------------------------------------------------------
 /**
@@ -780,12 +824,17 @@ void MBFCleaning::load_configuration_file(Tango::DevString argin)
 				Tango::WAttribute &att = dev_attr->get_w_attr_by_name("FreqMax");
 				att.set_write_value(attr_FreqMax_read[0]);
 				save_attribute_property("FreqMax","__value",attr_FreqMax_read[0]);
-			} else if (att_name=="SweepTime") {
-				ss >> attr_SweepTime_read[0];
-				Tango::WAttribute &att = dev_attr->get_w_attr_by_name("SweepTime");
-				att.set_write_value(attr_SweepTime_read[0]);
-				save_attribute_property("SweepTime","__value",attr_SweepTime_read[0]);
-			} else if (att_name=="Gain") {
+			} else if (att_name=="SweepPeriod") {
+				ss >> attr_SweepPeriod_read[0];
+				Tango::WAttribute &att = dev_attr->get_w_attr_by_name("SweepPeriod");
+				att.set_write_value(attr_SweepPeriod_read[0]);
+				save_attribute_property("SweepPeriod","__value",attr_SweepPeriod_read[0]);
+			} else if (att_name=="CleaningTime") {
+        ss >> attr_CleaningTime_read[0];
+        Tango::WAttribute &att = dev_attr->get_w_attr_by_name("CleaningTime");
+        att.set_write_value(attr_CleaningTime_read[0]);
+        save_attribute_property("CleaningTime","__value",attr_CleaningTime_read[0]);
+      } else if (att_name=="Gain") {
 				ss >> attr_Gain_read[0];
 				Tango::WAttribute &att = dev_attr->get_w_attr_by_name("Gain");
 				att.set_write_value(attr_Gain_read[0]);
@@ -880,7 +929,8 @@ void MBFCleaning::save_configuration_file(Tango::DevString argin)
 		conf << "## Multibunch cleaning  CONFIG  FILE ##" << endl;
 		conf << "FreqMin\t"         <<  attr_FreqMin_read[0] << endl;
 		conf << "FreqMax\t"         <<  attr_FreqMax_read[0] << endl;
-		conf << "SweepTime\t"       <<  attr_SweepTime_read[0] << endl;
+		conf << "SweepPeriod\t"     <<  attr_SweepPeriod_read[0] << endl;
+    conf << "CleaningTime\t"    <<  attr_CleaningTime_read[0] << endl;
 		conf << "Gain\t"            <<  attr_Gain_read[0] << endl;
 		conf << "ExternalSweep\t" <<  attr_ExternalSweep_read[0] << endl;
 		conf << "UsedScrapers\t";
@@ -949,7 +999,7 @@ void MBFCleaning::sweep()
 		RAISE_EXCEPTION("FreqMin must be lower than FreqMax");
 	}
 
-	if(attr_SweepTime_read[0]<=0.0) {
+	if(attr_CleaningTime_read[0]<=0.0) {
 		RAISE_EXCEPTION("SweepTime must be srictly positive");
 	}
 
@@ -999,8 +1049,8 @@ void MBFCleaning::do_all()
 		RAISE_EXCEPTION("FreqMin must be lower than FreqMax");
 	}
 
-	if(attr_SweepTime_read[0]<=0.0) {
-		RAISE_EXCEPTION("SweepTime must be srictly positive");
+	if(attr_CleaningTime_read[0]<=0.0) {
+		RAISE_EXCEPTION("CleaningTime must be srictly positive");
 	}
 
 	set_state(Tango::MOVING);
@@ -1167,73 +1217,6 @@ void MBFCleaning::split(vector<string> &tokens, const string &text, char sep) {
   tokens.push_back(text.substr(start));
 
 }
-
-// //--------------------------------------------------------
-// //--------------------------------------------------------
-// void MBFCleaning::read_Upp22(Tango::Attribute &attr)
-// {
-// 	DEBUG_STREAM << "MBFCleaning::read_Upp22(Tango::Attribute &attr) entering... " << endl;
-// 	attr.set_value(attr_Upp22_read);
-// 	
-// }
-
-// //--------------------------------------------------------
-// /**
-//  *	Write attribute Upp22 related method
-//  *	Description: 
-//  *
-//  *	Data type:	Tango::DevDouble
-//  *	Attr type:	Scalar
-//  */
-// //--------------------------------------------------------
-// void MBFCleaning::write_Upp22(Tango::WAttribute &attr)
-// {
-// 	DEBUG_STREAM << "MBFCleaning::write_Upp22(Tango::WAttribute &attr) entering... " << endl;
-// 	//	Retrieve write value
-// 	Tango::DevDouble	w_val;
-// 	attr.get_write_value(w_val);
-//   if( get_state()==Tango::MOVING )
-//     RAISE_EXCEPTION("Parameter change not allowed while moving.");
-//   attr_Upp22_read[0] = w_val;
-// 	
-// }
-
-// //--------------------------------------------------------
-// /**
-//  *	Read attribute Scrapers related method
-//  *	Description: 
-//  *
-//  *	Data type:	Tango::DevShort
-//  *	Attr type:	Scalar
-//  */
-// //--------------------------------------------------------
-// void MBFCleaning::read_Scrapers(Tango::Attribute &attr)
-// {
-// 	DEBUG_STREAM << "MBFCleaning::read_Scrapers(Tango::Attribute &attr) entering... " << endl;
-// 	attr.set_value(attr_Scrapers_read);
-// 	
-// }
-
-// //--------------------------------------------------------
-// /**
-//  *	Write attribute Scrapers related method
-//  *	Description: 
-//  *
-//  *	Data type:	Tango::DevShort
-//  *	Attr type:	Scalar
-//  */
-// //--------------------------------------------------------
-// void MBFCleaning::write_Scrapers(Tango::WAttribute &attr)
-// {
-// 	DEBUG_STREAM << "MBFCleaning::write_Scrapers(Tango::WAttribute &attr) entering... " << endl;
-// 	//	Retrieve write value
-// 	Tango::DevShort	w_val;
-// 	attr.get_write_value(w_val);
-//   if( get_state()==Tango::MOVING )
-//     RAISE_EXCEPTION("Parameter change not allowed while moving.");
-//   attr_Scrapers_read[0] = w_val;
-// }
-
 
 /*----- PROTECTED REGION END -----*/	//	MBFCleaning::namespace_ending
 } //	namespace

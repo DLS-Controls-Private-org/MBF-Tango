@@ -57,7 +57,7 @@ import MBF.PatternEditorFrame;
  */
 public class MainPanel extends javax.swing.JFrame implements IBooleanSpectrumListener,IDevStateScalarListener,ActionListener {
   
-  final static String APP_RELEASE = "1.2";
+  final static String APP_RELEASE = "1.3";
   final static String cleaningDevName = "srdiag/mbf/cleaning";
     
   private AttributeList attList;
@@ -183,8 +183,12 @@ public class MainPanel extends javax.swing.JFrame implements IBooleanSpectrumLis
       freqMaxEditor.setModel(freqMax);
       splash.progress(nbDevice++);
       
-      NumberScalar sweepTime = (NumberScalar)attList.add(cleaningDevName+"/SweepTime");
-      sweepTimeEditor.setModel(sweepTime);
+      NumberScalar sweepPeriod = (NumberScalar)attList.add(cleaningDevName+"/SweepPeriod");
+      sweepPeriodEditor.setModel(sweepPeriod);
+      splash.progress(nbDevice++);
+
+      NumberScalar cleaningTime = (NumberScalar)attList.add(cleaningDevName+"/CleaningTime");
+      cleaningTimeEditor.setModel(cleaningTime);
       splash.progress(nbDevice++);
 
       NumberScalar gain = (NumberScalar)attList.add(cleaningDevName+"/Gain");
@@ -424,12 +428,14 @@ public class MainPanel extends javax.swing.JFrame implements IBooleanSpectrumLis
     freqMinEditor = new fr.esrf.tangoatk.widget.attribute.NumberScalarWheelEditor();
     freqMaxLabel = new fr.esrf.tangoatk.widget.util.JSmoothLabel();
     freqMaxEditor = new fr.esrf.tangoatk.widget.attribute.NumberScalarWheelEditor();
-    sweepTimeLabel = new fr.esrf.tangoatk.widget.util.JSmoothLabel();
-    sweepTimeEditor = new fr.esrf.tangoatk.widget.attribute.NumberScalarWheelEditor();
+    sweepPeriodLabel = new fr.esrf.tangoatk.widget.util.JSmoothLabel();
+    sweepPeriodEditor = new fr.esrf.tangoatk.widget.attribute.NumberScalarWheelEditor();
     gainLabel = new fr.esrf.tangoatk.widget.util.JSmoothLabel();
     gainEditor = new fr.esrf.tangoatk.widget.attribute.NumberScalarWheelEditor();
     externalSweepEditor = new fr.esrf.tangoatk.widget.attribute.BooleanScalarCheckBoxViewer();
     shakerButton = new javax.swing.JButton();
+    cleaningTimeLabel = new fr.esrf.tangoatk.widget.util.JSmoothLabel();
+    cleaningTimeEditor = new fr.esrf.tangoatk.widget.attribute.NumberScalarWheelEditor();
     pllPanel = new javax.swing.JPanel();
     pllStateViewer = new fr.esrf.tangoatk.widget.attribute.StateViewer();
     pllStatusViewer = new fr.esrf.tangoatk.widget.attribute.StatusViewer();
@@ -556,32 +562,32 @@ public class MainPanel extends javax.swing.JFrame implements IBooleanSpectrumLis
     gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
     shakerSettingsPanel.add(freqMaxEditor, gridBagConstraints);
 
-    sweepTimeLabel.setHorizontalAlignment(0);
-    sweepTimeLabel.setOpaque(false);
-    sweepTimeLabel.setText("SweepTime (sec)");
+    sweepPeriodLabel.setHorizontalAlignment(0);
+    sweepPeriodLabel.setOpaque(false);
+    sweepPeriodLabel.setText("SweepPeriod (ms)");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 2;
+    gridBagConstraints.gridy = 3;
     gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
     gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
     gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
-    shakerSettingsPanel.add(sweepTimeLabel, gridBagConstraints);
+    shakerSettingsPanel.add(sweepPeriodLabel, gridBagConstraints);
 
-    sweepTimeEditor.setBackground(java.awt.SystemColor.controlHighlight);
-    sweepTimeEditor.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+    sweepPeriodEditor.setBackground(java.awt.SystemColor.controlHighlight);
+    sweepPeriodEditor.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 1;
-    gridBagConstraints.gridy = 2;
+    gridBagConstraints.gridy = 3;
     gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
     gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-    shakerSettingsPanel.add(sweepTimeEditor, gridBagConstraints);
+    shakerSettingsPanel.add(sweepPeriodEditor, gridBagConstraints);
 
     gainLabel.setHorizontalAlignment(0);
     gainLabel.setOpaque(false);
     gainLabel.setText("Gain (%)");
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 3;
+    gridBagConstraints.gridy = 4;
     gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
     gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
     gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
@@ -591,7 +597,7 @@ public class MainPanel extends javax.swing.JFrame implements IBooleanSpectrumLis
     gainEditor.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 1;
-    gridBagConstraints.gridy = 3;
+    gridBagConstraints.gridy = 4;
     gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
     gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
     shakerSettingsPanel.add(gainEditor, gridBagConstraints);
@@ -601,7 +607,7 @@ public class MainPanel extends javax.swing.JFrame implements IBooleanSpectrumLis
     externalSweepEditor.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 0;
-    gridBagConstraints.gridy = 4;
+    gridBagConstraints.gridy = 5;
     gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
     gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
     shakerSettingsPanel.add(externalSweepEditor, gridBagConstraints);
@@ -614,10 +620,30 @@ public class MainPanel extends javax.swing.JFrame implements IBooleanSpectrumLis
     });
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 1;
-    gridBagConstraints.gridy = 4;
+    gridBagConstraints.gridy = 5;
     gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
     gridBagConstraints.insets = new java.awt.Insets(5, 0, 0, 0);
     shakerSettingsPanel.add(shakerButton, gridBagConstraints);
+
+    cleaningTimeLabel.setHorizontalAlignment(0);
+    cleaningTimeLabel.setOpaque(false);
+    cleaningTimeLabel.setText("CleaningTime (sec)");
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 0;
+    gridBagConstraints.gridy = 2;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+    gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
+    shakerSettingsPanel.add(cleaningTimeLabel, gridBagConstraints);
+
+    cleaningTimeEditor.setBackground(java.awt.SystemColor.controlHighlight);
+    cleaningTimeEditor.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+    gridBagConstraints = new java.awt.GridBagConstraints();
+    gridBagConstraints.gridx = 1;
+    gridBagConstraints.gridy = 2;
+    gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+    gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+    shakerSettingsPanel.add(cleaningTimeEditor, gridBagConstraints);
 
     gridBagConstraints = new java.awt.GridBagConstraints();
     gridBagConstraints.gridx = 1;
@@ -788,6 +814,8 @@ public class MainPanel extends javax.swing.JFrame implements IBooleanSpectrumLis
   private javax.swing.JPanel btnPanel;
   private fr.esrf.tangoatk.widget.command.VoidVoidCommandViewer cleanCommand;
   private fr.esrf.tangoatk.widget.attribute.StatusViewer cleaningStatusViewer;
+  private fr.esrf.tangoatk.widget.attribute.NumberScalarWheelEditor cleaningTimeEditor;
+  private fr.esrf.tangoatk.widget.util.JSmoothLabel cleaningTimeLabel;
   private javax.swing.JPanel commandPanel;
   private javax.swing.JPanel configFileContainer;
   private javax.swing.JMenuItem diagMenuItem;
@@ -821,8 +849,8 @@ public class MainPanel extends javax.swing.JFrame implements IBooleanSpectrumLis
   private javax.swing.JPanel shakerSettingsPanel;
   private fr.esrf.tangoatk.widget.command.VoidVoidCommandViewer stopCommand;
   private fr.esrf.tangoatk.widget.command.VoidVoidCommandViewer sweepCommand;
-  private fr.esrf.tangoatk.widget.attribute.NumberScalarWheelEditor sweepTimeEditor;
-  private fr.esrf.tangoatk.widget.util.JSmoothLabel sweepTimeLabel;
+  private fr.esrf.tangoatk.widget.attribute.NumberScalarWheelEditor sweepPeriodEditor;
+  private fr.esrf.tangoatk.widget.util.JSmoothLabel sweepPeriodLabel;
   private javax.swing.JMenu viewMenu;
   // End of variables declaration//GEN-END:variables
 

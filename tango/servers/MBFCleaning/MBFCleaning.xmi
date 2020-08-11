@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="ASCII"?>
 <pogoDsl:PogoSystem xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:pogoDsl="http://www.esrf.fr/tango/pogo/PogoDsl">
-  <classes name="MBFCleaning" pogoRevision="9.6">
-    <description description="A class for the bunch by bunch cleaning in the SR" title="MBFCleaning" sourcePath="/mntdirect/_segfs/tango/cppserver/machine/diagnostic/MBF/tango/servers/MBFCleaning" language="Cpp" filestogenerate="XMI   file,Code files,Protected Regions" license="GPL" copyright="Copyright (C): 2018&#xA;               European Synchrotron Radiation Facility&#xA;               BP 220, Grenoble 38043&#xA;               France" hasMandatoryProperty="false" hasConcreteProperty="true" hasAbstractCommand="false" hasAbstractAttribute="false">
+  <classes name="MBFCleaning" pogoRevision="9.7">
+    <description description="A class for the bunch by bunch cleaning in the SR" title="MBFCleaning" sourcePath="/mntdirect/_segfs/tango/cppserver/machine/diagnostic/MBF-Tango/tango/servers/MBFCleaning" language="Cpp" filestogenerate="XMI   file,Code files,Protected Regions" license="GPL" copyright="Copyright (C): 2018&#xA;               European Synchrotron Radiation Facility&#xA;               BP 220, Grenoble 38043&#xA;               France" hasMandatoryProperty="false" hasConcreteProperty="true" hasAbstractCommand="false" hasAbstractAttribute="false">
       <inheritances classname="Device_Impl" sourcePath=""/>
       <identification contact="at esrf.fr - pons" author="pons" emailDomain="esrf.fr" classFamily="BeamDiagnostics" siteSpecific="ESRF" platform="Unix Like" bus="Not Applicable" manufacturer="none" reference=""/>
     </description>
@@ -140,7 +140,15 @@
       <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
       <properties description="" label="" unit="tune" standardUnit="" displayUnit="" format="%5.4f" maxValue="" minValue="" maxAlarm="" minAlarm="" maxWarning="" minWarning="" deltaTime="" deltaValue=""/>
     </attributes>
-    <attributes name="SweepTime" attType="Scalar" rwType="READ_WRITE" displayLevel="OPERATOR" polledPeriod="0" maxX="" maxY="" memorized="true" memorizedAtInit="true" allocReadMember="true" isDynamic="false">
+    <attributes name="SweepPeriod" attType="Scalar" rwType="READ_WRITE" displayLevel="OPERATOR" polledPeriod="0" maxX="" maxY="" memorized="true" memorizedAtInit="true" allocReadMember="true" isDynamic="false">
+      <dataType xsi:type="pogoDsl:DoubleType"/>
+      <changeEvent fire="false" libCheckCriteria="false"/>
+      <archiveEvent fire="false" libCheckCriteria="false"/>
+      <dataReadyEvent fire="false" libCheckCriteria="true"/>
+      <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
+      <properties description="" label="" unit="ms" standardUnit="" displayUnit="" format="%3.1f" maxValue="" minValue="" maxAlarm="" minAlarm="" maxWarning="" minWarning="" deltaTime="" deltaValue=""/>
+    </attributes>
+    <attributes name="CleaningTime" attType="Scalar" rwType="READ_WRITE" displayLevel="OPERATOR" polledPeriod="0" maxX="" maxY="" memorized="true" memorizedAtInit="true" allocReadMember="true" isDynamic="false">
       <dataType xsi:type="pogoDsl:DoubleType"/>
       <changeEvent fire="false" libCheckCriteria="false"/>
       <archiveEvent fire="false" libCheckCriteria="false"/>

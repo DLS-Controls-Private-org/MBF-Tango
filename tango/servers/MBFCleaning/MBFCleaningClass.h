@@ -116,19 +116,34 @@ public:
 		{return (static_cast<MBFCleaning *>(dev))->is_FreqMax_allowed(ty);}
 };
 
-//	Attribute SweepTime class definition
-class SweepTimeAttrib: public Tango::Attr
+//	Attribute SweepPeriod class definition
+class SweepPeriodAttrib: public Tango::Attr
 {
 public:
-	SweepTimeAttrib():Attr("SweepTime",
+	SweepPeriodAttrib():Attr("SweepPeriod",
 			Tango::DEV_DOUBLE, Tango::READ_WRITE) {};
-	~SweepTimeAttrib() {};
+	~SweepPeriodAttrib() {};
 	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
-		{(static_cast<MBFCleaning *>(dev))->read_SweepTime(att);}
+		{(static_cast<MBFCleaning *>(dev))->read_SweepPeriod(att);}
 	virtual void write(Tango::DeviceImpl *dev,Tango::WAttribute &att)
-		{(static_cast<MBFCleaning *>(dev))->write_SweepTime(att);}
+		{(static_cast<MBFCleaning *>(dev))->write_SweepPeriod(att);}
 	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
-		{return (static_cast<MBFCleaning *>(dev))->is_SweepTime_allowed(ty);}
+		{return (static_cast<MBFCleaning *>(dev))->is_SweepPeriod_allowed(ty);}
+};
+
+//	Attribute CleaningTime class definition
+class CleaningTimeAttrib: public Tango::Attr
+{
+public:
+	CleaningTimeAttrib():Attr("CleaningTime",
+			Tango::DEV_DOUBLE, Tango::READ_WRITE) {};
+	~CleaningTimeAttrib() {};
+	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
+		{(static_cast<MBFCleaning *>(dev))->read_CleaningTime(att);}
+	virtual void write(Tango::DeviceImpl *dev,Tango::WAttribute &att)
+		{(static_cast<MBFCleaning *>(dev))->write_CleaningTime(att);}
+	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
+		{return (static_cast<MBFCleaning *>(dev))->is_CleaningTime_allowed(ty);}
 };
 
 //	Attribute Gain class definition
