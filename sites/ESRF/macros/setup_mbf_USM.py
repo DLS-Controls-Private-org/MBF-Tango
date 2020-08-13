@@ -161,7 +161,7 @@ class Cleaning(Cleaning_legacy):
         Mbf.put('BUN:2:SEQ:ENABLE_S', abs(clean_pattern))
 
         #  set sweep parameters:
-        # TODO: add attribute for count and dwell
+        # TODO: add attribute for count, dwell and wait
         # each frequency step is 100 us
         Mbf.put('SEQ:1:DWELL_S', 36)
         Mbf.put('SEQ:1:COUNT_S', 200)
