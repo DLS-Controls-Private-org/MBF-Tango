@@ -26,7 +26,8 @@ class Cleaning_legacy():
                 cleaningDS = smc.get_device(SRCleaning_device_name)
                 self.freq_min = cleaningDS.FreqMin
                 self.freq_max = cleaningDS.FreqMax
-                self.freq_sweeptime = cleaningDS.SweepTime
+                self.freq_sweeptime = cleaningDS.SweepPeriod
+                self.CleaningDuration = cleaningDS.CleaningTime
                 self.cleaning_fine_gain = cleaningDS.Gain/100.
             else:
                 self.cleaning_fine_gain = 0.
@@ -163,8 +164,9 @@ class Cleaning(Cleaning_legacy):
         #  set sweep parameters:
         # TODO: add attribute for count, dwell and wait
         # each frequency step is 100 us
+        count = 352374000 * freq_sweeptime / (1000 * 992 * 36)
         Mbf.put('SEQ:1:DWELL_S', 36)
-        Mbf.put('SEQ:1:COUNT_S', 200)
+        Mbf.put('SEQ:1:COUNT_S', int(count))
         Mbf.put('SEQ:1:START_FREQ_S', freq_min)
         Mbf.put('SEQ:1:END_FREQ_S', freq_max)
         
@@ -194,7 +196,7 @@ class Cleaning(Cleaning_legacy):
             # wait for bunches to calm down after a sweep
             time.sleep(seq_dt + 0.01)
             ii += 1
-            if (time.time() - tic) > freq_sweeptime:
+            if (time.time() - tic) > self.CleaningDuration:
                 break
         
         # restore PV changed for the cleaning
