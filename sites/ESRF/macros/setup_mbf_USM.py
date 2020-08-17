@@ -141,11 +141,16 @@ class Cleaning(Cleaning_legacy):
         bk_list.append('SEQ:1:ENABLE_S')
         bk_list.append('TRG:SEQ:MODE_S')
         bk_list.append('TRG:SEQ:SOFT:BL_S')
+        bk_list.append('SEQ:SUPER:COUNT_S')
         for source in TRIGGER_SOURCES:
             bk_list.append('TRG:SEQ:{}:EN_S'.format(source))
         self.bk_dict = {}
         for pv_name in bk_list:
             self.bk_dict[pv_name] = Mbf.get(pv_name)
+
+        # Reset super-sequencer
+        Mbf.put('SEQ:SUPER:COUNT_S', 1)
+        Mbf.put('SEQ:SUPER:RESET_S', 0)
 
         # set cleaning pattern
         clean_pattern, fb_pattern = self.mbf_hl.gen_patterns(mode)
@@ -156,7 +161,7 @@ class Cleaning(Cleaning_legacy):
         Mbf.put('BUN:2:SEQ:ENABLE_S', abs(clean_pattern))
 
         #  set sweep parameters:
-        # TODO: add attribute for count and dwell
+        # TODO: add attribute for count, dwell and wait
         # each frequency step is 100 us
         Mbf.put('SEQ:1:DWELL_S', 36)
         Mbf.put('SEQ:1:COUNT_S', 200)
