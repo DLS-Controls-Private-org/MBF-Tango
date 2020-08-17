@@ -36,9 +36,11 @@ namespace MBFCleaning_ns
     
     CleaningTask ct(ds,mutex);
 
-    ct.scrapper_down(false);    
+    if( !ct.scrapper_down(false) )
+      return;
 
-    ct.sweep(false);
+    if( !ct.sweep(false) )
+      return;
 
     {
       omni_mutex_lock l(mutex);

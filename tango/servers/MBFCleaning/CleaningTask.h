@@ -29,9 +29,9 @@ public:
     // Constructor.
     CleaningTask(MBFCleaning *, omni_mutex &);
 
-    void scrapper_up(bool updateState);
-    void scrapper_down(bool updateState);
-    void sweep(bool updateState);
+    bool scrapper_up(bool updateState);
+    bool scrapper_down(bool updateState);
+    bool sweep(bool updateState);
 
 private:
     omni_mutex &mutex;

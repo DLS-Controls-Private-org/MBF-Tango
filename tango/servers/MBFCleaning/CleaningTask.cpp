@@ -26,7 +26,7 @@ CleaningTask::CleaningTask(MBFCleaning *cleaning, omni_mutex &m) :
 
 // ----------------------------------------------------------------------------------------
 
-void CleaningTask::scrapper_up(bool updateState) {
+bool CleaningTask::scrapper_up(bool updateState) {
 
   Tango::DeviceAttribute val;
   struct timespec nanotime;
@@ -42,10 +42,16 @@ void CleaningTask::scrapper_up(bool updateState) {
         ds->scraperDs[i]->set_source(Tango::DEV);
         val << ds->scrInitPos[i];
         ds->scraperDs[i]->write_attribute(val);
+        cout << "Scraper write :" << ds->scrInitPos[i] << " ok" << endl;
       }
     }
 
     // Wait while moving
+    // Sleep 2s
+    nanotime.tv_sec = 2;
+    nanotime.tv_nsec = 0;
+    nanosleep(&nanotime, NULL);
+
 
     bool isMoving = true;
     Tango::DevState state;
@@ -79,8 +85,9 @@ void CleaningTask::scrapper_up(bool updateState) {
       tmp = "Failure while moving scraper:\n" + string(e.errors[0].desc);
       ds->set_status(tmp.c_str());
       ds->set_state(Tango::OFF);
+      return false;
     }
-    exit(0);
+
 
   }
 
@@ -92,12 +99,13 @@ void CleaningTask::scrapper_up(bool updateState) {
     ds->set_status("Device ready");
   }
 
+  return true;
 
 }
 
 // ----------------------------------------------------------------------------------------
 
-void CleaningTask::scrapper_down(bool updateState) {
+bool CleaningTask::scrapper_down(bool updateState) {
 
   Tango::DeviceAttribute val;
   struct timespec nanotime;
@@ -111,9 +119,9 @@ void CleaningTask::scrapper_down(bool updateState) {
         ds->scraperDs[i]->set_source(Tango::DEV);
         val = ds->scraperDs[i]->read_attribute("Position");
         val >> ds->scrInitPos[i];
+        cout << "Scraper read :" << ds->scrInitPos[i] << " ok" << endl;
       }
     }
-
 
   } catch (Tango::DevFailed e) {
 
@@ -127,17 +135,12 @@ void CleaningTask::scrapper_down(bool updateState) {
       ds->set_status(tmp.c_str());
       ds->set_state(Tango::OFF);
     }
-    exit(0);
+    return false;
 
   }
 
 
   // Move scraper to cleaning value ---------------------------------------------------------------
-
-  // Sleep 1s
-  nanotime.tv_sec = 1;
-  nanotime.tv_nsec = 0;
-  nanosleep(&nanotime, NULL);
 
   try {
 
@@ -147,8 +150,14 @@ void CleaningTask::scrapper_down(bool updateState) {
         ds->scraperDs[i]->set_source(Tango::DEV);
         val << ds->scrSetPoints[i];
         ds->scraperDs[i]->write_attribute(val);
+        cout << "Scraper write :" << ds->scrSetPoints[i] << " ok" << endl;
       }
     }
+
+    // Sleep 2s
+    nanotime.tv_sec = 2;
+    nanotime.tv_nsec = 0;
+    nanosleep(&nanotime, NULL);
 
     // Wait while moving
 
@@ -185,7 +194,7 @@ void CleaningTask::scrapper_down(bool updateState) {
       ds->set_status(tmp.c_str());
       ds->set_state(Tango::ON);
     }
-    exit(0);
+    return false;
 
   }
 
@@ -197,12 +206,13 @@ void CleaningTask::scrapper_down(bool updateState) {
     ds->set_status("Ready to sweep");
   }
 
+  return true;
 
 }
 
 // ----------------------------------------------------------------------------------------
 
-void CleaningTask::sweep(bool updateState) {
+bool CleaningTask::sweep(bool updateState) {
 
   Tango::DeviceAttribute val;
   struct timespec nanotime;
@@ -298,7 +308,7 @@ void CleaningTask::sweep(bool updateState) {
     cout << "SweepThread: Received DevFailed exception while sweeping." << endl;
     Tango::Except::print_exception(e);
     ds->set_status("SweepThread Error:" + string(e.errors[0].desc.in()));
-    exit(0);
+    return false;
   }
 
   {
@@ -309,6 +319,7 @@ void CleaningTask::sweep(bool updateState) {
     ds->set_status("Sweep done succesfully");
   }
 
+  return true;
 
 }
 
