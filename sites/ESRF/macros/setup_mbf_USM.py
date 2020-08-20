@@ -39,7 +39,10 @@ class Cleaning_legacy():
             str_warning += "-> SR cleaning will not be possible\n\n"
         return str_warning
 
-    def clean(self, output_fct):
+    def clean(self, output_fct, nShots=None):
+        """
+        nShots is not used in this function
+        """
         Mbf = self.mbf_hl.Mbf
         mbfCtrl = self.mbf_hl.mbfCtrl
 
@@ -102,7 +105,7 @@ class Cleaning_legacy():
 
 
 class Cleaning(Cleaning_legacy):
-    def clean(self, output_fct):
+    def clean(self, output_fct, nShots=None):
         Mbf = self.mbf_hl.Mbf
         mbfCtrl = self.mbf_hl.mbfCtrl
 
@@ -186,18 +189,23 @@ class Cleaning(Cleaning_legacy):
         # It cannot harm to wait a little before the storm...
         time.sleep(0.1)
 
-        # Send soft trig during requested time
+        # Send soft trig during requested time or do nShots
         tic = time.time()
         ii = 1
         while True:
+            if nShots is not None:
+                if ii > nShots:
+                    break
+            else:
+                if (time.time() - tic) > self.CleaningDuration:
+                    break
+            
             output_fct("Cleaning cycle #{}".format(ii))
             Mbf.gput('TRG:SOFT.PROC', 0, tango_attr="TRG_SOFT_CMD")
             seq_dt = Mbf.get('SEQ:TOTAL:DURATION:S')
             # wait for bunches to calm down after a sweep
             time.sleep(seq_dt + 0.01)
             ii += 1
-            if (time.time() - tic) > self.CleaningDuration:
-                break
         
         # restore PV changed for the cleaning
         for pv_name, val in self.bk_dict.items():

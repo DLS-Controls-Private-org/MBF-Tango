@@ -71,7 +71,13 @@ class mbf_control(Macro):
                 mbf_hl.comm_set_sweep_on(False)
 
             elif command=="clean":
-                self.cleaning.clean(self.output)
+                # attName holds nShots
+                # if not 'None' it overrides CleaningTime attribute
+                try:
+                    nShots = int(attName)
+                except ValueError:
+                    nShots = None
+                self.cleaning.clean(self.output, nShots)
 
             elif command=="growdamp_start":
                 # attName holds mbfGrowDampDevName
