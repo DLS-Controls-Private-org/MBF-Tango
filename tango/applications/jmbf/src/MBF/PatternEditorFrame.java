@@ -68,6 +68,12 @@ public class PatternEditorFrame extends JFrame implements ActionListener {
   private JButton           dismissBtn;
 
   public PatternEditorFrame(int type,String fullAttributeName) {
+    this(type,fullAttributeName,MainPanel.NB_BUCKET);
+  }
+
+  public PatternEditorFrame(int type,String fullAttributeName,int nbBucket) {
+    
+    NB_BUCKET = nbBucket;
 
     int pos = fullAttributeName.lastIndexOf("/");
     if(pos<0) {
