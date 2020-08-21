@@ -273,11 +273,12 @@ public class Utils {
       AttributeInfo ai = ds.get_attribute_info(attName);
       DeviceAttribute argin = new DeviceAttribute(attName);
       DeviceAttribute da = ds.read_attribute(attName);
+      int nbRead = da.getNbRead();
       
       switch(ai.data_type) {
         case TangoConst.Tango_DEV_DOUBLE:
           double[] vd = da.extractDoubleArray();       
-          if(vd.length!=MainPanel.NB_BUCKET) {
+          if(nbRead!=MainPanel.NB_BUCKET) {
             System.out.println("Warning, invalid pattern lenght, reseting to " + MainPanel.NB_BUCKET);
             vd = new double[MainPanel.NB_BUCKET];
             for(int i=0;i<vd.length;i++) vd[i]=0.0;
@@ -292,7 +293,7 @@ public class Utils {
           break;
         case TangoConst.Tango_DEV_LONG:
           int[] vi = da.extractLongArray();
-          if(vi.length!=MainPanel.NB_BUCKET) {
+          if(nbRead!=MainPanel.NB_BUCKET) {
             System.out.println("Warning, invalid pattern lenght, reseting to " + MainPanel.NB_BUCKET);
             vi = new int[MainPanel.NB_BUCKET];
             for(int i=0;i<vi.length;i++) vi[i]=0;
@@ -307,7 +308,7 @@ public class Utils {
           break;
         case TangoConst.Tango_DEV_SHORT:
           short[] vs = da.extractShortArray();
-          if(vs.length!=MainPanel.NB_BUCKET) {
+          if(nbRead!=MainPanel.NB_BUCKET) {
             System.out.println("Warning, invalid pattern lenght, reseting to " + MainPanel.NB_BUCKET);
             vs = new short[MainPanel.NB_BUCKET];
             for(int i=0;i<vs.length;i++) vs[i]=0;
