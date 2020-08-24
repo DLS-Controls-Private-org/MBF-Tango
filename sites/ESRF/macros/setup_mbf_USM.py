@@ -141,8 +141,8 @@ class Cleaning(Cleaning_legacy):
         bk_list.append('SEQ:1:COUNT_S')
         bk_list.append('SEQ:1:START_FREQ_S')
         bk_list.append('SEQ:1:END_FREQ_S')
-        bk_list.append('SEQ:1:GAIN_S')
-        bk_list.append('SEQ:1:ENABLE_S')
+        #bk_list.append('SEQ:1:ENABLE_S')
+        seq_enable_bk = Mbf.get('SEQ:1:ENABLE_S')
         bk_list.append('TRG:SEQ:MODE_S')
         bk_list.append('TRG:SEQ:SOFT:BL_S')
         bk_list.append('SEQ:SUPER:COUNT_S')
@@ -206,11 +206,21 @@ class Cleaning(Cleaning_legacy):
             # wait for bunches to calm down after a sweep
             time.sleep(seq_dt + 0.01)
             ii += 1
-        
+
+        # Cancel next armed sweep
+        Mbf.put('TRG:SEQ:DISARM_S', 0)
+        Mbf.put('SEQ:RESET_S', 0)
+
+        # Disable SEQ NCO until re-configuring the MBF
+        Mbf.put('SEQ:1:ENABLE_S', 0)
+
         # restore PV changed for the cleaning
         for pv_name, val in self.bk_dict.items():
             Mbf.put(pv_name, val)
         self.bk_dict = {}
+
+        # Restore SEQ enable
+        Mbf.put('SEQ:1:ENABLE_S', seq_enable_bk)
 
     def stop(self, output_fct):
         if hasattr(self, 'bk_dict'):
