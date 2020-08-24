@@ -442,7 +442,7 @@ class MBF_HL():
         
         sweep_state = self.get_sweep_state()
         fb_state = self.get_feedback_state()
-        detector_input = 0      # Detector input is ADC (0)
+        detector_input = 1      # Detector input is FIR (1)
         det_gain = 0            # Don't use the -48 dB scaling (0)
         
         tune_fb = mbfCtrl.Tune
