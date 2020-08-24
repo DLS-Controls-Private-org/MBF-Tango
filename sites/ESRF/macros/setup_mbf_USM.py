@@ -235,10 +235,8 @@ class MBF_HL():
             gap = 61
             clean_pattern[1:1+gap] = 1
             clean_pattern[-gap:] = -1
-            # Don't clean bucket #61 to avoid killing right marker
-            clean_pattern[61] = 0
             fb_pattern = zeros((bunch_count,), dtype=int)
-            fb_pattern[0] = 1
+            fb_pattern[62:931] = 1
         elif sr_mode == '16-bunch':
             for ii in range(16):
                 clean_pattern[62*ii+1:62*(ii+1)] = (2*(ii%2)-1)
