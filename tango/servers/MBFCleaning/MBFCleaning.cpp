@@ -721,6 +721,8 @@ void MBFCleaning::add_dynamic_attributes()
 	  string attName =  "Scraper_" + get_last_field(scraperNames[i]);
     scrAttNames.push_back(attName);
 	  ScraperAttribute *att = new ScraperAttribute(attName.c_str(),i);
+	  att->set_memorized();
+	  att->set_memorized_init(true);
 	  add_attribute(att);
 	}
 
