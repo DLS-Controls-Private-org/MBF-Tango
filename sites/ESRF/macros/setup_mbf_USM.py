@@ -157,7 +157,7 @@ class Cleaning(Cleaning_legacy):
         Mbf.put('SEQ:SUPER:RESET_S', 0)
 
         # set cleaning pattern
-        clean_pattern, fb_pattern = self.mbf_hl.gen_patterns(mode)
+        clean_pattern, fb_patterns = self.mbf_hl.gen_patterns(mode)
         gainwf_clean = self.cleaning_fine_gain * clean_pattern
         Mbf.put('BUN:0:SEQ:GAIN_S', gainwf_clean)
         Mbf.put('BUN:2:SEQ:GAIN_S', gainwf_clean)
@@ -240,19 +240,30 @@ class MBF_HL():
     def gen_patterns(self, sr_mode):
         bunch_count = self.Mbf.bunch_count
         clean_pattern = zeros((bunch_count,), dtype=int)
-        fb_pattern = clean_pattern == 0
+        fb_patterns = []
+        for ii in range(4):
+            fb_patterns.append(zeros((bunch_count,), dtype=int))
         if sr_mode == '7/8+1':
             gap = 61
-            clean_pattern[1:1+gap] = 1
+            clean_pattern[1:2+gap] = 1
             clean_pattern[-gap:] = -1
-            fb_pattern = zeros((bunch_count,), dtype=int)
-            fb_pattern[62:931] = 1
+            # Feedback on single bunch
+            fb_patterns[0][0] = 1
+            # Feedback on main train
+            fb_patterns[1][2+gap:-gap] = 1
         elif sr_mode == '16-bunch':
             for ii in range(16):
                 clean_pattern[62*ii+1:62*(ii+1)] = (2*(ii%2)-1)
         elif sr_mode == '4-bunch':
             for ii in range(4):
                 clean_pattern[248*ii+1:248*(ii+1)] = (2*(ii%2)-1)
+        elif sr_mode == '32*12':
+            trains_l = 12
+            clean_pattern = zeros((bunch_count,), dtype=int)
+            start = trains_l
+            for ii in range(32):
+                clean_pattern[start+ii*31:start+ii*31+(31-trains_l)] = \
+                        (2*(ii%2)-1)
         elif sr_mode == 'Hybrid':
             gap_l = 147
             gap_r = 123
@@ -274,7 +285,7 @@ class MBF_HL():
             clean_pattern[:] = sign(user_pattern)
         else:
             raise NameError('SR mode ' + sr_mode + ' invalid')
-        return clean_pattern, fb_pattern
+        return clean_pattern, fb_patterns
 
     def set_banks(self, mode, cleaning_fine_gain, feedback_fine_gain,
             sweep_bunch_enables):
@@ -286,16 +297,22 @@ class MBF_HL():
 
         # Configure banks #1, #2, #3 and #4
         #
-        clean_pattern, fb_pattern = self.gen_patterns(mode)
+        clean_pattern, fb_patterns = self.gen_patterns(mode)
 
         all_bucket = ones((BUNCH_COUNT,))
         bunches = clean_pattern == 0
 
-        outwf_fb = smc.DAC_OUT_FIR*fb_pattern
+        firwf = zeros(BUNCH_COUNT, dtype = int)
+        fb_pattern_any = zeros(BUNCH_COUNT, dtype = int)
+        for ii, fb_pattern in enumerate(fb_patterns):
+            firwf[fb_pattern == 1] = ii
+            fb_pattern_any[fb_pattern == 1] = 1
+
+        outwf_fb = smc.DAC_OUT_FIR*fb_pattern_any
         outwf_clean = smc.DAC_OUT_NCO1*logical_not(bunches)
         outwf_sweep = smc.DAC_OUT_SWEEP*sweep_bunch_enables
         gainwf_clean = cleaning_fine_gain*clean_pattern
-        gainwf_fb = feedback_fine_gain*fb_pattern
+        gainwf_fb = feedback_fine_gain*fb_pattern_any
         gainwf_sweep = feedback_fine_gain*all_bucket
 
         # For all banks:
@@ -303,7 +320,7 @@ class MBF_HL():
         #  - set the 5 gains
         for bank in range(4):
             prefix = 'BUN:{:d}'.format(bank)
-            Mbf.put(prefix + ':FIRWF_S', BUNCH_ZEROS)
+            Mbf.put(prefix + ':FIRWF_S', firwf)
             Mbf.put(prefix + ':FIR_GAIN_S', gainwf_fb)
             Mbf.put(prefix + ':NCO1:GAIN_S', gainwf_clean)
             Mbf.put(prefix + ':NCO2:GAIN_S', 0*all_bucket)
