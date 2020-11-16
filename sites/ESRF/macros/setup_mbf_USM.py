@@ -275,7 +275,8 @@ class MBF_HL():
                 clean_pattern[start+ii*31:start+ii*31+(31-trains_l)] = \
                         (2*(ii%2)-1)
         elif sr_mode == 'Uniform':
-            pass
+            # Feedback everywhere
+            fb_patterns[0][:] = 1
         elif sr_mode == 'ARB_Pattern':
             mbfCtrl = self.mbfCtrl
             user_pattern = mbfCtrl.CleaningPattern
