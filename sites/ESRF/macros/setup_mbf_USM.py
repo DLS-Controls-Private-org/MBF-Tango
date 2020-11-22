@@ -264,6 +264,7 @@ class MBF_HL():
             for ii in range(32):
                 clean_pattern[start+ii*31:start+ii*31+(31-trains_l)] = \
                         (2*(ii%2)-1)
+            fb_patterns[0][:] = clean_pattern == 0
         elif sr_mode == 'Hybrid':
             gap_l = 147
             gap_r = 123
