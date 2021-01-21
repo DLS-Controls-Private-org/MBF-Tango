@@ -1,0 +1,36 @@
+# -*- coding: utf-8 -*-
+
+horizontal_axis_number = 1
+
+tmbf_dev_name = {
+        'horizontal': 'sy/d-mbf/utca-horizontal',
+        'vertical': 'sy/d-mbf/utca-vertical',
+        'global': 'sy/d-mbf/utca-global' }
+
+tmbf_instance_name = {
+        'horizontal': 'sy-mbf-horizontal',
+        'vertical': 'sy-mbf-vertical',
+        'global': 'sy-mbf-global' }
+
+tfit_dev_name = {
+        'horizontal': 'sy/d-mbf/tune-h',
+        'vertical': 'sy/d-mbf/tune-v' }
+
+tfit_instance_name = {
+        'horizontal': 'sy-mbf-tuneh',
+        'vertical': 'sy-mbf-tunev' }
+
+vars_users = {
+        'DEVICE': 'SY-TMBF',
+        'AXIS0': 'Y',
+        'AXIS1': 'X',
+        'MEMORY_READOUT_LENGTH': '16384',
+        'ADC_TAPS': '20',
+        'DAC_TAPS': '20',
+        'BUNCHES_PER_TURN': '704',
+        'DETECTOR_LENGTH': '4096',
+        'BUNCH_TAPS': '16',
+        'REVOLUTION_FREQUENCY': '500531',
+        'TUNE_PLL_LENGTH': '4096' }
+
+# vim: set filetype=python:
