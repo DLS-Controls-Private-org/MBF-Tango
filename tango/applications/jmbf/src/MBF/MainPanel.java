@@ -12,6 +12,7 @@ import fr.esrf.tangoatk.widget.util.jdraw.JDMouseEvent;
 import fr.esrf.tangoatk.widget.util.jdraw.JDMouseListener;
 import fr.esrf.tangoatk.widget.util.jdraw.JDObject;
 import fr.esrf.tangoatk.widget.util.jdraw.JDSwingObject;
+import fr.esrf.tangoatk.widget.util.jdraw.JDTitledRect;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -35,7 +36,7 @@ import javax.swing.JOptionPane;
  */
 public class MainPanel extends javax.swing.JFrame implements SynopticProgressListener {
 
-  final static String APP_RELEASE = "1.8";
+  final static String APP_RELEASE = "2.0";
 
   static int NB_BUCKET = 992;
   static String mfdbkHDevName;
@@ -190,6 +191,29 @@ public class MainPanel extends javax.swing.JFrame implements SynopticProgressLis
                     
     addMouseListener(mfdbkHEpicsDevName+"/FIR_OVF",firPanelHShower);
     addMouseListener(mfdbkVEpicsDevName+"/FIR_OVF",firPanelVShower);
+
+    // Rectangle title
+    JDTitledRect hr = (JDTitledRect)theSynoptic.getObjectsByName("H_TitledRect",false).get(0);
+    JDTitledRect vr = (JDTitledRect)theSynoptic.getObjectsByName("V_TitledRect",false).get(0);
+    
+    
+    if( mfdbkHEpicsDevName.toLowerCase().startsWith("sy") ) {
+      // Hide delay turn status
+      Vector<JDObject> objs = theSynoptic.getObjectsByName(mfdbkGEpicsDevName+"/DLY_TURN_STATUS", false);
+      for(int i=0;i<objs.size();i++)
+        objs.get(i).setVisible(false);
+      JDObject obj = (JDObject)theSynoptic.getObjectsByName("TURN_STATUS_LABEL", false).get(0);
+      obj.setVisible(false);
+      
+      hr.setTitle("SY Horizontal");
+      vr.setTitle("SY Vertical");
+              
+    } else {
+
+      hr.setTitle("SR Horizontal");
+      vr.setTitle("SR Vertical");
+      
+    }
             
     JDSwingObject btnh = (JDSwingObject)theSynoptic.getObjectsByName("HorizontalTuneChart",false).get(0);
     ((JButton) btnh.getComponent()).addActionListener(
@@ -275,7 +299,10 @@ public class MainPanel extends javax.swing.JFrame implements SynopticProgressLis
     attList.startRefresher();
     
     splash.setVisible(false);
-    setTitle("Multibunch Feedback " + APP_RELEASE);
+    if(mfdbkHEpicsDevName.toLowerCase().startsWith("sy"))
+      setTitle("Multibunch Feedback " + APP_RELEASE + " [Booster]");
+    else
+      setTitle("Multibunch Feedback " + APP_RELEASE + " [Storage Ring]");
     ATKGraphicsUtils.centerFrameOnScreen(this);
     setVisible(true);
     

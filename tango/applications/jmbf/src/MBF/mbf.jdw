@@ -938,13 +938,13 @@ JDFile v11 {
   JDTitledRect {
     summit:10,5,866,163
     origin:58,15
-    name:"TitledRect"
-    title:"Horizontal"
+    name:"H_TitledRect"
+    title:"Horizontal_Title"
   }
   JDTitledRect {
     summit:10,167,866,324
     origin:58,170
-    name:"TitledRect"
+    name:"V_TitledRect"
     title:"Vertical"
   }
   JDTitledRect {
@@ -1075,7 +1075,7 @@ JDFile v11 {
     summit:873,153,919,174
     origin:935,164
     lineWidth:0
-    name:"Label"
+    name:"TURN_STATUS_LABEL"
     font:"Dialog",0,13
     text:"TURN"
     hAlignment:1
