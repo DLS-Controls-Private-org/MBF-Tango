@@ -3,22 +3,22 @@
 horizontal_axis_number = 1
 
 tmbf_dev_name = {
-        'horizontal': 'sr/d-mfdbk/utca-horizontal',
-        'vertical': 'sr/d-mfdbk/utca-vertical',
-        'global': 'sr/d-mfdbk/utca-global' }
+        'horizontal': 'tmbf/processor/h',
+        'vertical': 'tmbf/processor/v',
+        'global': 'tmbf/processor/global' }
 
 tmbf_instance_name = {
-        'horizontal': 'mfdbk-h',
-        'vertical': 'mfdbk-v',
-        'global': 'mfdbk-global' }
+        'horizontal': 'tmbf-h',
+        'vertical': 'tmbf-v',
+        'global': 'tmbf-global' }
 
 tfit_dev_name = {
-        'horizontal': 'sr/d-mtune/h',
-        'vertical': 'sr/d-mtune/v' }
+        'horizontal': 'tmbf/tune_fit/h',
+        'vertical': 'tmbf/tune_fit/v' }
 
 tfit_instance_name = {
-        'horizontal': 'mfdbk-tuneh',
-        'vertical': 'mfdbk-tunev' }
+        'horizontal': 'tmbf-tuneh',
+        'vertical': 'tmbf-tunev' }
 
 vars_users = {
         'DEVICE': 'SR-TMBF',

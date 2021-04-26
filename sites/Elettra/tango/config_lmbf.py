@@ -2,9 +2,9 @@
 
 longitudinal_axis_number = 0
 
-lmbf_dev_name = {'longitudinal': 'sr/d-mfdbk/utca-longitudinal'}
+lmbf_dev_name = {'longitudinal': 'lmbf/processor/l'}
 
-lmbf_instance_name = {'longitudinal': 'mfdbk-l' }
+lmbf_instance_name = {'longitudinal': 'lmbf-l' }
 
 
 vars_users = {
