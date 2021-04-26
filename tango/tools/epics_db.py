@@ -90,14 +90,23 @@ def print_res_file(dico_tango_make, instance_name, dev_name):
                 'max_value', 'format']
         for att_prop in att_prop_list:
             if att_prop in d:
+                my_str_e = '' # hack for Elettra: untill cumbia and qtango do not undertsand and parse 'EnumValues' , replicate it as 'values' 
                 my_str = dev_name + '/' + tango_att_name + '->' \
                         + att_prop + ': '
+                if att_prop == 'EnumLabels':
+                    my_str_e = dev_name + '/' + tango_att_name + '->'  + 'values' + ': '
                 if type(d[att_prop]) is str:
                     my_str += '"' + d[att_prop] + '"'
+                    if my_str_e:
+                        my_str += '"' + d[att_prop] + '"'
                 else:
                     lst = d[att_prop]
                     my_str += ', '.join('"{}"'.format(elem) for elem in lst)
+                    if my_str_e:
+                        my_str_e += ', '.join('"{}"'.format(elem) for elem in lst)
                 print(my_str)
+                if my_str_e:
+                    print(my_str_e)
 
 class EPICS_db:
     def __init__(self, filename, vars_defs):
