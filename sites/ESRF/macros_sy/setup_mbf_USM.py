@@ -64,51 +64,23 @@ class MBF_HL():
         gainwf_sweep = np.zeros((704,))
         if mode == '7/8_1b':
             bank_this_mode = 0
-            gainwf_sweep[1:352] = 1
-            gainwf_sweep[352+1:352+352] = -1
-            Mbf.put('SEQ:1:BANK_S', bank_this_mode)
+            bunch_list = [0]
             harmonic_shift = 1
         elif mode == '7/8_2b':
             bank_this_mode = 1
-            gainwf_sweep[1:206] = 1
-            gainwf_sweep[207:352] = -1
-            gainwf_sweep[352+1:352+206] = 1
-            gainwf_sweep[352+207:352+352] = -1
-            Mbf.put('SEQ:1:BANK_S', bank_this_mode)
+            bunch_list = [0, 206]
             harmonic_shift = 0
         elif mode == '7/8_4b':
             bank_this_mode = 2
-            gainwf_sweep[1:88] = 1
-            gainwf_sweep[89:176] = -1
-            gainwf_sweep[177:264] = 1
-            gainwf_sweep[265:352] = -1
-            gainwf_sweep[352+1:352+88] = 1
-            gainwf_sweep[352+89:352+176] = -1
-            gainwf_sweep[352+177:352+264] = 1
-            gainwf_sweep[352+265:352+352] = -1
-            Mbf.put('SEQ:1:BANK_S', bank_this_mode)
+            bunch_list = [0, 88, 176, 264]
             harmonic_shift = 0
         elif mode == '16-bunch':
             bank_this_mode = 0
-            gainwf_sweep[1:62] = 1
-            gainwf_sweep[63:124] = -1
-            gainwf_sweep[125:186] = 1
-            gainwf_sweep[187:248] = -1
-            gainwf_sweep[249:352] = 1
-            gainwf_sweep[352+1:352+62] = -1
-            gainwf_sweep[352+63:352+124] = 1
-            gainwf_sweep[352+125:352+186] = -1
-            gainwf_sweep[352+187:352+248] = 1
-            gainwf_sweep[352+249:352+352] = -1
-            Mbf.put('SEQ:1:BANK_S', bank_this_mode)
+            bunch_list = [0, 62, 124, 186, 248]
             harmonic_shift = 1
         elif mode == '4-bunch':
             bank_this_mode = 0
-            gainwf_sweep[1:248] = 1
-            gainwf_sweep[249:352] = -1
-            gainwf_sweep[352+1:352+248] = 1
-            gainwf_sweep[352+249:352+352] = -1
-            Mbf.put('SEQ:1:BANK_S', bank_this_mode)
+            bunch_list = [0, 248]
             harmonic_shift = 0
         elif mode == 'ARB_Pattern':
             raise Exception(('ARB_Pattern mode is not implemented'
@@ -118,8 +90,16 @@ class MBF_HL():
             if user_pattern.size != BUNCH_COUNT:
                 raise ValueError(('CleaningPattern should have exactly {:.0f} '
                         + 'elements').format(BUNCH_COUNT))
-            Mbf.put('SEQ:1:BANK_S', bank_this_mode)
             harmonic_shift = 0
+
+        Mbf.put('SEQ:1:BANK_S', bank_this_mode)
+
+        cleanbunch_list = bunch_list + [352+el for el in bunch_list] + [2*352]
+        N_cleaning_buckets = 2
+        for ii in range(len(cleanbunch_list) - 1):
+                b1 = cleanbunch_list[ii] + N_cleaning_buckets
+                b2 = cleanbunch_list[ii+1]
+                gainwf_sweep[b1:b2] = 1 if ii%2 == 0 else -1
 
         BUNCH_ZEROS = np.zeros(BUNCH_COUNT, dtype=int)
         BUNCH_ONES = np.ones(BUNCH_COUNT, dtype=int)
