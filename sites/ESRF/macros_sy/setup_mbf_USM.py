@@ -4,6 +4,34 @@ import numpy as np
 import time
 from importlib import reload
 from math import modf
+import re
+
+
+# This function generates a booster bunch list based on the mode name.
+# Valid modes are for instance:
+# - '1b'
+# - '2b_248'
+# - '5b_62'
+# The first part is the number of bunches in SY.
+# The second argument is the separation between bunches (same for all bunches).
+def mode_auto(mode):
+    try:
+        rout = re.match('\A([1-9])b(?:_(\d{1,3}))*\Z', mode)
+        num, dist = rout.groups()
+        num = int(num)
+        if dist is None:
+            if num != 1:
+                raise Exception("Distance between bunches required")
+            dist = 1
+        else:
+            dist = int(dist)
+        bunch_list = list(range(0, int(num)*int(dist), int(dist)))
+        if bunch_list[-1] > 351:
+            raise Exception("Bunch number exceeded max value")
+        harmonic_shift = 1 if num%2 == 1 else 0
+    except:
+        raise Exception("Mode '{}' is incorrect".format(mode))
+    return bunch_list, harmonic_shift
 
 
 class MBF_HL():
@@ -62,35 +90,35 @@ class MBF_HL():
         BUNCH_COUNT = Mbf.bunch_count
 
         gainwf_sweep = np.zeros((704,))
-        if mode == '7/8_1b':
-            bank_this_mode = 0
+        bank_this_mode = 0
+        if (mode == '7/8_1b') or (mode == 'hybrid_1b'):
             bunch_list = [0]
             harmonic_shift = 1
-        elif mode == '7/8_2b':
-            bank_this_mode = 1
+        elif (mode == '7/8_2b'):
             bunch_list = [0, 206]
             harmonic_shift = 0
-        elif mode == '7/8_4b':
-            bank_this_mode = 2
+        elif (mode == '7/8_4b'):
             bunch_list = [0, 88, 176, 264]
             harmonic_shift = 0
-        elif mode == '16-bunch':
-            bank_this_mode = 0
+        elif (mode == 'hybrid_4b'):
+            bunch_list = [0, 62, 124, 186]
+            harmonic_shift = 0
+        elif (mode == '16-bunch') or (mode == 'hybrid_5b'):
             bunch_list = [0, 62, 124, 186, 248]
             harmonic_shift = 1
-        elif mode == '4-bunch':
-            bank_this_mode = 0
+        elif (mode == '4-bunch'):
             bunch_list = [0, 248]
             harmonic_shift = 0
         elif mode == 'ARB_Pattern':
             raise Exception(('ARB_Pattern mode is not implemented'
                     ).format(BUNCH_COUNT))
-            bank_this_mode = 0
             user_pattern = mbfCtrl.CleaningPattern
             if user_pattern.size != BUNCH_COUNT:
                 raise ValueError(('CleaningPattern should have exactly {:.0f} '
                         + 'elements').format(BUNCH_COUNT))
             harmonic_shift = 0
+        else:
+            bunch_list, harmonic_shift = mode_auto(mode)
 
         Mbf.put('SEQ:1:BANK_S', bank_this_mode)
 
