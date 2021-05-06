@@ -1,5 +1,5 @@
 #
-# Resource backup , created Tue Feb 11 12:10:37 CET 2020
+# Resource backup , created Mon Apr 26 13:40:33 CEST 2021
 #
 
 #---------------------------------------------------------
@@ -13,8 +13,6 @@ Tango2Epics/tmbf-tune-h/DEVICE/Tango2Epics: "tmbf/tune_fit/h"
 
 tmbf/tune_fit/h->ArrayAccessTimeout: 0.3
 tmbf/tune_fit/h->HelperApplication: "atkpanel tmbf/tune_fit/h"
-tmbf/tune_fit/h->polled_attr: tune,\ 
-                              1000
 tmbf/tune_fit/h->ScalarAccessTimeout: 0.2
 tmbf/tune_fit/h->SubscriptionCycle: 0.4
 tmbf/tune_fit/h->Variables: SR-TMBF:X:TUNE:CENTRE:HEIGHT*Scalar*Double*READ_ONLY*ATTRIBUTE*CENTRE_HEIGHT,\ 
@@ -62,6 +60,7 @@ tmbf/tune_fit/h->Variables: SR-TMBF:X:TUNE:CENTRE:HEIGHT*Scalar*Double*READ_ONLY
                             SR-TMBF:X:TUNE:RIGHT:VALID*Scalar*Enum*READ_ONLY*ATTRIBUTE*RIGHT_VALID,\ 
                             SR-TMBF:X:TUNE:RIGHT:WIDTH*Scalar*Double*READ_ONLY*ATTRIBUTE*RIGHT_WIDTH,\ 
                             SR-TMBF:X:TUNE:SCALE*Array:4096*Double*READ_ONLY*ATTRIBUTE*SCALE,\ 
+                            SR-TMBF:X:TUNE:SELECT_S*Scalar*Enum*READ_WRITE*ATTRIBUTE*SELECT_S,\ 
                             SR-TMBF:X:TUNE:SYNCTUNE*Scalar*Double*READ_ONLY*ATTRIBUTE*SYNCTUNE,\ 
                             SR-TMBF:X:TUNE:TUNE*Scalar*Double*READ_ONLY*ATTRIBUTE*TUNE
 
@@ -124,6 +123,13 @@ tmbf/tune_fit/h/RIGHT_VALID->description: "Peak valid"
 tmbf/tune_fit/h/RIGHT_VALID->EnumLabels: Invalid,\ 
                                          Ok
 tmbf/tune_fit/h/RIGHT_WIDTH->description: "Peak width"
+tmbf/tune_fit/h/SELECT_S->description: "Tune source"
+tmbf/tune_fit/h/SELECT_S->EnumLabels: Fitted,\ 
+                                      Maximum,\ 
+                                      TunePLL
+tmbf/tune_fit/h/SELECT_S->values: Fitted,\ 
+                                  Maximum,\ 
+                                  TunePLL
 tmbf/tune_fit/h/SYNCTUNE->description: "Synchrotron tune"
 tmbf/tune_fit/h/TUNE->archive_abs_change: -0.0002,\ 
                                           0.0002
@@ -158,4 +164,4 @@ CLASS/Tango2Epics->ProjectTitle: "Tango2Epics Tango Device"
 
 # --- dserver/Tango2Epics/tmbf-tune-h properties
 
-dserver/Tango2Epics/tmbf-tune-h->polling_threads_pool_conf: "tmbf/tune_fit/h"
+dserver/Tango2Epics/tmbf-tune-h->__SubDevices: "tmp/log/goofy@127"

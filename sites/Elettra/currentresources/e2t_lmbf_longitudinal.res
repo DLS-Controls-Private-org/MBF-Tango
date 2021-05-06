@@ -1,5 +1,5 @@
 #
-# Resource backup , created Tue Feb 11 12:09:11 CET 2020
+# Resource backup , created Mon Apr 26 13:38:20 CEST 2021
 #
 
 #---------------------------------------------------------
@@ -13,6 +13,8 @@ Tango2Epics/lmbf-l/DEVICE/Tango2Epics: "lmbf/processor/l"
 
 lmbf/processor/l->ArrayAccessTimeout: 0.3
 lmbf/processor/l->HelperApplication: lmbf-gui
+lmbf/processor/l->polled_attr: i_adc_mms_mean_mean,\ 
+                               1000
 lmbf/processor/l->ScalarAccessTimeout: 0.2
 lmbf/processor/l->SubscriptionCycle: 0.4
 lmbf/processor/l->Variables: SR-LMBF:ADC:EVENTS:FAN*Scalar*Int*READ_WRITE*ATTRIBUTE*ADC_EVENTS_FAN,\ 
@@ -654,7 +656,8 @@ lmbf/processor/l->Variables: SR-LMBF:ADC:EVENTS:FAN*Scalar*Int*READ_WRITE*ATTRIB
                              SR-LMBF:TRG:SHARED*Scalar*String*READ_ONLY*ATTRIBUTE*TRG_SHARED,\ 
                              SR-LMBF:TRG:SOFT:IN*Scalar*Enum*READ_ONLY*ATTRIBUTE*TRG_SOFT_IN,\ 
                              SR-LMBF:TRG:SOFT_S*Scalar*Int*READ_WRITE*ATTRIBUTE*TRG_SOFT_S,\ 
-                             SR-LMBF:TRG:STATUS*Scalar*Enum*READ_ONLY*ATTRIBUTE*TRG_STATUS
+                             SR-LMBF:TRG:STATUS*Scalar*Enum*READ_ONLY*ATTRIBUTE*TRG_STATUS,\ 
+                             SR-LMBF:TRG:SOFT_S.SCAN*Scalar*Enum*READ_WRITE*ATTRIBUTE*TRG_SOFT_S_SCAN
 
 # --- lmbf/processor/l attribute properties
 
@@ -1815,6 +1818,8 @@ lmbf/processor/l/I_ADC_MMS_ARCHIVE_TRIG->description: "ARCHIVE processing trigge
 lmbf/processor/l/I_ADC_MMS_DELTA->description: "Max ADC values per bunch"
 lmbf/processor/l/I_ADC_MMS_MAX->description: "Max ADC values per bunch"
 lmbf/processor/l/I_ADC_MMS_MEAN->description: "Mean ADC values per bunch"
+lmbf/processor/l/I_ADC_MMS_MEAN_MEAN->archive_rel_change: -30,\ 
+                                                          30
 lmbf/processor/l/I_ADC_MMS_MEAN_MEAN->description: "Mean position"
 lmbf/processor/l/I_ADC_MMS_MIN->description: "Min ADC values per bunch"
 lmbf/processor/l/I_ADC_MMS_OVERFLOW->description: "MMS capture overflow status"
@@ -1869,10 +1874,10 @@ lmbf/processor/l/I_DAC_DRAM_SOURCE_S->description: "Source of memory data"
 lmbf/processor/l/I_DAC_DRAM_SOURCE_S->EnumLabels: "Before FIR",\ 
                                                   "After FIR"
 lmbf/processor/l/I_DAC_ENABLE_S->description: "DAC output enable"
-lmbf/processor/l/I_DAC_ENABLE_S->EnumLabels: Off,\ 
-                                             On
-lmbf/processor/l/I_DAC_ENABLE_S->values: Off,\ 
-                                         On
+lmbf/processor/l/I_DAC_ENABLE_S->EnumLabels: OFF,\ 
+                                             ON
+lmbf/processor/l/I_DAC_ENABLE_S->values: OFF,\ 
+                                         ON
 lmbf/processor/l/I_DAC_FILTER_S->description: "Output preemphasis filter"
 lmbf/processor/l/I_DAC_FIR_OVF->description: "DAC FIR overflow"
 lmbf/processor/l/I_DAC_FIR_OVF->EnumLabels: Ok,\ 
@@ -2120,6 +2125,8 @@ lmbf/processor/l/Q_FIR_OVF->EnumLabels: Ok,\
 lmbf/processor/l/STA_CLOCK->description: "ADC clock status"
 lmbf/processor/l/STA_CLOCK->EnumLabels: Unlocked,\ 
                                         Locked
+lmbf/processor/l/STA_CLOCK->values: Unlocked,\ 
+                                    Locked
 lmbf/processor/l/STA_POLL_S->description: "Poll system status"
 lmbf/processor/l/STA_VCO->description: "VCO clock status"
 lmbf/processor/l/STA_VCO->EnumLabels: Unlocked,\ 
@@ -2246,7 +2253,30 @@ lmbf/processor/l/TRG_SHARED->description: "List of shared targets"
 lmbf/processor/l/TRG_SOFT_IN->description: "Soft trigger input"
 lmbf/processor/l/TRG_SOFT_IN->EnumLabels: No,\ 
                                           Yes
+lmbf/processor/l/TRG_SOFT_IN->values: No,\ 
+                                      Yes
 lmbf/processor/l/TRG_SOFT_S->description: "Soft trigger"
+lmbf/processor/l/TRG_SOFT_S_SCAN->description: "Soft trigger scan"
+lmbf/processor/l/TRG_SOFT_S_SCAN->EnumValues: Passive,\ 
+                                              Event,\ 
+                                              Passive,\ 
+                                              "10 second",\ 
+                                              "5 second",\ 
+                                              "2 second",\ 
+                                              "1 second",\ 
+                                              "0.5 second",\ 
+                                              "0.2 second",\ 
+                                              "0.1 second"
+lmbf/processor/l/TRG_SOFT_S_SCAN->values: Passive,\ 
+                                          Event,\ 
+                                          Passive,\ 
+                                          "10 second",\ 
+                                          "5 second",\ 
+                                          "2 second",\ 
+                                          "1 second",\ 
+                                          "0.5 second",\ 
+                                          "0.2 second",\ 
+                                          "0.1 second"
 lmbf/processor/l/TRG_STATUS->description: "Shared trigger target status"
 lmbf/processor/l/TRG_STATUS->EnumLabels: Idle,\ 
                                          Armed,\ 
@@ -2254,6 +2284,12 @@ lmbf/processor/l/TRG_STATUS->EnumLabels: Idle,\
                                          Busy,\ 
                                          Mixed,\ 
                                          Invalid
+lmbf/processor/l/TRG_STATUS->values: Idle,\ 
+                                     Armed,\ 
+                                     Locked,\ 
+                                     Busy,\ 
+                                     Mixed,\ 
+                                     Invalid
 
 #---------------------------------------------------------
 # CLASS Tango2Epics properties
@@ -2279,3 +2315,7 @@ CLASS/Tango2Epics->ProjectTitle: "Tango2Epics Tango Device"
 # CLASS Tango2Epics attribute properties
 
 
+
+# --- dserver/Tango2Epics/lmbf-l properties
+
+dserver/Tango2Epics/lmbf-l->polling_threads_pool_conf: "lmbf/processor/l"

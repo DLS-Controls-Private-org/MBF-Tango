@@ -1,5 +1,5 @@
 #
-# Resource backup , created Tue Feb 11 12:10:09 CET 2020
+# Resource backup , created Mon Apr 26 13:39:17 CEST 2021
 #
 
 #---------------------------------------------------------
@@ -715,10 +715,10 @@ tmbf/processor/h/DAC_DRAM_SOURCE_S->description: "Source of memory data"
 tmbf/processor/h/DAC_DRAM_SOURCE_S->EnumLabels: "Before FIR",\ 
                                                 "After FIR"
 tmbf/processor/h/DAC_ENABLE_S->description: "DAC output enable"
-tmbf/processor/h/DAC_ENABLE_S->EnumLabels: Off,\ 
-                                           On
-tmbf/processor/h/DAC_ENABLE_S->values: Off,\ 
-                                       On
+tmbf/processor/h/DAC_ENABLE_S->EnumLabels: OFF,\ 
+                                           ON
+tmbf/processor/h/DAC_ENABLE_S->values: OFF,\ 
+                                       ON
 tmbf/processor/h/DAC_FILTER_DELAY_S->description: "Preemphasis filter group delay"
 tmbf/processor/h/DAC_FILTER_DELAY_S->max_value: 7.0
 tmbf/processor/h/DAC_FILTER_DELAY_S->min_value: 0.0
