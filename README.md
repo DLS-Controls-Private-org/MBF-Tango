@@ -62,7 +62,7 @@ as an example, the generic `CONFIG` file can be use:
 `make`  
 Generated resources files can be found in `$MBF_TANGO_HOME/tango/server/resources` (or a different path depending on the settings in `$MBF_TANGO_HOME/CONFIG`).
 
-4.  Load resources files in your Tango database using Jive (File -> Load Property File).
+4. Load resources files in your Tango database using Jive (File -> Load Property File).
 
 5. Start Tango Devices on MBF crate using Astor (on the create Control window, double click your server in the list).
 
