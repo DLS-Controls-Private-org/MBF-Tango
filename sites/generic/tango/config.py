@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 horizontal_axis_number = 1
+horizontal_axis_name = 'X'
+vertical_axis_name = 'Y'
 
 tmbf_dev_name = {
         'horizontal': 'srdiag/mbf/utca-horizontal',
@@ -13,8 +15,8 @@ tmbf_instance_name = {
         'global': 'mbf-global' }
 
 tfit_dev_name = {
-        'horizontal': 'srdiag/mtune/h',
-        'vertical': 'srdiag/mtune/v' }
+        'horizontal': 'srdiag/mtune/horizontal',
+        'vertical': 'srdiag/mtune/vertical' }
 
 tfit_instance_name = {
         'horizontal': 'mbf-tuneh',

@@ -110,14 +110,9 @@ class EPICS_db:
             rout = re_db_rec.match(line)
             if rout:
                 pv = rout.group(2)
-                pv_short = pv.replace("$(DEVICE):$(AXIS0):", "")
-                pv_short = pv_short.replace("$(DEVICE):$(AXIS1):", "")
-                pv_short = pv_short.replace("$(DEVICE):$(AXIS01):", "")
-                pv_short = pv_short.replace("$(DEVICE):", "")
                 d = {}
                 dico_db[pv] = d
                 d['__type__'] = rout.group(1)
-                d['__pv_short__'] = pv_short
                 d['__pv_abs__'] = replace_vars(pv, vars_defs)
             else:
                 rout = re_db_field.match(line)
