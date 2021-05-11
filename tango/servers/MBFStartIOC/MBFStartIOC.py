@@ -57,7 +57,7 @@ import subprocess
 # No states for this device
 
 
-class MBFStartIOC (PyTango.Device_4Impl):
+class MBFStartIOC (PyTango.LatestDeviceImpl):
     """This class mimic an EPICS IOC. It is used to display the state of an IOC in Astor.
     
     when the Tango device is started, it starts the IOC. When it is killed, it also kills the IOC. And if the IOC dies, the Tango device commit a suicide."""
@@ -75,7 +75,7 @@ class MBFStartIOC (PyTango.Device_4Impl):
     #----- PROTECTED REGION END -----#	//	MBFStartIOC.global_variables
 
     def __init__(self, cl, name):
-        PyTango.Device_4Impl.__init__(self,cl,name)
+        PyTango.LatestDeviceImpl.__init__(self,cl,name)
         self.debug_stream("In __init__()")
         MBFStartIOC.init_device(self)
         #----- PROTECTED REGION ID(MBFStartIOC.__init__) ENABLED START -----#
