@@ -74,15 +74,10 @@ def print_res_file(dico_tango_make, instance_name, dev_name):
         t += ["ATTRIBUTE"]
         t += [d['tango_att_name']]
         tab += ["{}*{}*{}*{}*{}*{}".format(*t)]
-    print(",\\ \n".join(tab))
-
-    #add special case for STA:STATUS - use also STA:STATUS.SEVR in order to read the string of the state
-    for pv_name in keys:
-        if 'STA:STATUS' in pv_name:
+        if 'STA:STATUS' in pv_name:  # Elettra special case for STA:STATUS - add  attribute STA:STATUS.SEVR in order to read the string of the state
             pv_name_e = pv_name + '.SEVR'
-            newattr = pv_name_e + '*Scalar*String*READ_ONLY*ATTRIBUTE*STA_SEVR'
-            print(",\\ \n",newattr)
-
+            tab += [pv_name_e + '*Scalar*String*READ_ONLY*ATTRIBUTE*STA_SEVR']
+    print(",\\ \n".join(tab))
 
     print("")
     print("# --- {} attribute properties".format(dev_name))
