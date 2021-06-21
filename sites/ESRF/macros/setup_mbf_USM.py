@@ -251,6 +251,10 @@ class MBF_HL():
             fb_patterns[0][0] = 1
             # Feedback on main train (FIR #1)
             fb_patterns[1][2+gap:-gap] = 1
+        elif sr_mode == '62-bunch':
+            for ii in range(62):
+                fb_patterns[0][16*ii] = 1
+                clean_pattern[16*ii+1:16*(ii+1)] = (2*(ii%2)-1)
         elif sr_mode == '16-bunch':
             for ii in range(16):
                 fb_patterns[0][62*ii] = 1
