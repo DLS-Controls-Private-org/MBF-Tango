@@ -36,7 +36,7 @@ import javax.swing.border.BevelBorder;
  */
 public class MainPanel extends javax.swing.JFrame {
   
-  final static String APP_RELEASE = "3.2";
+  final static String APP_RELEASE = "3.3";
   final static String SYCLEAN_DEV = "sy/mbf/cleaning";
   
   private Splash splash;
@@ -406,7 +406,7 @@ public class MainPanel extends javax.swing.JFrame {
 
         jSmoothLabel23.setHorizontalAlignment(2);
         jSmoothLabel23.setOpaque(false);
-        jSmoothLabel23.setText("Mode");
+        jSmoothLabel23.setText("Mode (not saved in config file)");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 8;
