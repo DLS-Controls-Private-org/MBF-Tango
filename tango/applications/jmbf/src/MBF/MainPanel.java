@@ -36,7 +36,7 @@ import javax.swing.JOptionPane;
  */
 public class MainPanel extends javax.swing.JFrame implements SynopticProgressListener {
 
-  final static String APP_RELEASE = "2.0";
+  final static String APP_RELEASE = "2.2";
 
   static int NB_BUCKET = 992;
   static String mfdbkHDevName;
@@ -44,6 +44,8 @@ public class MainPanel extends javax.swing.JFrame implements SynopticProgressLis
   static String mfdbkHEpicsDevName;
   static String mfdbkVEpicsDevName;
   static String mfdbkGEpicsDevName;
+  static String tuneHEpicsDevName;
+  static String tuneVEpicsDevName;
   
   private AttributeList attList;
   public static ErrorHistory errWin;
@@ -56,13 +58,15 @@ public class MainPanel extends javax.swing.JFrame implements SynopticProgressLis
    * Creates new form MainPanel
    */
   public MainPanel(boolean runningFromShell,
-          String hName,String vName,
+          String hName,String vName,String hTuneName,String vTuneName,
           String epicsHNane,String epicsVNane,String epicsGNane,
           int nbBucket) {
     
     NB_BUCKET = nbBucket;
     mfdbkHDevName = hName;
     mfdbkVDevName = vName;
+    tuneHEpicsDevName = hTuneName;
+    tuneVEpicsDevName = vTuneName;
     mfdbkHEpicsDevName = epicsHNane;
     mfdbkVEpicsDevName = epicsVNane;
     mfdbkGEpicsDevName = epicsGNane;
@@ -374,9 +378,11 @@ public class MainPanel extends javax.swing.JFrame implements SynopticProgressLis
     hMenu = new javax.swing.JMenu();
     sequencerHMenuItem = new javax.swing.JMenuItem();
     hDetMenuItem = new javax.swing.JMenuItem();
+    hTuneFitMenuItem = new javax.swing.JMenuItem();
     vMenu = new javax.swing.JMenu();
     sequencerVMenuItem = new javax.swing.JMenuItem();
     vDetMenuItem = new javax.swing.JMenuItem();
+    vTuneFitMenuItem = new javax.swing.JMenuItem();
     triggerMenuItem = new javax.swing.JMenuItem();
     delayMenuItem = new javax.swing.JMenuItem();
     memoryMenuItem = new javax.swing.JMenuItem();
@@ -426,6 +432,14 @@ public class MainPanel extends javax.swing.JFrame implements SynopticProgressLis
     });
     hMenu.add(hDetMenuItem);
 
+    hTuneFitMenuItem.setText("Tune Fit...");
+    hTuneFitMenuItem.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        hTuneFitMenuItemActionPerformed(evt);
+      }
+    });
+    hMenu.add(hTuneFitMenuItem);
+
     jViewMenu.add(hMenu);
 
     vMenu.setText("Vertical");
@@ -445,6 +459,14 @@ public class MainPanel extends javax.swing.JFrame implements SynopticProgressLis
       }
     });
     vMenu.add(vDetMenuItem);
+
+    vTuneFitMenuItem.setText("Tune Fit...");
+    vTuneFitMenuItem.addActionListener(new java.awt.event.ActionListener() {
+      public void actionPerformed(java.awt.event.ActionEvent evt) {
+        vTuneFitMenuItemActionPerformed(evt);
+      }
+    });
+    vMenu.add(vTuneFitMenuItem);
 
     jViewMenu.add(vMenu);
 
@@ -537,16 +559,26 @@ public class MainPanel extends javax.swing.JFrame implements SynopticProgressLis
     Utils.showvDETPanel();
   }//GEN-LAST:event_vDetMenuItemActionPerformed
 
+    private void vTuneFitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_vTuneFitMenuItemActionPerformed
+      Utils.showVTuneFitPanel();
+    }//GEN-LAST:event_vTuneFitMenuItemActionPerformed
+
+  private void hTuneFitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hTuneFitMenuItemActionPerformed
+    Utils.showHTuneFitPanel();
+  }//GEN-LAST:event_hTuneFitMenuItemActionPerformed
+
   /**
    * @param args the command line arguments
    */
   public static void main(String args[]) {
     
-    if( args.length != 6 ) {
+    if( args.length != 8 ) {
       
-      System.out.println("Usage: jmbf devH devV bridgeH bridgeV bridgeG bucketNb");
+      System.out.println("Usage: jmbf devH devV tuneH tuneV bridgeH bridgeV bridgeG bucketNb");
       System.out.println("  devH: Name of the horizontal MBFControl device");
       System.out.println("  devV: Name of the vertical MBFControl device");
+      System.out.println("  tuneH: Name of the horizontal MBF tune device");
+      System.out.println("  tuneV: Name of the vertical MBF tune device");
       System.out.println("  bridgeH: Name of the epics gateway horizontal device");
       System.out.println("  bridgeV: Name of the epics gateway vertical device");
       System.out.println("  bridgeG: Name of the epics gateway global device");
@@ -557,8 +589,8 @@ public class MainPanel extends javax.swing.JFrame implements SynopticProgressLis
 
     /* Create and display the form */
     try {
-      int nb = Integer.parseInt(args[5]);    
-      new MainPanel(true,args[0],args[1],args[2],args[3],args[4],nb).setVisible(true);
+      int nb = Integer.parseInt(args[7]);    
+      new MainPanel(true,args[0],args[1],args[2],args[3],args[4],args[5],args[6],nb).setVisible(true);
     } catch( NumberFormatException e) {
       System.out.println("Error: bucketNb " + e.getMessage());
     }
@@ -570,6 +602,7 @@ public class MainPanel extends javax.swing.JFrame implements SynopticProgressLis
   private javax.swing.JMenuItem delayMenuItem;
   private javax.swing.JMenuItem hDetMenuItem;
   private javax.swing.JMenu hMenu;
+  private javax.swing.JMenuItem hTuneFitMenuItem;
   private javax.swing.JMenuItem jExitMenuItem;
   private javax.swing.JMenu jFileMenu;
   private javax.swing.JMenuBar jMenuBar1;
@@ -583,6 +616,7 @@ public class MainPanel extends javax.swing.JFrame implements SynopticProgressLis
   private javax.swing.JPanel upPanel;
   private javax.swing.JMenuItem vDetMenuItem;
   private javax.swing.JMenu vMenu;
+  private javax.swing.JMenuItem vTuneFitMenuItem;
   private javax.swing.JMenuItem viewDiagMenuItem;
   private javax.swing.JMenuItem viewErrorMenuItem;
   // End of variables declaration//GEN-END:variables

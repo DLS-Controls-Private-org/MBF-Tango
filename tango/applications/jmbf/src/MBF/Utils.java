@@ -19,6 +19,8 @@ import static MBF.MainPanel.mfdbkVEpicsDevName;
 import static MBF.MainPanel.mfdbkGEpicsDevName;
 import static MBF.MainPanel.mfdbkHDevName;
 import static MBF.MainPanel.mfdbkVDevName;
+import static MBF.MainPanel.tuneHEpicsDevName;
+import static MBF.MainPanel.tuneVEpicsDevName;
 import fr.esrf.TangoApi.AttributeInfo;
 import fr.esrf.TangoDs.TangoConst;
 import java.io.IOException;
@@ -52,6 +54,12 @@ public class Utils {
   private static MemoryPanel  memoryPanel = null;    
   private static DETWaveformPanel hWaveformPanel = null; 
   private static DETWaveformPanel vWaveformPanel = null; 
+  private static TuneFitPanel hTuneFitPanel = null; 
+  private static TuneFitPanel vTuneFitPanel = null; 
+  private static TuneFitConfigPanel hTuneFitConfigPanel = null; 
+  private static TuneFitConfigPanel vTuneFitConfigPanel = null; 
+  private static TuneFitChartPanel hTuneFitChartPanel = null; 
+  private static TuneFitChartPanel vTuneFitChartPanel = null; 
   
   
   public static void execCommand(String devName,String cmd) {
@@ -167,6 +175,36 @@ public class Utils {
       if( vControlPanel==null )
       vControlPanel = new BunchControlPanel(mfdbkVEpicsDevName);
     vControlPanel.setVisible(true);    
+  }
+  public static void showHTuneFitPanel() {
+      if( hTuneFitPanel==null )
+      hTuneFitPanel = new TuneFitPanel(tuneHEpicsDevName);
+    hTuneFitPanel.setVisible(true);    
+  }
+  public static void showVTuneFitPanel() {
+      if( vTuneFitPanel==null )
+      vTuneFitPanel = new TuneFitPanel(tuneVEpicsDevName);
+    vTuneFitPanel.setVisible(true);    
+  }
+  public static void showHTuneFitConfigPanel() {
+      if( hTuneFitConfigPanel==null )
+      hTuneFitConfigPanel = new TuneFitConfigPanel(tuneHEpicsDevName);
+    hTuneFitConfigPanel.setVisible(true);    
+  }
+  public static void showVTuneFitConfigPanel() {
+      if( vTuneFitConfigPanel==null )
+      vTuneFitConfigPanel = new TuneFitConfigPanel(tuneVEpicsDevName);
+    vTuneFitConfigPanel.setVisible(true);    
+  }
+  public static void showHTuneFitChartPanel() {
+    if( hTuneFitChartPanel==null )
+      hTuneFitChartPanel = new TuneFitChartPanel(tuneHEpicsDevName);
+    hTuneFitChartPanel.setVisible(true);    
+  }
+  public static void showVTuneFitChartPanel() {
+      if( vTuneFitChartPanel==null )
+      vTuneFitChartPanel = new TuneFitChartPanel(tuneVEpicsDevName);
+    vTuneFitChartPanel.setVisible(true);    
   }
 
   public static JComponent createLabel(String l,String unit) {
