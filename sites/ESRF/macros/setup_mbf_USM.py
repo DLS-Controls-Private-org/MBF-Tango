@@ -247,15 +247,21 @@ class MBF_HL():
             gap = 61
             clean_pattern[1:2+gap] = 1
             clean_pattern[-gap:] = -1
-            # Feedback on single bunch
+            # Feedback on single bunch (FIR #0)
             fb_patterns[0][0] = 1
-            # Feedback on main train
+            # Feedback on main train (FIR #1)
             fb_patterns[1][2+gap:-gap] = 1
+        elif sr_mode == '62-bunch':
+            for ii in range(62):
+                fb_patterns[0][16*ii] = 1
+                clean_pattern[16*ii+1:16*(ii+1)] = (2*(ii%2)-1)
         elif sr_mode == '16-bunch':
             for ii in range(16):
+                fb_patterns[0][62*ii] = 1
                 clean_pattern[62*ii+1:62*(ii+1)] = (2*(ii%2)-1)
         elif sr_mode == '4-bunch':
             for ii in range(4):
+                fb_patterns[0][248*ii] = 1
                 clean_pattern[248*ii+1:248*(ii+1)] = (2*(ii%2)-1)
         elif sr_mode == '32*12':
             trains_l = 12
@@ -265,16 +271,21 @@ class MBF_HL():
                 clean_pattern[start+ii*31:start+ii*31+(31-trains_l)] = \
                         (2*(ii%2)-1)
             fb_patterns[0][:] = clean_pattern == 0
-        elif sr_mode == 'Hybrid':
-            gap_l = 147
-            gap_r = 123
-            trains_l = 9
+        elif sr_mode == '28*12+1':
+            gap_l = 81
+            gap_r = 61
+            trains_l = 12
             clean_pattern[1:1+gap_l] = 1
             clean_pattern[-gap_r:] = -1
             start = gap_l+trains_l+1
-            for ii in range(23):
+            for ii in range(28):
                 clean_pattern[start+ii*31:start+ii*31+(31-trains_l)] = \
                         (2*(ii%2)-1)
+            # Feedback on single bunchv$ (FIR #0)
+            fb_patterns[0][0] = 1
+            # Feedback on the 28 little trains (FIR #1)
+            fb_patterns[1][:] = clean_pattern == 0
+            fb_patterns[1][0] = 0
         elif sr_mode == 'Uniform':
             # Feedback everywhere
             fb_patterns[0][:] = 1

@@ -28,6 +28,14 @@ def keep_one_scope(dico_tango, current_scope):
         if dico_tango[pv_name]['scope'] != current_scope:
             dico_tango.pop(pv_name)
 
+def make_pv_short(dico_tango):
+    for pv_name in dico_tango:
+        pv_short = pv_name.replace("$(DEVICE):$(AXIS0):", "")
+        pv_short = pv_short.replace("$(DEVICE):$(AXIS1):", "")
+        pv_short = pv_short.replace("$(DEVICE):$(AXIS01):", "")
+        pv_short = pv_short.replace("$(DEVICE):", "")
+        dico_tango[pv_name]['__pv_short__'] = pv_short
+
 
 pv_dot_PROC = [
     'DLY:TURN:SYNC_S',

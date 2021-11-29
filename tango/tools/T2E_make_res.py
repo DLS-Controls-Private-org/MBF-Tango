@@ -29,6 +29,11 @@ if __name__ == '__main__':
 
     # Make dico_tango_make from db file
     db = EPICS_db(db_filename, config.vars_users)
+
+    # Generator short pv name
+    T2E_rules.make_pv_short(db.dico_db)
+
+    # Make Tango dico
     dico_tango_make = db.build_tango_dico(T2E_rules.pv_dot_PROC, 
             T2E_rules.pv_dot_SCAN, T2E_rules.e2t_exceptions)
 
