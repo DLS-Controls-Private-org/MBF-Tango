@@ -1005,6 +1005,12 @@ void MBFCleaning::sweep()
 		RAISE_EXCEPTION("SweepTime must be srictly positive");
 	}
 
+  Tango::DevState mState;
+  mbfDS->read_attribute("State") >> mState;
+  if( mState==Tango::FAULT ) {
+    RAISE_EXCEPTION("MBF is not synchronized, SR Cleaning cannot be performed");
+  }
+
 	set_state(Tango::MOVING);
 	set_status("Starting sweep");
 	SweepThread *t = new SweepThread(this, mutexsweep);
@@ -1054,6 +1060,12 @@ void MBFCleaning::do_all()
 	if(attr_CleaningTime_read[0]<=0.0) {
 		RAISE_EXCEPTION("CleaningTime must be srictly positive");
 	}
+
+  Tango::DevState mState;
+  mbfDS->read_attribute("State") >> mState;
+  if( mState==Tango::FAULT ) {
+    RAISE_EXCEPTION("MBF is not synchronized, SR Cleaning cannot be performed");
+  }
 
 	set_state(Tango::MOVING);
 	set_status("Moving scrapers");

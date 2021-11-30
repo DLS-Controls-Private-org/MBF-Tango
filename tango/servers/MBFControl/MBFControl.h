@@ -99,6 +99,8 @@ public:
 	vector<string>	modeList;
 	//	GMBFDevice:	Name of the global MBF device
 	string	gMBFDevice;
+	//	CheckSynchro:	True to check MBF synchronisation
+	Tango::DevBoolean	checkSynchro;
 
 //	Attribute data members
 public:

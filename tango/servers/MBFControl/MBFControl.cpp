@@ -263,7 +263,8 @@ void MBFControl::get_device_property()
   mBFDevice = "";
   gMBFDevice = "";
   doorDevice = "";
-	
+	checkSynchro = false;
+
 	/*----- PROTECTED REGION END -----*/	//	MBFControl::get_device_property_before
 
 
@@ -274,6 +275,7 @@ void MBFControl::get_device_property()
 	dev_prop.push_back(Tango::DbDatum("DoorDevice"));
 	dev_prop.push_back(Tango::DbDatum("ModeList"));
 	dev_prop.push_back(Tango::DbDatum("GMBFDevice"));
+	dev_prop.push_back(Tango::DbDatum("CheckSynchro"));
 
 	//	is there at least one property to be read ?
 	if (dev_prop.size()>0)
@@ -342,6 +344,17 @@ void MBFControl::get_device_property()
 		}
 		//	And try to extract GMBFDevice value from database
 		if (dev_prop[i].is_empty()==false)	dev_prop[i]  >>  gMBFDevice;
+
+		//	Try to initialize CheckSynchro from class property
+		cl_prop = ds_class->get_class_property(dev_prop[++i].name);
+		if (cl_prop.is_empty()==false)	cl_prop  >>  checkSynchro;
+		else {
+			//	Try to initialize CheckSynchro from default device value
+			def_prop = ds_class->get_default_device_property(dev_prop[i].name);
+			if (def_prop.is_empty()==false)	def_prop  >>  checkSynchro;
+		}
+		//	And try to extract CheckSynchro value from database
+		if (dev_prop[i].is_empty()==false)	dev_prop[i]  >>  checkSynchro;
 
 	}
 
@@ -1112,6 +1125,17 @@ Tango::DevState MBFControl::dev_state()
       run_macro("set_param","BlankingInterval");
     }
 
+    // Check synchro
+    if( checkSynchro ) {
+      Tango::DevUShort synch;
+      gmbfDS->read_attribute("DLY_TURN_STATUS") >> synch;
+      if( synch!=1 ) {
+        // Not synch
+        argout = Tango::FAULT;
+        status+="Fault: MBF not synch\n";
+      }
+    }
+
     // Add sequencer status
 		Tango::DevState door_state = Tango::UNKNOWN;
 
@@ -1487,6 +1511,12 @@ void MBFControl::sweep_on()
             (const char*)"Invalid operation mode",
             (const char*)"MBFControl::sweep_on");
 
+  if( get_state()==Tango::FAULT )
+    Tango::Except::throw_exception(
+            (const char*)"Error",
+            (const char*)"Cannot start sweep (synchro error)",
+            (const char*)"MBFControl::sweep_on");
+
   run_macro("sweep_on","None");
 
 	/*----- PROTECTED REGION END -----*/	//	MBFControl::sweep_on
@@ -1529,6 +1559,12 @@ void MBFControl::clean()
     Tango::Except::throw_exception(
             (const char*)"Error",
             (const char*)"Invalid operation mode",
+            (const char*)"MBFControl::clean");
+
+  if( get_state()==Tango::FAULT )
+    Tango::Except::throw_exception(
+            (const char*)"Error",
+            (const char*)"Cannot start cleaning (synchro error)",
             (const char*)"MBFControl::clean");
 
   run_macro("clean","None");

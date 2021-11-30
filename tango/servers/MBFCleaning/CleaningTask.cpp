@@ -308,6 +308,7 @@ bool CleaningTask::sweep(bool updateState) {
     cout << "SweepThread: Received DevFailed exception while sweeping." << endl;
     Tango::Except::print_exception(e);
     ds->set_status("SweepThread Error:" + string(e.errors[0].desc.in()));
+    ds->set_state(Tango::OFF);
     return false;
   }
 
