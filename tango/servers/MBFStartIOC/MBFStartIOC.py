@@ -180,7 +180,7 @@ class MBFStartIOC (PyTango.LatestDeviceImpl):
                 print("Screen session closed.")
                 print("-> Committing suicide")
                 pid = os.getpid()
-                os.kill(pid, signal.SIGTERM)
+                os.kill(pid, signal.SIGKILL)
         else:
             self.set_state(PyTango.DevState.FAULT)
         
