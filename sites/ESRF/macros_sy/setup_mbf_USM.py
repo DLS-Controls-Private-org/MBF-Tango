@@ -91,19 +91,7 @@ class MBF_HL():
 
         gainwf_sweep = np.zeros((704,))
         bank_this_mode = 0
-        if (mode == '7/8_1b') or (mode == 'hybrid_1b'):
-            bunch_list = [0]
-            harmonic_shift = 1
-        elif (mode == '7/8_2b'):
-            bunch_list = [0, 206]
-            harmonic_shift = 0
-        elif (mode == '7/8_4b'):
-            bunch_list = [0, 88, 176, 264]
-            harmonic_shift = 0
-        elif (mode == 'hybrid_4b'):
-            bunch_list = [0, 62, 124, 186]
-            harmonic_shift = 0
-        elif (mode == '16-bunch') or (mode == 'hybrid_5b'):
+        if (mode == '16-bunch'):
             bunch_list = [0, 62, 124, 186, 248]
             harmonic_shift = 1
         elif (mode == '4-bunch'):
