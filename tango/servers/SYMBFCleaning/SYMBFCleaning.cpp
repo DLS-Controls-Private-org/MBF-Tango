@@ -66,25 +66,21 @@ static const char *RcsId = "$Id:  $";
 //  The following table gives the correspondence
 //  between command and method names.
 //
-//  Command name              |  Method name
+//  Command name   |  Method name
 //================================================================
-//  State                     |  dev_state
-//  Status                    |  Inherited (no method)
-//  GetConfigurationFilePath  |  get_configuration_file_path
-//  LoadConfigurationFile     |  load_configuration_file
-//  SaveConfigurationFile     |  save_configuration_file
-//  SweepOn                   |  sweep_on
-//  SweepOff                  |  sweep_off
-//  EndCleaning               |  end_cleaning
-//  Stop                      |  stop
-//  StartCleaning             |  start_cleaning
-//  Reset                     |  reset
+//  State          |  dev_state
+//  Status         |  Inherited (no method)
+//  SweepOn        |  sweep_on
+//  SweepOff       |  sweep_off
+//  EndCleaning    |  end_cleaning
+//  Stop           |  stop
+//  StartCleaning  |  start_cleaning
+//  Reset          |  reset
 //================================================================
 
 //================================================================
 //  Attributes managed are:
 //================================================================
-//  ConfigFileName      |  Tango::DevString	Scalar
 //  Phase               |  Tango::DevDouble	Scalar
 //  InjectionDelay      |  Tango::DevDouble	Scalar
 //  CleaningTime        |  Tango::DevDouble	Scalar
@@ -154,7 +150,6 @@ void SYMBFCleaning::delete_device()
 	//	Delete device allocated objects
 	
 	/*----- PROTECTED REGION END -----*/	//	SYMBFCleaning::delete_device
-	delete[] attr_ConfigFileName_read;
 	delete[] attr_Phase_read;
 	delete[] attr_InjectionDelay_read;
 	delete[] attr_CleaningTime_read;
@@ -187,7 +182,6 @@ void SYMBFCleaning::init_device()
 	//	Get the device properties from database
 	get_device_property();
 	
-	attr_ConfigFileName_read = new Tango::DevString[1];
 	attr_Phase_read = new Tango::DevDouble[1];
 	attr_InjectionDelay_read = new Tango::DevDouble[1];
 	attr_CleaningTime_read = new Tango::DevDouble[1];
@@ -206,7 +200,6 @@ void SYMBFCleaning::init_device()
 	/*----- PROTECTED REGION ID(SYMBFCleaning::init_device) ENABLED START -----*/
 	
 	//	Initialize device
-	strcpy(configFile,"No file loaded");
 	attr_Phase_read[0]=0.0;
 	attr_InjectionDelay_read[0]=0.0;
 	attr_CleaningTime_read[0]=0.0;
@@ -244,10 +237,6 @@ void SYMBFCleaning::init_device()
   }
   if( injectionDelayAttName.length()==0 ) {
     cerr << "InjectionDelayAttName device property not defined" << endl;
-    exit(0);
-  }
-  if( settingsFilesPath.length()==0 ) {
-    cerr << "SettingsFilesPath device property not defined" << endl;
     exit(0);
   }
 	if( lowScrapperName.length()==0 ) {
@@ -295,9 +284,8 @@ void SYMBFCleaning::init_device()
   lowDs->set_source(Tango::DEV);
   uppDs->set_source(Tango::DEV);
 
-  strcpy(configFile,lastLoaded.c_str());
 
-	/*----- PROTECTED REGION END -----*/	//	SYMBFCleaning::init_device
+  /*----- PROTECTED REGION END -----*/	//	SYMBFCleaning::init_device
 }
 
 //--------------------------------------------------------
@@ -314,12 +302,10 @@ void SYMBFCleaning::get_device_property()
   epicsName = "";
 	ampli1Name = "";
 	ampli2Name = "";
-	settingsFilesPath = "";
   vPhaseAttName = "";
   lowScrapperName = "";
   uppScrapperName = "";
   injectionDelayAttName = "";
-  lastLoaded = "No file loaded";
 
 	/*----- PROTECTED REGION END -----*/	//	SYMBFCleaning::get_device_property_before
 
@@ -335,8 +321,6 @@ void SYMBFCleaning::get_device_property()
 	dev_prop.push_back(Tango::DbDatum("LowScrapperName"));
 	dev_prop.push_back(Tango::DbDatum("Ampli1Name"));
 	dev_prop.push_back(Tango::DbDatum("Ampli2Name"));
-	dev_prop.push_back(Tango::DbDatum("SettingsFilesPath"));
-	dev_prop.push_back(Tango::DbDatum("LastLoaded"));
 
 	//	is there at least one property to be read ?
 	if (dev_prop.size()>0)
@@ -441,28 +425,6 @@ void SYMBFCleaning::get_device_property()
 		//	And try to extract Ampli2Name value from database
 		if (dev_prop[i].is_empty()==false)	dev_prop[i]  >>  ampli2Name;
 
-		//	Try to initialize SettingsFilesPath from class property
-		cl_prop = ds_class->get_class_property(dev_prop[++i].name);
-		if (cl_prop.is_empty()==false)	cl_prop  >>  settingsFilesPath;
-		else {
-			//	Try to initialize SettingsFilesPath from default device value
-			def_prop = ds_class->get_default_device_property(dev_prop[i].name);
-			if (def_prop.is_empty()==false)	def_prop  >>  settingsFilesPath;
-		}
-		//	And try to extract SettingsFilesPath value from database
-		if (dev_prop[i].is_empty()==false)	dev_prop[i]  >>  settingsFilesPath;
-
-		//	Try to initialize LastLoaded from class property
-		cl_prop = ds_class->get_class_property(dev_prop[++i].name);
-		if (cl_prop.is_empty()==false)	cl_prop  >>  lastLoaded;
-		else {
-			//	Try to initialize LastLoaded from default device value
-			def_prop = ds_class->get_default_device_property(dev_prop[i].name);
-			if (def_prop.is_empty()==false)	def_prop  >>  lastLoaded;
-		}
-		//	And try to extract LastLoaded value from database
-		if (dev_prop[i].is_empty()==false)	dev_prop[i]  >>  lastLoaded;
-
 	}
 
 	/*----- PROTECTED REGION ID(SYMBFCleaning::get_device_property_after) ENABLED START -----*/
@@ -552,24 +514,6 @@ void SYMBFCleaning::write_attr_hardware(TANGO_UNUSED(vector<long> &attr_list))
 	/*----- PROTECTED REGION END -----*/	//	SYMBFCleaning::write_attr_hardware
 }
 
-//--------------------------------------------------------
-/**
- *	Read attribute ConfigFileName related method
- *	Description: 
- *
- *	Data type:	Tango::DevString
- *	Attr type:	Scalar
- */
-//--------------------------------------------------------
-void SYMBFCleaning::read_ConfigFileName(Tango::Attribute &attr)
-{
-	DEBUG_STREAM << "SYMBFCleaning::read_ConfigFileName(Tango::Attribute &attr) entering... " << endl;
-	/*----- PROTECTED REGION ID(SYMBFCleaning::read_ConfigFileName) ENABLED START -----*/
-	//	Set the attribute value
-	attr_ConfigFileName_read[0] = configFile;
-  attr.set_value(attr_ConfigFileName_read);
-	/*----- PROTECTED REGION END -----*/	//	SYMBFCleaning::read_ConfigFileName
-}
 //--------------------------------------------------------
 /**
  *	Read attribute Phase related method
@@ -1030,6 +974,7 @@ Tango::DevState SYMBFCleaning::dev_state()
 	} else {
     status += "Shaker is OFF";
 	}
+
 	set_status(status);
 	
 	/*----- PROTECTED REGION END -----*/	//	SYMBFCleaning::dev_state
@@ -1037,187 +982,6 @@ Tango::DevState SYMBFCleaning::dev_state()
 	if (argout!=Tango::ALARM)
 		Tango::DeviceImpl::dev_state();
 	return get_state();  // Return it after Tango management.
-}
-//--------------------------------------------------------
-/**
- *	Command GetConfigurationFilePath related method
- *	Description: Return configuration file path
- *
- *	@returns Configuration file path
- */
-//--------------------------------------------------------
-Tango::DevString SYMBFCleaning::get_configuration_file_path()
-{
-	Tango::DevString argout;
-	DEBUG_STREAM << "SYMBFCleaning::GetConfigurationFilePath()  - " << device_name << endl;
-	/*----- PROTECTED REGION ID(SYMBFCleaning::get_configuration_file_path) ENABLED START -----*/
-
-	argout  = new char[settingsFilesPath.length()+1];
-	strcpy(argout, settingsFilesPath.c_str());
-	
-	/*----- PROTECTED REGION END -----*/	//	SYMBFCleaning::get_configuration_file_path
-	return argout;
-}
-//--------------------------------------------------------
-/**
- *	Command LoadConfigurationFile related method
- *	Description: 
- *
- *	@param argin Configuration file name (without the path)
- */
-//--------------------------------------------------------
-void SYMBFCleaning::load_configuration_file(Tango::DevString argin)
-{
-	DEBUG_STREAM << "SYMBFCleaning::LoadConfigurationFile()  - " << device_name << endl;
-	/*----- PROTECTED REGION ID(SYMBFCleaning::load_configuration_file) ENABLED START -----*/
-	
-	if( get_state()==Tango::MOVING )
-	  RAISE_EXCEPTION("Cannot read config file while moving.");
-
-  char absolute_name[512];
-  strcpy(absolute_name, settingsFilesPath.c_str());
-  strcat(absolute_name, argin);
-  char *p = strchr(argin,'.');
-  if(p==NULL)
-    // Add extension
-    strcat(absolute_name,".ts");
-
-  ifstream conf(absolute_name, ios::in);
-  if (conf.is_open()) {
-
-    char buffer[8192];
-    int line_number = 0;
-    int end = 0;
-
-    while(!end) {
-
-      // Read a line from file.
-      conf.getline(buffer, 8192);
-      line_number++;
-      string rd = string(buffer);
-
-      if (rd.length() == 0) {
-        // End of file reached
-        end = 1;
-        continue;
-      }
-
-      // Jump comments
-      if (rd[0] == '#')
-        continue;
-      vector<string> fields;
-      vector<string> nameFields;
-
-      split(fields, rd, ':');
-      if (fields.size() != 2) {
-        cerr << "Syntax error at line " << line_number << ": " << absolute_name << endl;
-        conf.close();
-        RAISE_EXCEPTION("Syntax error in config file, ':' missing");
-      }
-
-      split(nameFields, fields[0], '/');
-      if (nameFields.size() != 4) {
-        cerr << "Syntax error at line " << line_number << ": " << absolute_name << endl;
-        conf.close();
-        RAISE_EXCEPTION("Syntax error in config file. invalid attribute name");
-      }
-
-      string devName = nameFields[0] + "/" + nameFields[1] + "/" + nameFields[2];
-      if( strcasecmp(devName.c_str(),get_name().c_str())!=0 ) {
-        conf.close();
-        RAISE_EXCEPTION("configfile limited to single device");
-      }
-
-      try {
-        write_att(nameFields[3],fields[1]);
-      } catch (Tango::DevFailed &e) {
-        conf.close();
-        Tango::Except::throw_exception(
-          (const char *) "SyCleaning::error", \
-          (const char *) (string(e.errors[0].desc) + " " +nameFields[3]).c_str(), \
-          (const char *) "SyCleaning::raise");
-      }
-    }
-
-  } else {
-
-    // Unable to open file.
-    char tmp[1024];
-    sprintf(tmp,"Unable to open file for reading %s",absolute_name);
-    RAISE_EXCEPTION(tmp);
-
-  }
-
-  conf.close();
-  update_configfile_name(argin);
-
-	/*----- PROTECTED REGION END -----*/	//	SYMBFCleaning::load_configuration_file
-}
-//--------------------------------------------------------
-/**
- *	Command SaveConfigurationFile related method
- *	Description: 
- *
- *	@param argin Configuration file name (without the path)
- */
-//--------------------------------------------------------
-void SYMBFCleaning::save_configuration_file(Tango::DevString argin)
-{
-	DEBUG_STREAM << "SYMBFCleaning::SaveConfigurationFile()  - " << device_name << endl;
-	/*----- PROTECTED REGION ID(SYMBFCleaning::save_configuration_file) ENABLED START -----*/
-
-	if( get_state()==Tango::MOVING )
-	  RAISE_EXCEPTION("Cannot save config file while moving.");
-
-  char absolute_name[1024];
-  strcpy(absolute_name, settingsFilesPath.c_str());
-  strcat(absolute_name, argin);
-  char *p = strchr(argin,'.');
-  if(p==NULL)
-    // Add extension
-    strcat(absolute_name,".ts");
-
-  ofstream conf(absolute_name, ios::out);
-
-  if (conf.is_open()) {
-
-    conf << "# SY cleaning  CONFIG  FILE " << endl;
-    conf << "#" << endl;
-    conf << get_name() + "/Phase: "          <<  attr_Phase_read[0] << endl;
-    conf << get_name() + "/InjectionDelay: " <<  attr_InjectionDelay_read[0] << endl;
-    conf << get_name() + "/Dwell: "          <<  attr_Dwell_read[0] << endl;
-    conf << get_name() + "/Count: "          <<  attr_Count_read[0] << endl;
-    conf << get_name() + "/Harmonic: "       <<  read_att("Harmonic") << endl;
-    conf << get_name() + "/DeltaFreq: "      <<  read_att("DeltaFreq") << endl;
-    conf << get_name() + "/CentralFreq: "    <<  read_att("CentralFreq") << endl;
-    conf << get_name() + "/Amplitude: "      <<  attr_Amplitude_read[0] << endl;
-    conf << get_name() + "/UppScrapperPos: " <<  attr_UppScrapperPos_read[0] << endl;
-    conf << get_name() + "/LowScrapperPos: " <<  attr_LowScrapperPos_read[0] << endl;
-    conf << get_name() + "/SwitchOFFAmplifier: " <<  (int)(attr_SwitchOFFAmplifier_read[0]) << endl;
-    conf << get_name() + "/PatternDelay: "   <<  attr_PatternDelay_read[0] << endl;
-    /*
-    conf << get_name() + "/CleaningPattern: ";
-    for(int i=0;i<704;i++) {
-      conf << attr_CleaningPattern_read[i];
-      if(i<703)
-        conf << ",";
-    }
-    conf << endl;
-    */
-    conf.close();
-    update_configfile_name(argin);
-
-
-  } else {
-
-    // Unable to create file.
-    char tmp[1024];
-    sprintf(tmp,"Unable to open file for writing %s",absolute_name);
-    RAISE_EXCEPTION(tmp);
-
-  }
-
-	/*----- PROTECTED REGION END -----*/	//	SYMBFCleaning::save_configuration_file
 }
 //--------------------------------------------------------
 /**
@@ -1374,20 +1138,6 @@ void SYMBFCleaning::add_dynamic_commands()
 
   }
 
-  void SYMBFCleaning::update_configfile_name(char *fileName) {
-    strcpy(configFile,fileName);
-    // Remove extension
-    char *p = strrchr(configFile,'.');
-    if(p) *p = 0;
-
-    // Save to DB
-    Tango::DbDatum dbProp("LastLoaded");
-    dbProp << configFile;
-    Tango::DbData dbData;
-    dbData.push_back(dbProp);
-    get_db_device()->put_property(dbData);
-  }
-
   Tango::DevState SYMBFCleaning::getShakerState() {
 
     Tango::DevState s = Tango::UNKNOWN;
@@ -1398,77 +1148,6 @@ void SYMBFCleaning::add_dynamic_commands()
     }
 
     return s;
-
-  }
-
-  double SYMBFCleaning::read_att(string attName) {
-    double ret;
-    Tango::DeviceAttribute da = self->read_attribute(attName);
-    da >> ret;
-    return ret;
-  }
-
-  void SYMBFCleaning::write_att(string attName,string value) {
-
-    Tango::WAttribute &att = dev_attr->get_w_attr_by_name(attName.c_str());
-    switch( att.get_data_type() ) {
-      case Tango::DEV_DOUBLE:
-        if(att.get_data_format()==Tango::SCALAR) {
-          double vd = stod(value);
-          Tango::DeviceAttribute da(attName,vd);
-          self->write_attribute(da);
-        } else {
-          RAISE_EXCEPTION("Unexpected attribute type/format");
-        }
-        break;
-      case Tango::DEV_BOOLEAN:
-        if(att.get_data_format()==Tango::SCALAR) {
-          Tango::DevBoolean vb = (stoi(value)!=0);
-          Tango::DeviceAttribute da(attName,vb);
-          self->write_attribute(da);
-        } else {
-          RAISE_EXCEPTION("Unexpected attribute type/format");
-        }
-        break;
-      case Tango::DEV_LONG:
-        if(att.get_data_format()==Tango::SCALAR) {
-          Tango::DevLong vl = stol(value);
-          Tango::DeviceAttribute da(attName,vl);
-          self->write_attribute(da);
-        } else {
-          RAISE_EXCEPTION("Unexpected attribute type/format");
-        }
-        break;
-      case Tango::DEV_SHORT:
-        if(att.get_data_format()==Tango::SPECTRUM) {
-          vector<string> fields;
-          split(fields,value,',');
-          vector<Tango::DevShort> vsa;
-          for(int i=0;i<(int)fields.size();i++)
-            vsa.push_back((Tango::DevShort)stol(fields[i]));
-          Tango::DeviceAttribute da(attName,vsa);
-          self->write_attribute(da);
-        } else {
-          RAISE_EXCEPTION("Unexpected attribute type/format");
-        }
-        break;
-      default:
-        RAISE_EXCEPTION("Unexpected attribute type/format");
-    }
-
-  }
-
-  void SYMBFCleaning::save_attribute_property(string attName,string propName,double value) {
-
-    Tango::DbDatum dbAtt(attName);
-    Tango::DbDatum dbProp(propName);
-    Tango::DbData dbData;
-
-    dbAtt << 1; // One property
-    dbProp << value;
-    dbData.push_back(dbAtt);
-    dbData.push_back(dbProp);
-    get_db_device()->put_attribute_property(dbData);
 
   }
 

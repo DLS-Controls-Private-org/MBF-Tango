@@ -58,7 +58,6 @@ namespace SYMBFCleaning_ns
 {
 /*----- PROTECTED REGION ID(SYMBFCleaning::Additional Class Declarations) ENABLED START -----*/
 
-//	Additional Class Declarations
 
 /*----- PROTECTED REGION END -----*/	//	SYMBFCleaning::Additional Class Declarations
 
@@ -71,7 +70,6 @@ class SYMBFCleaning : public TANGO_BASE_CLASS
 
 public:
 
-	char configFile[256];
 	omni_mutex mutex;
 	int sequence_running;
 	string sequence_error;
@@ -88,12 +86,8 @@ public:
   string delayAttName;
   bool abortRequest;
 
-	void write_att(string attName,string value);
-  void save_attribute_property(string attName,string propName,double value);
   void split(vector<string> &tokens, const string &text, char sep);
-  void update_configfile_name(char *fileName);
   Tango::DevState getShakerState();
-  double read_att(string attName);
 
 /*----- PROTECTED REGION END -----*/	//	SYMBFCleaning::Data Members
 
@@ -115,16 +109,11 @@ public:
 	string	ampli1Name;
 	//	Ampli2Name:	Name of the Ampli2 device
 	string	ampli2Name;
-	//	SettingsFilesPath:	Path were are stored settings file
-	string	settingsFilesPath;
-	//	LastLoaded:	Last loaded file
-	string	lastLoaded;
 
 	bool	mandatoryNotDefined;
 
 //	Attribute data members
 public:
-	Tango::DevString	*attr_ConfigFileName_read;
 	Tango::DevDouble	*attr_Phase_read;
 	Tango::DevDouble	*attr_InjectionDelay_read;
 	Tango::DevDouble	*attr_CleaningTime_read;
@@ -208,15 +197,6 @@ public:
 	//--------------------------------------------------------
 	virtual void write_attr_hardware(vector<long> &attr_list);
 
-/**
- *	Attribute ConfigFileName related methods
- *	Description: 
- *
- *	Data type:	Tango::DevString
- *	Attr type:	Scalar
- */
-	virtual void read_ConfigFileName(Tango::Attribute &attr);
-	virtual bool is_ConfigFileName_allowed(Tango::AttReqType type);
 /**
  *	Attribute Phase related methods
  *	Description: 
@@ -348,30 +328,6 @@ public:
 	 *	@returns Device state
 	 */
 	virtual Tango::DevState dev_state();
-	/**
-	 *	Command GetConfigurationFilePath related method
-	 *	Description: Return configuration file path
-	 *
-	 *	@returns Configuration file path
-	 */
-	virtual Tango::DevString get_configuration_file_path();
-	virtual bool is_GetConfigurationFilePath_allowed(const CORBA::Any &any);
-	/**
-	 *	Command LoadConfigurationFile related method
-	 *	Description: 
-	 *
-	 *	@param argin Configuration file name (without the path)
-	 */
-	virtual void load_configuration_file(Tango::DevString argin);
-	virtual bool is_LoadConfigurationFile_allowed(const CORBA::Any &any);
-	/**
-	 *	Command SaveConfigurationFile related method
-	 *	Description: 
-	 *
-	 *	@param argin Configuration file name (without the path)
-	 */
-	virtual void save_configuration_file(Tango::DevString argin);
-	virtual bool is_SaveConfigurationFile_allowed(const CORBA::Any &any);
 	/**
 	 *	Command SweepOn related method
 	 *	Description: Start sweep (Sweep from freqmin to freqmax)

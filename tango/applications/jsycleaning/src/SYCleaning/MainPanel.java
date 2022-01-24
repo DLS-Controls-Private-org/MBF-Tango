@@ -6,6 +6,8 @@
 package SYCleaning;
 
 import MBF.PatternEditorFrame;
+import fr.esrf.Tango.DevFailed;
+import fr.esrf.TangoApi.DeviceAttribute;
 import fr.esrf.tangoatk.core.AttributeList;
 import fr.esrf.tangoatk.core.CommandList;
 import fr.esrf.tangoatk.core.ConnectionException;
@@ -19,7 +21,9 @@ import fr.esrf.tangoatk.widget.attribute.StateViewer;
 import fr.esrf.tangoatk.widget.util.ATKDiagnostic;
 import fr.esrf.tangoatk.widget.util.ATKGraphicsUtils;
 import fr.esrf.tangoatk.widget.util.ErrorHistory;
+import fr.esrf.tangoatk.widget.util.ErrorPane;
 import fr.esrf.tangoatk.widget.util.ErrorPopup;
+import fr.esrf.tangoatk.widget.util.SettingsManagerProxy;
 import fr.esrf.tangoatk.widget.util.Splash;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -28,6 +32,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.border.BevelBorder;
 
 /**
@@ -36,15 +41,16 @@ import javax.swing.border.BevelBorder;
  */
 public class MainPanel extends javax.swing.JFrame {
   
-  final static String APP_RELEASE = "3.3";
+  final static String APP_RELEASE = "3.4";
   final static String SYCLEAN_DEV = "sy/mbf/cleaning";
-  
+  final static String SYCLEAN_SETTING_MANAGER = "sy/d-clean/settings";
+          
   private Splash splash;
   private boolean runningFromShell;
-  private ConfigFilePanel cfgPanel;
   private ScraperPanel uppPanel;
   private ScraperPanel lowPanel;
   private PatternEditorFrame patternEditor = null;
+  private SettingsManagerProxy smProxy;
   
   private AttributeList attList;
   private CommandList cmdList;
@@ -114,13 +120,17 @@ public class MainPanel extends javax.swing.JFrame {
       patternDelayWheelEditor.setModel(patternDelayModel);
       EnumScalar modeModel = (EnumScalar)attList.add(SYCLEAN_DEV+"/Mode");
       modeComboEditor.setEnumModel(modeModel);
-      
+
+      StringScalar gainFile = (StringScalar)attList.add(SYCLEAN_SETTING_MANAGER+"/LastAppliedFile");
+      configFileViewer.setBackgroundColor(getBackground());
+      configFileViewer.setModel(gainFile);
+
     } catch(ConnectionException e) {
     }
-            
-    cfgPanel = new ConfigFilePanel();
-    cfgPanel.setModel(SYCLEAN_DEV, errWin);
-    configFilePanel.add(cfgPanel,BorderLayout.CENTER);
+    
+    // Setting manager API
+    smProxy = new SettingsManagerProxy(SYCLEAN_SETTING_MANAGER);
+    smProxy.setErrorHistoryWindow(errWin);
     
     try {            
       DevStateScalar stateModel = (DevStateScalar)attList.add(SYCLEAN_DEV+"/State");
@@ -240,6 +250,10 @@ public class MainPanel extends javax.swing.JFrame {
         jSmoothLabel19 = new fr.esrf.tangoatk.widget.util.JSmoothLabel();
         vPhaseWheelEditor = new fr.esrf.tangoatk.widget.attribute.NumberScalarWheelEditor();
         configFilePanel = new javax.swing.JPanel();
+        configFileViewer = new fr.esrf.tangoatk.widget.attribute.SimpleScalarViewer();
+        configButton = new javax.swing.JButton();
+        loadButton = new javax.swing.JButton();
+        saveButton = new javax.swing.JButton();
         cleaningPanel = new javax.swing.JPanel();
         cleaningStatusViewer = new fr.esrf.tangoatk.widget.attribute.StatusViewer();
         cleaningStateViewer = new fr.esrf.tangoatk.widget.attribute.StateViewer();
@@ -532,7 +546,49 @@ public class MainPanel extends javax.swing.JFrame {
         scrapperPanel.setBounds(5, 160, 320, 190);
 
         configFilePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), "Configuration File"));
-        configFilePanel.setLayout(new java.awt.BorderLayout());
+        configFilePanel.setLayout(new java.awt.GridBagLayout());
+
+        configFileViewer.setText("simpleScalarViewer1");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 2, 0, 2);
+        configFilePanel.add(configFileViewer, gridBagConstraints);
+
+        configButton.setText("...");
+        configButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                configButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(0, 2, 0, 2);
+        configFilePanel.add(configButton, gridBagConstraints);
+
+        loadButton.setText("Load...");
+        loadButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loadButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(0, 2, 0, 2);
+        configFilePanel.add(loadButton, gridBagConstraints);
+
+        saveButton.setText("Save...");
+        saveButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.insets = new java.awt.Insets(0, 2, 0, 2);
+        configFilePanel.add(saveButton, gridBagConstraints);
+
         centerPanel.add(configFilePanel);
         configFilePanel.setBounds(5, 430, 665, 55);
 
@@ -741,6 +797,27 @@ public class MainPanel extends javax.swing.JFrame {
     // TODO add your handling code here:
   }//GEN-LAST:event_cleaningTimeViewerActionPerformed
 
+    private void configButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_configButtonActionPerformed
+        try {
+
+            String status;
+            DeviceAttribute da = smProxy.getDevice().read_attribute("Status");
+            status = da.extractString();
+            JOptionPane.showMessageDialog(this, status, "Setting Manager Status [" + SYCLEAN_SETTING_MANAGER + "]", JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (DevFailed ex) {
+            ErrorPane.showErrorMessage(this, SYCLEAN_SETTING_MANAGER, ex);
+        }
+    }//GEN-LAST:event_configButtonActionPerformed
+
+    private void loadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadButtonActionPerformed
+          smProxy.loadSettingsFile();
+    }//GEN-LAST:event_loadButtonActionPerformed
+
+    private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
+          smProxy.saveSettingsFile();
+    }//GEN-LAST:event_saveButtonActionPerformed
+
   /**
    * @param args the command line arguments
    */
@@ -763,7 +840,9 @@ public class MainPanel extends javax.swing.JFrame {
     private fr.esrf.tangoatk.widget.attribute.StateViewer cleaningStateViewer;
     private fr.esrf.tangoatk.widget.attribute.StatusViewer cleaningStatusViewer;
     private fr.esrf.tangoatk.widget.attribute.SimpleScalarViewer cleaningTimeViewer;
+    private javax.swing.JButton configButton;
     private javax.swing.JPanel configFilePanel;
+    private fr.esrf.tangoatk.widget.attribute.SimpleScalarViewer configFileViewer;
     private fr.esrf.tangoatk.widget.attribute.NumberScalarWheelEditor countWheelEditor;
     private fr.esrf.tangoatk.widget.attribute.NumberScalarWheelEditor deltaFrequencyWheelEditor;
     private javax.swing.JMenuItem diagMenuItem;
@@ -788,12 +867,14 @@ public class MainPanel extends javax.swing.JFrame {
     private fr.esrf.tangoatk.widget.util.JSmoothLabel jSmoothLabel20;
     private fr.esrf.tangoatk.widget.util.JSmoothLabel jSmoothLabel21;
     private fr.esrf.tangoatk.widget.util.JSmoothLabel jSmoothLabel23;
+    private javax.swing.JButton loadButton;
     private fr.esrf.tangoatk.widget.attribute.NumberScalarWheelEditor lowScrapperWheelEditor;
     private fr.esrf.tangoatk.widget.attribute.StateViewer mbfStateViewer;
     private fr.esrf.tangoatk.widget.attribute.EnumScalarComboEditor modeComboEditor;
     private fr.esrf.tangoatk.widget.attribute.NumberScalarWheelEditor patternDelayWheelEditor;
     private javax.swing.JMenuItem patternEditorMenuItem;
     private fr.esrf.tangoatk.widget.command.VoidVoidCommandViewer resetCommand;
+    private javax.swing.JButton saveButton;
     private javax.swing.JPanel scr1Panel;
     private javax.swing.JPanel scr2Panel;
     private fr.esrf.tangoatk.widget.attribute.ScalarAttributeSetPanel scrExtSetPanel;

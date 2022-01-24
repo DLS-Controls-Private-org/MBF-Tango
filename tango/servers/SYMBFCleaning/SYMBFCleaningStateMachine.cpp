@@ -50,22 +50,6 @@ namespace SYMBFCleaning_ns
 
 //--------------------------------------------------------
 /**
- *	Method      : SYMBFCleaning::is_ConfigFileName_allowed()
- *	Description : Execution allowed for ConfigFileName attribute
- */
-//--------------------------------------------------------
-bool SYMBFCleaning::is_ConfigFileName_allowed(TANGO_UNUSED(Tango::AttReqType type))
-{
-
-	//	Not any excluded states for ConfigFileName attribute in read access.
-	/*----- PROTECTED REGION ID(SYMBFCleaning::ConfigFileNameStateAllowed_READ) ENABLED START -----*/
-	
-	/*----- PROTECTED REGION END -----*/	//	SYMBFCleaning::ConfigFileNameStateAllowed_READ
-	return true;
-}
-
-//--------------------------------------------------------
-/**
  *	Method      : SYMBFCleaning::is_Phase_allowed()
  *	Description : Execution allowed for Phase attribute
  */
@@ -284,51 +268,6 @@ bool SYMBFCleaning::is_CleaningPattern_allowed(TANGO_UNUSED(Tango::AttReqType ty
 //=================================================
 //		Commands Allowed Methods
 //=================================================
-
-//--------------------------------------------------------
-/**
- *	Method      : SYMBFCleaning::is_GetConfigurationFilePath_allowed()
- *	Description : Execution allowed for GetConfigurationFilePath attribute
- */
-//--------------------------------------------------------
-bool SYMBFCleaning::is_GetConfigurationFilePath_allowed(TANGO_UNUSED(const CORBA::Any &any))
-{
-	//	Not any excluded states for GetConfigurationFilePath command.
-	/*----- PROTECTED REGION ID(SYMBFCleaning::GetConfigurationFilePathStateAllowed) ENABLED START -----*/
-	
-	/*----- PROTECTED REGION END -----*/	//	SYMBFCleaning::GetConfigurationFilePathStateAllowed
-	return true;
-}
-
-//--------------------------------------------------------
-/**
- *	Method      : SYMBFCleaning::is_LoadConfigurationFile_allowed()
- *	Description : Execution allowed for LoadConfigurationFile attribute
- */
-//--------------------------------------------------------
-bool SYMBFCleaning::is_LoadConfigurationFile_allowed(TANGO_UNUSED(const CORBA::Any &any))
-{
-	//	Not any excluded states for LoadConfigurationFile command.
-	/*----- PROTECTED REGION ID(SYMBFCleaning::LoadConfigurationFileStateAllowed) ENABLED START -----*/
-	
-	/*----- PROTECTED REGION END -----*/	//	SYMBFCleaning::LoadConfigurationFileStateAllowed
-	return true;
-}
-
-//--------------------------------------------------------
-/**
- *	Method      : SYMBFCleaning::is_SaveConfigurationFile_allowed()
- *	Description : Execution allowed for SaveConfigurationFile attribute
- */
-//--------------------------------------------------------
-bool SYMBFCleaning::is_SaveConfigurationFile_allowed(TANGO_UNUSED(const CORBA::Any &any))
-{
-	//	Not any excluded states for SaveConfigurationFile command.
-	/*----- PROTECTED REGION ID(SYMBFCleaning::SaveConfigurationFileStateAllowed) ENABLED START -----*/
-	
-	/*----- PROTECTED REGION END -----*/	//	SYMBFCleaning::SaveConfigurationFileStateAllowed
-	return true;
-}
 
 //--------------------------------------------------------
 /**

@@ -154,63 +154,6 @@ SYMBFCleaningClass *SYMBFCleaningClass::instance()
 //===================================================================
 //--------------------------------------------------------
 /**
- * method : 		GetConfigurationFilePathClass::execute()
- * description : 	method to trigger the execution of the command.
- *
- * @param	device	The device on which the command must be executed
- * @param	in_any	The command input data
- *
- *	returns The command output data (packed in the Any object)
- */
-//--------------------------------------------------------
-CORBA::Any *GetConfigurationFilePathClass::execute(Tango::DeviceImpl *device, TANGO_UNUSED(const CORBA::Any &in_any))
-{
-	cout2 << "GetConfigurationFilePathClass::execute(): arrived" << endl;
-	return insert((static_cast<SYMBFCleaning *>(device))->get_configuration_file_path());
-}
-
-//--------------------------------------------------------
-/**
- * method : 		LoadConfigurationFileClass::execute()
- * description : 	method to trigger the execution of the command.
- *
- * @param	device	The device on which the command must be executed
- * @param	in_any	The command input data
- *
- *	returns The command output data (packed in the Any object)
- */
-//--------------------------------------------------------
-CORBA::Any *LoadConfigurationFileClass::execute(Tango::DeviceImpl *device, const CORBA::Any &in_any)
-{
-	cout2 << "LoadConfigurationFileClass::execute(): arrived" << endl;
-	Tango::DevString argin;
-	extract(in_any, argin);
-	((static_cast<SYMBFCleaning *>(device))->load_configuration_file(argin));
-	return new CORBA::Any();
-}
-
-//--------------------------------------------------------
-/**
- * method : 		SaveConfigurationFileClass::execute()
- * description : 	method to trigger the execution of the command.
- *
- * @param	device	The device on which the command must be executed
- * @param	in_any	The command input data
- *
- *	returns The command output data (packed in the Any object)
- */
-//--------------------------------------------------------
-CORBA::Any *SaveConfigurationFileClass::execute(Tango::DeviceImpl *device, const CORBA::Any &in_any)
-{
-	cout2 << "SaveConfigurationFileClass::execute(): arrived" << endl;
-	Tango::DevString argin;
-	extract(in_any, argin);
-	((static_cast<SYMBFCleaning *>(device))->save_configuration_file(argin));
-	return new CORBA::Any();
-}
-
-//--------------------------------------------------------
-/**
  * method : 		SweepOnClass::execute()
  * description : 	method to trigger the execution of the command.
  *
@@ -490,32 +433,6 @@ void SYMBFCleaningClass::set_default_property()
 	}
 	else
 		add_wiz_dev_prop(prop_name, prop_desc);
-	prop_name = "SettingsFilesPath";
-	prop_desc = "Path were are stored settings file";
-	prop_def  = "";
-	vect_data.clear();
-	if (prop_def.length()>0)
-	{
-		Tango::DbDatum	data(prop_name);
-		data << vect_data ;
-		dev_def_prop.push_back(data);
-		add_wiz_dev_prop(prop_name, prop_desc,  prop_def);
-	}
-	else
-		add_wiz_dev_prop(prop_name, prop_desc);
-	prop_name = "LastLoaded";
-	prop_desc = "Last loaded file";
-	prop_def  = "";
-	vect_data.clear();
-	if (prop_def.length()>0)
-	{
-		Tango::DbDatum	data(prop_name);
-		data << vect_data ;
-		dev_def_prop.push_back(data);
-		add_wiz_dev_prop(prop_name, prop_desc,  prop_def);
-	}
-	else
-		add_wiz_dev_prop(prop_name, prop_desc);
 }
 
 //--------------------------------------------------------
@@ -622,30 +539,6 @@ void SYMBFCleaningClass::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	Add your own code
 	
 	/*----- PROTECTED REGION END -----*/	//	SYMBFCleaningClass::attribute_factory_before
-	//	Attribute : ConfigFileName
-	ConfigFileNameAttrib	*configfilename = new ConfigFileNameAttrib();
-	Tango::UserDefaultAttrProp	configfilename_prop;
-	//	description	not set for ConfigFileName
-	//	label	not set for ConfigFileName
-	//	unit	not set for ConfigFileName
-	//	standard_unit	not set for ConfigFileName
-	//	display_unit	not set for ConfigFileName
-	//	format	not set for ConfigFileName
-	//	max_value	not set for ConfigFileName
-	//	min_value	not set for ConfigFileName
-	//	max_alarm	not set for ConfigFileName
-	//	min_alarm	not set for ConfigFileName
-	//	max_warning	not set for ConfigFileName
-	//	min_warning	not set for ConfigFileName
-	//	delta_t	not set for ConfigFileName
-	//	delta_val	not set for ConfigFileName
-	
-	configfilename->set_default_properties(configfilename_prop);
-	//	Not Polled
-	configfilename->set_disp_level(Tango::OPERATOR);
-	//	Not Memorized
-	att_list.push_back(configfilename);
-
 	//	Attribute : Phase
 	PhaseAttrib	*phase = new PhaseAttrib();
 	Tango::UserDefaultAttrProp	phase_prop;
@@ -995,33 +888,6 @@ void SYMBFCleaningClass::command_factory()
 	Tango::Command	&stateCmd = get_cmd_by_name("State");
 	stateCmd.set_polling_period(1000);
 	
-
-	//	Command GetConfigurationFilePath
-	GetConfigurationFilePathClass	*pGetConfigurationFilePathCmd =
-		new GetConfigurationFilePathClass("GetConfigurationFilePath",
-			Tango::DEV_VOID, Tango::DEV_STRING,
-			"",
-			"Configuration file path",
-			Tango::OPERATOR);
-	command_list.push_back(pGetConfigurationFilePathCmd);
-
-	//	Command LoadConfigurationFile
-	LoadConfigurationFileClass	*pLoadConfigurationFileCmd =
-		new LoadConfigurationFileClass("LoadConfigurationFile",
-			Tango::DEV_STRING, Tango::DEV_VOID,
-			"Configuration file name (without the path)",
-			"",
-			Tango::OPERATOR);
-	command_list.push_back(pLoadConfigurationFileCmd);
-
-	//	Command SaveConfigurationFile
-	SaveConfigurationFileClass	*pSaveConfigurationFileCmd =
-		new SaveConfigurationFileClass("SaveConfigurationFile",
-			Tango::DEV_STRING, Tango::DEV_VOID,
-			"Configuration file name (without the path)",
-			"",
-			Tango::OPERATOR);
-	command_list.push_back(pSaveConfigurationFileCmd);
 
 	//	Command SweepOn
 	SweepOnClass	*pSweepOnCmd =

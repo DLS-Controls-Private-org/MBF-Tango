@@ -37,14 +37,6 @@
       <type xsi:type="pogoDsl:StringType"/>
       <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
     </deviceProperties>
-    <deviceProperties name="SettingsFilesPath" description="Path were are stored settings file">
-      <type xsi:type="pogoDsl:StringType"/>
-      <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
-    </deviceProperties>
-    <deviceProperties name="LastLoaded" description="Last loaded file">
-      <type xsi:type="pogoDsl:StringType"/>
-      <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
-    </deviceProperties>
     <commands name="State" description="This command gets the device state (stored in its device_state data member) and returns it to the caller." execMethod="dev_state" displayLevel="OPERATOR" polledPeriod="1000" isDynamic="false">
       <argin description="none">
         <type xsi:type="pogoDsl:VoidType"/>
@@ -62,33 +54,6 @@
         <type xsi:type="pogoDsl:ConstStringType"/>
       </argout>
       <status abstract="true" inherited="true" concrete="true"/>
-    </commands>
-    <commands name="GetConfigurationFilePath" description="Return configuration file path" execMethod="get_configuration_file_path" displayLevel="OPERATOR" polledPeriod="0" isDynamic="false">
-      <argin description="">
-        <type xsi:type="pogoDsl:VoidType"/>
-      </argin>
-      <argout description="Configuration file path">
-        <type xsi:type="pogoDsl:StringType"/>
-      </argout>
-      <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
-    </commands>
-    <commands name="LoadConfigurationFile" description="" execMethod="load_configuration_file" displayLevel="OPERATOR" polledPeriod="0" isDynamic="false">
-      <argin description="Configuration file name (without the path)">
-        <type xsi:type="pogoDsl:StringType"/>
-      </argin>
-      <argout description="">
-        <type xsi:type="pogoDsl:VoidType"/>
-      </argout>
-      <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
-    </commands>
-    <commands name="SaveConfigurationFile" description="" execMethod="save_configuration_file" displayLevel="OPERATOR" polledPeriod="0" isDynamic="false">
-      <argin description="Configuration file name (without the path)">
-        <type xsi:type="pogoDsl:StringType"/>
-      </argin>
-      <argout description="">
-        <type xsi:type="pogoDsl:VoidType"/>
-      </argout>
-      <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
     </commands>
     <commands name="SweepOn" description="Start sweep (Sweep from freqmin to freqmax)" execMethod="sweep_on" displayLevel="OPERATOR" polledPeriod="0" isDynamic="false">
       <argin description="">
@@ -144,14 +109,6 @@
       </argout>
       <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
     </commands>
-    <attributes name="ConfigFileName" attType="Scalar" rwType="READ" displayLevel="OPERATOR" polledPeriod="0" maxX="" maxY="" allocReadMember="true" isDynamic="false">
-      <dataType xsi:type="pogoDsl:StringType"/>
-      <changeEvent fire="false" libCheckCriteria="false"/>
-      <archiveEvent fire="false" libCheckCriteria="false"/>
-      <dataReadyEvent fire="false" libCheckCriteria="true"/>
-      <status abstract="false" inherited="false" concrete="true" concreteHere="true"/>
-      <properties description="" label="" unit="" standardUnit="" displayUnit="" format="" maxValue="" minValue="" maxAlarm="" minAlarm="" maxWarning="" minWarning="" deltaTime="" deltaValue=""/>
-    </attributes>
     <attributes name="Phase" attType="Scalar" rwType="READ_WRITE" displayLevel="OPERATOR" polledPeriod="0" maxX="" maxY="" memorized="true" memorizedAtInit="true" allocReadMember="true" isDynamic="false">
       <dataType xsi:type="pogoDsl:DoubleType"/>
       <changeEvent fire="false" libCheckCriteria="false"/>

@@ -58,19 +58,6 @@ namespace SYMBFCleaning_ns
 //=========================================
 //	Define classes for attributes
 //=========================================
-//	Attribute ConfigFileName class definition
-class ConfigFileNameAttrib: public Tango::Attr
-{
-public:
-	ConfigFileNameAttrib():Attr("ConfigFileName",
-			Tango::DEV_STRING, Tango::READ) {};
-	~ConfigFileNameAttrib() {};
-	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
-		{(static_cast<SYMBFCleaning *>(dev))->read_ConfigFileName(att);}
-	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
-		{return (static_cast<SYMBFCleaning *>(dev))->is_ConfigFileName_allowed(ty);}
-};
-
 //	Attribute Phase class definition
 class PhaseAttrib: public Tango::Attr
 {
@@ -274,75 +261,6 @@ public:
 //=========================================
 //	Define classes for commands
 //=========================================
-//	Command GetConfigurationFilePath class definition
-class GetConfigurationFilePathClass : public Tango::Command
-{
-public:
-	GetConfigurationFilePathClass(const char   *name,
-	               Tango::CmdArgType in,
-				   Tango::CmdArgType out,
-				   const char        *in_desc,
-				   const char        *out_desc,
-				   Tango::DispLevel  level)
-	:Command(name,in,out,in_desc,out_desc, level)	{};
-
-	GetConfigurationFilePathClass(const char   *name,
-	               Tango::CmdArgType in,
-				   Tango::CmdArgType out)
-	:Command(name,in,out)	{};
-	~GetConfigurationFilePathClass() {};
-	
-	virtual CORBA::Any *execute (Tango::DeviceImpl *dev, const CORBA::Any &any);
-	virtual bool is_allowed (Tango::DeviceImpl *dev, const CORBA::Any &any)
-	{return (static_cast<SYMBFCleaning *>(dev))->is_GetConfigurationFilePath_allowed(any);}
-};
-
-//	Command LoadConfigurationFile class definition
-class LoadConfigurationFileClass : public Tango::Command
-{
-public:
-	LoadConfigurationFileClass(const char   *name,
-	               Tango::CmdArgType in,
-				   Tango::CmdArgType out,
-				   const char        *in_desc,
-				   const char        *out_desc,
-				   Tango::DispLevel  level)
-	:Command(name,in,out,in_desc,out_desc, level)	{};
-
-	LoadConfigurationFileClass(const char   *name,
-	               Tango::CmdArgType in,
-				   Tango::CmdArgType out)
-	:Command(name,in,out)	{};
-	~LoadConfigurationFileClass() {};
-	
-	virtual CORBA::Any *execute (Tango::DeviceImpl *dev, const CORBA::Any &any);
-	virtual bool is_allowed (Tango::DeviceImpl *dev, const CORBA::Any &any)
-	{return (static_cast<SYMBFCleaning *>(dev))->is_LoadConfigurationFile_allowed(any);}
-};
-
-//	Command SaveConfigurationFile class definition
-class SaveConfigurationFileClass : public Tango::Command
-{
-public:
-	SaveConfigurationFileClass(const char   *name,
-	               Tango::CmdArgType in,
-				   Tango::CmdArgType out,
-				   const char        *in_desc,
-				   const char        *out_desc,
-				   Tango::DispLevel  level)
-	:Command(name,in,out,in_desc,out_desc, level)	{};
-
-	SaveConfigurationFileClass(const char   *name,
-	               Tango::CmdArgType in,
-				   Tango::CmdArgType out)
-	:Command(name,in,out)	{};
-	~SaveConfigurationFileClass() {};
-	
-	virtual CORBA::Any *execute (Tango::DeviceImpl *dev, const CORBA::Any &any);
-	virtual bool is_allowed (Tango::DeviceImpl *dev, const CORBA::Any &any)
-	{return (static_cast<SYMBFCleaning *>(dev))->is_SaveConfigurationFile_allowed(any);}
-};
-
 //	Command SweepOn class definition
 class SweepOnClass : public Tango::Command
 {
