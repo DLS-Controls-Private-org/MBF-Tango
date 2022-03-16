@@ -1,8 +1,8 @@
 #---------------------------------------------------------
-# SERVER Tango2Epics/tmbf-tuneh, Tango2Epics device declaration
+# SERVER Tango2Epics/tmbf-tune-h, Tango2Epics device declaration
 #---------------------------------------------------------
 
-Tango2Epics/tmbf-tuneh/DEVICE/Tango2Epics: "tmbf/tune_fit/h"
+Tango2Epics/tmbf-tune-h/DEVICE/Tango2Epics: "tmbf/tune_fit/h"
 
 
 # --- tmbf/tune_fit/h properties

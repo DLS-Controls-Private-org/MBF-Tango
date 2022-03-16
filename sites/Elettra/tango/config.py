@@ -17,8 +17,8 @@ tfit_dev_name = {
         'vertical': 'tmbf/tune_fit/v' }
 
 tfit_instance_name = {
-        'horizontal': 'tmbf-tuneh',
-        'vertical': 'tmbf-tunev' }
+        'horizontal': 'tmbf-tune-h',
+        'vertical': 'tmbf-tune-v' }
 
 vars_users = {
         'DEVICE': 'SR-TMBF',
