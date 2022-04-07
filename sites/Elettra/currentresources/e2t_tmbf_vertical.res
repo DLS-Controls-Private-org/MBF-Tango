@@ -1,5 +1,5 @@
 #
-# Resource backup , created Mon Apr 26 13:39:46 CEST 2021
+# Resource backup , created Thu Apr 07 15:20:22 CEST 2022
 #
 
 #---------------------------------------------------------
@@ -12,8 +12,10 @@ Tango2Epics/tmbf-v/DEVICE/Tango2Epics: "tmbf/processor/v"
 # --- tmbf/processor/v properties
 
 tmbf/processor/v->ArrayAccessTimeout: 0.3
-tmbf/processor/v->HelperApplication: "tmbf-gui h"
+tmbf/processor/v->HelperApplication: "/home/elettra/tmp/tmbf_v.sh"
 tmbf/processor/v->polled_attr: dac_mms_std_mean,\ 
+                               1000,\ 
+                               dac_enable_s,\ 
                                1000
 tmbf/processor/v->ScalarAccessTimeout: 0.2
 tmbf/processor/v->SubscriptionCycle: 0.4
@@ -714,6 +716,11 @@ tmbf/processor/v/DAC_DELAY_S->description: "DAC output delay"
 tmbf/processor/v/DAC_DRAM_SOURCE_S->description: "Source of memory data"
 tmbf/processor/v/DAC_DRAM_SOURCE_S->EnumLabels: "Before FIR",\ 
                                                 "After FIR"
+tmbf/processor/v/DAC_ENABLE_S->abs_change: -1,\ 
+                                           1
+tmbf/processor/v/DAC_ENABLE_S->archive_abs_change: -1,\ 
+                                                   1
+tmbf/processor/v/DAC_ENABLE_S->archive_period: 86400000
 tmbf/processor/v/DAC_ENABLE_S->description: "DAC output enable"
 tmbf/processor/v/DAC_ENABLE_S->EnumLabels: OFF,\ 
                                            ON

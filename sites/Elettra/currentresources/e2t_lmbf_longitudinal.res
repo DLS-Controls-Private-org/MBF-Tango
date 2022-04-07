@@ -1,5 +1,5 @@
 #
-# Resource backup , created Mon Apr 26 13:38:20 CEST 2021
+# Resource backup , created Thu Apr 07 15:18:44 CEST 2022
 #
 
 #---------------------------------------------------------
@@ -12,8 +12,10 @@ Tango2Epics/lmbf-l/DEVICE/Tango2Epics: "lmbf/processor/l"
 # --- lmbf/processor/l properties
 
 lmbf/processor/l->ArrayAccessTimeout: 0.3
-lmbf/processor/l->HelperApplication: lmbf-gui
+lmbf/processor/l->HelperApplication: "lmbf-gui lmbf/delay/l lmbf/rfampl/l  lmbf/processor/l"
 lmbf/processor/l->polled_attr: i_adc_mms_mean_mean,\ 
+                               1000,\ 
+                               i_dac_enable_s,\ 
                                1000
 lmbf/processor/l->ScalarAccessTimeout: 0.2
 lmbf/processor/l->SubscriptionCycle: 0.4
@@ -1873,6 +1875,11 @@ lmbf/processor/l/I_DAC_DELAY_S->description: "DAC output delay"
 lmbf/processor/l/I_DAC_DRAM_SOURCE_S->description: "Source of memory data"
 lmbf/processor/l/I_DAC_DRAM_SOURCE_S->EnumLabels: "Before FIR",\ 
                                                   "After FIR"
+lmbf/processor/l/I_DAC_ENABLE_S->abs_change: -1,\ 
+                                             1
+lmbf/processor/l/I_DAC_ENABLE_S->archive_abs_change: -1,\ 
+                                                     1
+lmbf/processor/l/I_DAC_ENABLE_S->archive_period: 86400000
 lmbf/processor/l/I_DAC_ENABLE_S->description: "DAC output enable"
 lmbf/processor/l/I_DAC_ENABLE_S->EnumLabels: OFF,\ 
                                              ON
