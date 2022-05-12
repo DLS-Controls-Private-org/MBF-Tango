@@ -7,6 +7,12 @@ Tango2Epics/lmbf-l/DEVICE/Tango2Epics: "lmbf/processor/l"
 
 # --- lmbf/processor/l properties
 
+lmbf/processor/l->ArrayAccessTimeout: 0.3
+lmbf/processor/l->HelperApplication: lmbf-gui
+lmbf/processor/l->polled_attr: i_adc_mms_mean_mean,\ 
+1000
+lmbf/processor/l->ScalarAccessTimeout: 0.2
+lmbf/processor/l->SubscriptionCycle: 0.4
 lmbf/processor/l->Variables: \ 
 SR-LMBF:ADC:EVENTS:FAN*Scalar*Int*READ_WRITE*ATTRIBUTE*ADC_EVENTS_FAN,\ 
 SR-LMBF:ADC:EVENTS:FAN1*Scalar*Int*READ_WRITE*ATTRIBUTE*ADC_EVENTS_FAN1,\ 

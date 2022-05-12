@@ -7,6 +7,10 @@ Tango2Epics/tmbf-tune-h/DEVICE/Tango2Epics: "tmbf/tune_fit/h"
 
 # --- tmbf/tune_fit/h properties
 
+tmbf/tune_fit/h->ArrayAccessTimeout: 0.3
+tmbf/tune_fit/h->HelperApplication: "atkpanel tmbf/tune_fit/h"
+tmbf/tune_fit/h->ScalarAccessTimeout: 0.2
+tmbf/tune_fit/h->SubscriptionCycle: 0.4
 tmbf/tune_fit/h->Variables: \ 
 SR-TMBF:X:TUNE:CENTRE:HEIGHT*Scalar*Double*READ_ONLY*ATTRIBUTE*CENTRE_HEIGHT,\ 
 SR-TMBF:X:TUNE:CENTRE:PHASE*Scalar*Double*READ_ONLY*ATTRIBUTE*CENTRE_PHASE,\ 

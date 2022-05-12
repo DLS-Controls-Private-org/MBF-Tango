@@ -7,6 +7,18 @@ Tango2Epics/tmbf-global/DEVICE/Tango2Epics: "tmbf/processor/global"
 
 # --- tmbf/processor/global properties
 
+tmbf/processor/global->ArrayAccessTimeout: 0.3
+tmbf/processor/global->HelperApplication: "atkpanel tmbf/processor/global"
+tmbf/processor/global->polled_attr: dly_turn_errors,\ 
+                                    1000,\ 
+                                    sta_vcxo,\ 
+                                    1000,\ 
+                                    state,\ 
+                                    3000,\ 
+                                    status,\ 
+                                    3000
+tmbf/processor/global->ScalarAccessTimeout: 0.2
+tmbf/processor/global->SubscriptionCycle: 0.4
 tmbf/processor/global->Variables: \ 
 SR-TMBF:ADC:EVENTS:FAN*Scalar*Int*READ_WRITE*ATTRIBUTE*ADC_EVENTS_FAN,\ 
 SR-TMBF:ADC:EVENTS:FAN1*Scalar*Int*READ_WRITE*ATTRIBUTE*ADC_EVENTS_FAN1,\ 

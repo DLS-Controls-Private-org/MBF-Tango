@@ -7,6 +7,12 @@ Tango2Epics/tmbf-h/DEVICE/Tango2Epics: "tmbf/processor/h"
 
 # --- tmbf/processor/h properties
 
+tmbf/processor/h->ArrayAccessTimeout: 0.3
+tmbf/processor/h->HelperApplication: "tmbf-gui h"
+tmbf/processor/h->polled_attr: dac_mms_std_mean,\ 
+                               1000
+tmbf/processor/h->ScalarAccessTimeout: 0.2
+tmbf/processor/h->SubscriptionCycle: 0.4
 tmbf/processor/h->Variables: \ 
 SR-TMBF:X:ADC:DRAM_SOURCE_S*Scalar*Enum*READ_WRITE*ATTRIBUTE*ADC_DRAM_SOURCE_S,\ 
 SR-TMBF:X:ADC:EVENT*Scalar*Enum*READ_ONLY*ATTRIBUTE*ADC_EVENT,\ 
