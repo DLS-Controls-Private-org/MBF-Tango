@@ -825,7 +825,7 @@ SR-LMBF:TRG:SEQ0:IN*Scalar*Enum*READ_ONLY*ATTRIBUTE*TRG_SEQ0_IN,\
 SR-LMBF:TRG:SEQ1:IN*Scalar*Enum*READ_ONLY*ATTRIBUTE*TRG_SEQ1_IN,\ 
 SR-LMBF:TRG:SHARED*Scalar*String*READ_ONLY*ATTRIBUTE*TRG_SHARED,\ 
 SR-LMBF:TRG:SOFT:IN*Scalar*Enum*READ_ONLY*ATTRIBUTE*TRG_SOFT_IN,\ 
-SR-LMBF:TRG:SOFT_S*Scalar*Int*READ_WRITE*ATTRIBUTE*TRG_SOFT_S,\ 
+SR-LMBF:TRG:SOFT_S.SCAN*Scalar*Enum*READ_WRITE*ATTRIBUTE*TRG_SOFT_S.SCAN,\ 
 SR-LMBF:TRG:STATUS*Scalar*Enum*READ_ONLY*ATTRIBUTE*TRG_STATUS
 
 # --- lmbf/processor/l attribute properties
@@ -2421,6 +2421,8 @@ lmbf/processor/l/TRG_SOFT_IN->description: "Soft trigger input"
 lmbf/processor/l/TRG_SOFT_IN->EnumLabels: "No", "Yes"
 lmbf/processor/l/TRG_SOFT_IN->values: "No", "Yes"
 lmbf/processor/l/TRG_SOFT_S->description: "Soft trigger"
+lmbf/processor/l/TRG_SOFT_S.SCAN->EnumLabels: "Passive","Event","I/O Intr","10 seconds","5 seconds", "2 seconds", "1 seconds", ".5 seconds" ,".2 seconds", ".1 seconds"
+lmbf/processor/l/TRG_SOFT_S.SCAN->values: "Passive","Event","I/O Intr","10 seconds","5 seconds", "2 seconds", "1 seconds", ".5 seconds" ,".2 seconds", ".1 seconds"
 lmbf/processor/l/TRG_STATUS->description: "Shared trigger target status"
 lmbf/processor/l/TRG_STATUS->EnumLabels: "Idle", "Armed", "Locked", "Busy", "Mixed", "Invalid"
 lmbf/processor/l/TRG_STATUS->values: "Idle", "Armed", "Locked", "Busy", "Mixed", "Invalid"
