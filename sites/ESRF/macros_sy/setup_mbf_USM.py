@@ -6,6 +6,7 @@ from importlib import reload
 from math import modf
 import re
 
+nyquist = lambda f: f if f < 352 else 2*352-f
 
 # This function generates a booster bunch list based on the mode name.
 # Valid modes are for instance:
@@ -60,12 +61,12 @@ class MBF_HL():
         Harmonic = mbfCtrl.Harmonic
         tune_sweep = mbfCtrl.Tune
         if Harmonic < 0:
-            Harmonic = abs(Harmonic)
-            tune_sweep += 0.5
-        Harmonic += harmonic_shift
+            Harmonic = 352 + Harmonic
         sweep_range = mbfCtrl.SweepRange
-        sweep_start = Harmonic + tune_sweep - sweep_range
-        sweep_end = sweep_start + 2 * sweep_range
+        sweep_start = 2 * (Harmonic + tune_sweep) - sweep_range
+        sweep_end = sweep_start + 2*sweep_range
+        sweep_start = nyquist(sweep_start) + harmonic_shift
+        sweep_end = nyquist(sweep_end) + harmonic_shift
         Mbf.put('SEQ:1:START_FREQ_S', sweep_start)
         Mbf.put('SEQ:1:END_FREQ_S', sweep_end)
         Mbf.put('SEQ:1:CAPTURE_S', 'Capture')

@@ -278,12 +278,27 @@ class MBF_HL():
             clean_pattern[1:1+gap_l] = 1
             clean_pattern[-gap_r:] = -1
             start = gap_l+trains_l+1
-            for ii in range(28):
+            for ii in range(27):
                 clean_pattern[start+ii*31:start+ii*31+(31-trains_l)] = \
                         (2*(ii%2)-1)
             # Feedback on single bunchv$ (FIR #0)
             fb_patterns[0][0] = 1
             # Feedback on the 28 little trains (FIR #1)
+            fb_patterns[1][:] = clean_pattern == 0
+            fb_patterns[1][0] = 0
+        elif sr_mode == '24*8+1':
+            gap_l = 147
+            gap_r = 123
+            trains_l = 8
+            clean_pattern[1:1+gap_l] = 1
+            clean_pattern[-gap_r:] = -1
+            start = gap_l+trains_l+1
+            for ii in range(23):
+                clean_pattern[start+ii*31:start+ii*31+(31-trains_l)] = \
+                        (2*(ii%2)-1)
+            # Feedback on single bunchv$ (FIR #0)
+            fb_patterns[0][0] = 1
+            # Feedback on the 24 little trains (FIR #1)
             fb_patterns[1][:] = clean_pattern == 0
             fb_patterns[1][0] = 0
         elif sr_mode == 'Uniform':
