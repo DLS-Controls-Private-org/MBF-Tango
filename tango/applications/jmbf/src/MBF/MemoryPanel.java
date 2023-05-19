@@ -89,7 +89,7 @@ public class MemoryPanel extends javax.swing.JFrame implements IEnumScalarListen
     wf0Viewer.getXAxis().setGridVisible(true);
     wf0Viewer.getY1Axis().setGridVisible(true);
 
-    wf1Viewer.setHeader("Channel 0");
+    wf1Viewer.setHeader("Channel 1");
     wf1Viewer.setPreferredSize(new Dimension(800,300));
     wf1Viewer.getXAxis().setGridVisible(true);
     wf1Viewer.getY1Axis().setGridVisible(true);
