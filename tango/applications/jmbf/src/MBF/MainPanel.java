@@ -1,6 +1,10 @@
 package MBF;
 
+import fr.esrf.Tango.DevFailed;
+import fr.esrf.Tango.DevSource;
 import fr.esrf.tangoatk.core.AttributeList;
+import fr.esrf.tangoatk.core.ConnectionException;
+import fr.esrf.tangoatk.core.DeviceFactory;
 import fr.esrf.tangoatk.widget.jdraw.SynopticProgressListener;
 import fr.esrf.tangoatk.widget.jdraw.TangoSynopticHandler;
 import fr.esrf.tangoatk.widget.util.ATKDiagnostic;
@@ -301,6 +305,16 @@ public class MainPanel extends javax.swing.JFrame implements SynopticProgressLis
     
     attList.setRefreshInterval(1000);
     attList.startRefresher();
+    
+    try {
+      DeviceFactory.getInstance().getDevice(mfdbkHEpicsDevName).set_source(DevSource.DEV);
+      DeviceFactory.getInstance().getDevice(mfdbkVEpicsDevName).set_source(DevSource.DEV);
+      DeviceFactory.getInstance().getDevice(mfdbkGEpicsDevName).set_source(DevSource.DEV);
+    } catch(ConnectionException e) {
+      System.out.println("DeviceFactory.getInstance().getDevice() failed: "+e.getMessage());
+    } catch(DevFailed e) {
+      System.out.println("DeviceFactory.getInstance().getDevice() failed: "+e.getMessage());        
+    }
     
     splash.setVisible(false);
     if(mfdbkHEpicsDevName.toLowerCase().startsWith("sy"))
