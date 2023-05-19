@@ -142,7 +142,7 @@ public class BunchControlPanel extends javax.swing.JFrame {
       // NCO1
       NumberScalar freq1 = (NumberScalar)attList.add(devName+"/NCO1_FREQ_S");
       nco1FreqEditor.setModel(freq1); 
-      nco1FreqEditor.setFormat("%6.5f");
+      nco1FreqEditor.setFormat("%8.5f");
       NumberScalar gain = (NumberScalar)attList.add(devName+"/NCO1_GAIN_SCALAR_S");
       nco1GainEditor.setModel(gain);      
       nco1GainEditor.setFormat("%4.3f");
@@ -157,7 +157,7 @@ public class BunchControlPanel extends javax.swing.JFrame {
       // NCO2
       NumberScalar freq2 = (NumberScalar)attList.add(devName+"/NCO2_FREQ_S");
       nco2FreqEditor.setModel(freq2); 
-      nco2FreqEditor.setFormat("%6.5f");
+      nco2FreqEditor.setFormat("%8.5f");
       NumberScalar gain2 = (NumberScalar)attList.add(devName+"/NCO2_GAIN_SCALAR_S");
       nco2GainEditor.setModel(gain2);
       nco2GainEditor.setFormat("%4.3f");
