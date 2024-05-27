@@ -2,8 +2,6 @@ from tango import *
 from numpy import *
 import numpy as np
 import time
-from importlib import reload
-from math import modf
 import re
 
 nyquist = lambda f: f if f < 352 else 2*352-f
@@ -50,6 +48,9 @@ class MBF_HL():
     def set_sweep(self, harmonic_shift=0):
         Mbf = self.Mbf
         mbfCtrl = self.mbfCtrl
+        str_out_d = {}
+        str_out_d['warning'] = ""
+        str_out_d['output'] = ""
 
         # Ensure no triggers are running and the sequencer is stopped
         Mbf.put('TRG:SEQ:DISARM_S', 0)
@@ -76,14 +77,25 @@ class MBF_HL():
         Mbf.put('SEQ:1:ENWIN_S', 'Windowed')
         Mbf.put('SEQ:1:BLANK_S', 'Off')
 
+        # output the trigger status
+        trg_status_str = ["IDLE", "ARMED", "BUSY"]
+        trg_status = Mbf.get('TRG:SEQ:STATUS')
+        mess = f"\nTrigger status: {trg_status_str[trg_status]}"
+        str_out_d["output"] += mess
+
         Mbf.put('SEQ:PC_S', 1)
         # Arm has to be done after all configuration
         Mbf.put('TRG:SEQ:ARM_S', 0)
+        str_out_d["output"] += "\nArm trigger"
+
+        return str_out_d
 
     def set_param(self, attName):
         Mbf = self.Mbf
         mbfCtrl = self.mbfCtrl
-        str_warning = ""
+        str_out_d = {}
+        str_out_d['warning'] = ""
+        str_out_d['output'] = ""
 
         modeList = mbfCtrl.ModeList
         mode = modeList[mbfCtrl.mode]
@@ -136,6 +148,8 @@ class MBF_HL():
         prefix = 'BUN:{:d}'.format(bank_this_mode)
         Mbf.put(prefix + ':SEQ:GAIN_S', gainwf_sweep)
 
-        self.set_sweep(harmonic_shift)
+        str_out_d_sweep = self.set_sweep(harmonic_shift)
+        str_out_d["output"] += str_out_d_sweep["output"]
+        str_out_d["warning"] += str_out_d_sweep["warning"]
 
-        return str_warning
+        return str_out_d

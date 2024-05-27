@@ -1,5 +1,6 @@
 from sardana.macroserver.macro import *
 
+import sys
 from tango import *
 import time
 from importlib import reload
@@ -26,7 +27,7 @@ class mbf_control(Macro):
 
         tic = time.time()
         str_warning = ""
-        self.output("[mbf_%s] Start macro: %s" % (command, mbfCtrlDevName) )
+        self.output(f"[mbf_{command}] Start macro: {mbfCtrlDevName}")
         
         # reload module to handle change
         reload(setup_mbf_common)
@@ -58,30 +59,32 @@ class mbf_control(Macro):
                 mbf_hl.comm_set_sweep_on(False)
 
             elif command=="set_param":
-                self.output("setting params for: %s" % mbfCtrlDevName)
+                output_str = "setting params for: %s\n" % mbfCtrlDevName
                 
                 sweepGainList = [0,-6,-12,-18,-24,-30,-36,-42,-48,-54,-60,
                         -66,-72,-78,-84,-90]
                 firGainList = [48,42,36,30,24,18,12,6,0,-6,-12,-18,-24,-30,
                         -36,-42]
 
-                self.output("Attriute=%s" % attName)
-                self.output("Mode=%s" % mode)
-                self.output("Tune=%f" % mbfCtrl.Tune)
-                self.output("FeedbackGain=%d dB" %
-                        firGainList[mbfCtrl.FeedbackGain])
-                self.output("FeedbackFineGain=%f" % mbfCtrl.FeedbackFineGain)
-                self.output("FeedbackPhase=%f" % mbfCtrl.FeedbackPhase)
-                self.output("Harmonic=%f" % mbfCtrl.Harmonic)
-                self.output("SweepDwellTime=%d" % mbfCtrl.SweepDwellTime)
-                self.output("SweepRange=%f" % mbfCtrl.SweepRange)
-                self.output("SweepGainAllBunches=%d dB" %
-                        sweepGainList[mbfCtrl.SweepGainAllBunches])
-                self.output("BlankingInterval=%d" % mbfCtrl.BlankingInterval)
-                self.output("TuneOnSingleBunch=%d" % mbfCtrl.TuneOnSingleBunch)
-                self.output("TuneBunch=%d" % mbfCtrl.TuneBunch)
+                output_str += "Attriute=%s\n" % attName
+                output_str += "Mode=%s\n" % mode
+                output_str += "Tune=%f\n" % mbfCtrl.Tune
+                output_str += "FeedbackGain=%d dB\n" % firGainList[mbfCtrl.FeedbackGain]
+                output_str += "FeedbackFineGain=%f\n" % mbfCtrl.FeedbackFineGain
+                output_str += "FeedbackPhase=%f\n" % mbfCtrl.FeedbackPhase
+                output_str += "Harmonic=%f\n" % mbfCtrl.Harmonic
+                output_str += "SweepDwellTime=%d\n" % mbfCtrl.SweepDwellTime
+                output_str += "SweepRange=%f\n" % mbfCtrl.SweepRange
+                output_str += "SweepGainAllBunches=%d dB\n" % sweepGainList[mbfCtrl.SweepGainAllBunches]
+                output_str += "BlankingInterval=%d\n" % mbfCtrl.BlankingInterval
+                output_str += "TuneOnSingleBunch=%d\n" % mbfCtrl.TuneOnSingleBunch
+                output_str += "TuneBunch=%d" % mbfCtrl.TuneBunch
                 
-                str_warning += mbf_hl.set_param(attName)
+                str_out_d = mbf_hl.set_param(attName)
+                output_str += str_out_d["output"]
+                str_warning += str_out_d["warning"]
+
+                self.output(output_str)
 
             elif command=="reset":
                 pass
@@ -94,10 +97,11 @@ class mbf_control(Macro):
             raise ValueError("%s %s Failed: %s" %
                     (mbfCtrlDevName, command, df[0].desc))
 
-        self.output("[mbf_%s] End macro" % command)
-        self.output("[mbf_%s] Execution time: %f s" %
-                (command, time.time()-tic))
-
+        output_str = f"[mbf_{command}] End macro\n"
+        exec_time = time.time() - tic
+        output_str += f"Execution time: {exec_time:.3f} s"
+        self.output(output_str)
+        self.info(sys.version)
         self.warning(str_warning)
         return
         
