@@ -1,5 +1,6 @@
 from tango import *
 from numpy import *
+import numpy as np
 import time
 from importlib import reload
 
@@ -320,14 +321,14 @@ class MBF_HL():
         Mbf = self.Mbf
         BUNCH_COUNT = Mbf.bunch_count
 
-        BUNCH_ONES = ones(BUNCH_COUNT, dtype = int)
-        BUNCH_ZEROS = zeros(BUNCH_COUNT, dtype = int)
+        BUNCH_ONES = np.ones(BUNCH_COUNT, dtype = int)
+        BUNCH_ZEROS = np.zeros(BUNCH_COUNT, dtype = int)
 
         # Configure banks #1, #2, #3 and #4
         #
         clean_pattern, fb_patterns = self.gen_patterns(mode)
 
-        all_bucket = ones((BUNCH_COUNT,))
+        all_bucket = np.ones((BUNCH_COUNT,), dtype='int')
         bunches = clean_pattern == 0
 
         firwf = zeros(BUNCH_COUNT, dtype = int)
@@ -337,8 +338,10 @@ class MBF_HL():
             fb_pattern_any[fb_pattern == 1] = 1
 
         outwf_fb = smc.DAC_OUT_FIR*fb_pattern_any
-        outwf_clean = smc.DAC_OUT_NCO1*logical_not(bunches)
+        outwf_clean = smc.DAC_OUT_NCO1*np.logical_not(bunches)
+        outwf_clean += smc.DAC_OUT_TUNEPLL*all_bucket
         outwf_sweep = smc.DAC_OUT_SWEEP*sweep_bunch_enables
+        outwf_sweep += smc.DAC_OUT_TUNEPLL*all_bucket
         gainwf_clean = cleaning_fine_gain*clean_pattern
         gainwf_fb = feedback_fine_gain*fb_pattern_any
         gainwf_sweep = feedback_fine_gain*all_bucket
@@ -353,7 +356,7 @@ class MBF_HL():
             Mbf.put(prefix + ':NCO1:GAIN_S', gainwf_clean)
             Mbf.put(prefix + ':NCO2:GAIN_S', 0*all_bucket)
             Mbf.put(prefix + ':SEQ:GAIN_S', gainwf_sweep)
-            Mbf.put(prefix + ':PLL:GAIN_S', 0*all_bucket)
+            Mbf.put(prefix + ':PLL:GAIN_S', 1*all_bucket)
 
         # Bank1: Tune sweep
         Mbf.put('BUN:0:OUTWF_S', outwf_sweep.astype(int))
@@ -531,8 +534,10 @@ class MBF_HL():
             # Ensure the blanking interval is right (this is not axis specific)
             Mbf.gput('TRG:BLANKING_S', blanking_interval)
 
-            # Ensure NCO1 is stopped
+            # Ensure NCO1, NCO2 and NCO_PLL are stopped
             Mbf.put('NCO1:ENABLE_S', 0)
+            Mbf.put('NCO2:ENABLE_S', 0)
+            Mbf.put('PLL:NCO:ENABLE_S', 0)
 
             # Configure bank selection
             self.comm_set_feedback_on(fb_state == 'ON')
@@ -553,6 +558,14 @@ class MBF_HL():
         if 'set_banks' in actions:
             self.set_banks(mode, cleaning.cleaning_fine_gain,
                     feedback_fine_gain, sweep_bunch_enables)
+            # configure things for TUNEPLL blow-up
+            clean_pattern, _ = self.gen_patterns(mode)
+            bunches = clean_pattern == 0
+            Mbf.put('PLL:DET:BLANKING_S', 'Ignore')
+            Mbf.put('PLL:DET:DWELL_S', 100)
+            Mbf.put('PLL:DET:SCALING_S', '48dB')
+            Mbf.put('PLL:DET:SELECT_S', 'ADC no fill')
+            Mbf.put('PLL:DET:BUNCHES_S', bunches)
 
         if 'reset_mbf' in actions:
             # Disable all sequencer triggers and configure triggering
