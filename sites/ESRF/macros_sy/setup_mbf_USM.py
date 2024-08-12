@@ -55,6 +55,8 @@ class MBF_HL():
         # Ensure no triggers are running and the sequencer is stopped
         Mbf.put('TRG:SEQ:DISARM_S', 0)
         Mbf.put('SEQ:RESET_S', 0)
+        while Mbf.get('TRG:SEQ:STATUS') != 0:
+            time.sleep(0.001)
         # Ensure super sequencer isn't in a strange state
         Mbf.put('SEQ:SUPER:COUNT_S', 1)
         Mbf.put('SEQ:SUPER:RESET_S', 0)
