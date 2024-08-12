@@ -1,5 +1,4 @@
 from tango import *
-from numpy import *
 import numpy as np
 import time
 from importlib import reload
@@ -12,12 +11,15 @@ TRIGGER_SOURCES = ['SOFT', 'EXT', 'PM', 'ADC0', 'ADC1', 'SEQ0', 'SEQ1', 'DAC0',
 sweep_holdoff = 0
 
 
-class Cleaning_legacy():
-    def __init__(self, mbf_hl):
-        self.mbf_hl = mbf_hl
+class MBF_HL():
+    def __init__(self, Mbf, mbfCtrl):
+        self.Mbf = Mbf
+        self.mbfCtrl = mbfCtrl
+        self.cleaning_init_ok = None
 
-    def init(self):
-        Mbf = self.mbf_hl.Mbf
+
+    def cleaning_init(self):
+        Mbf = self.Mbf
         str_warning = ""
         try:
             if "vertical" in Mbf.mbfDevName:
@@ -30,162 +32,51 @@ class Cleaning_legacy():
                 self.freq_sweeptime = cleaningDS.SweepPeriod
                 self.CleaningDuration = cleaningDS.CleaningTime
                 self.cleaning_fine_gain = cleaningDS.Gain/100.
+                # Temporary solution to enable ContinuousCleaning mode
+                self.ContinuousCleaning = (cleaningDS.CleaningTime == 42)
             else:
                 self.cleaning_fine_gain = 0.
-            self.init_ok = True
+            self.cleaning_init_ok = True
         except:
-            self.init_ok = False
+            self.cleaning_init_ok = False
             self.cleaning_fine_gain = 0.
             str_warning += "Error while loading Cleaning parameters\n"
             str_warning += "-> SR cleaning will not be possible\n\n"
+            raise
         return str_warning
 
-    def clean(self, output_fct, nShots=None):
-        """
-        nShots is not used in this function
-        """
-        Mbf = self.mbf_hl.Mbf
-        mbfCtrl = self.mbf_hl.mbfCtrl
 
-        if "vertical" not in Mbf.mbfDevName:
-            raise ValueError(
-                "Cleaning allowed only on vertical device")
+    def cleaning_start(self, output_fct, nShots=None):
+        Mbf = self.Mbf
+        mbfCtrl = self.mbfCtrl
 
-        if not self.init_ok:
-            raise EnvironmentError(
-                "Error while loading Cleaning parameters")
+        if self.cleaning_init_ok is None:
+            self.cleaning_init()
 
-        dt = 0.2
-
-        # Stop Tune sweep during a cleaning
-        Mbf.put('TRG:SEQ:DISARM_S', 0)
-        Mbf.put('SEQ:RESET_S', 0)
-
-        sweep_bunch_enables = self.mbf_hl.gen_sweep_pattern()
-        feedback_fine_gain = mbfCtrl.FeedbackFineGain
-        freq_min = self.freq_min
-        freq_max = self.freq_max
-        freq_sweeptime = self.freq_sweeptime
+        # Configure banks 1 and 3 for cleaning
+        # this is done at the last minute in case the 'ARB_Pattern'
+        # changed
         modeList = mbfCtrl.ModeList
         mode = modeList[mbfCtrl.mode]
-        self.mbf_hl.set_banks(mode, self.cleaning_fine_gain,
-                feedback_fine_gain, sweep_bunch_enables)
-
-        # Set Cleaning Gain
-        Mbf.put('NCO1:GAIN_S', '0dB')
-
-        # Generate frequency list
-        freq_list = linspace(freq_min, freq_max,
-                round(freq_sweeptime/dt)-1, endpoint=True)
-
-        # Start NCO1 and sweep frequency
-        output_fct("Cleaning in progress, sweep from {:.6f} to {:.6f}"
-                .format(freq_min,freq_max))
-        Mbf.put('NCO1:FREQ_S', freq_list[0])
-        time.sleep(dt)
-        Mbf.put('NCO1:ENABLE_S', 1)
-        for freq in freq_list:
-            Mbf.put('NCO1:FREQ_S', freq)
-            output_fct("Cleaning in progress, currently at %.6f" % (freq))
-            time.sleep(dt)
-
-        # Stop NCO1
-        Mbf.put('NCO1:ENABLE_S', 0)
-        # Rearm sequence for tune sweep
-        Mbf.put('TRG:SEQ:ARM_S', 0)
-
-    def stop(self, output_fct):
-        # Here we assume a cleaning is in progress, and we just have
-        # to stop it
-        #
-        Mbf = self.mbf_hl.Mbf
-        # Stop NCO1
-        Mbf.put('NCO1:ENABLE_S', 0)
-        # Rearm sequence for tune sweep
-        Mbf.put('TRG:SEQ:ARM_S', 0)
-
-
-class Cleaning(Cleaning_legacy):
-    def clean(self, output_fct, nShots=None):
-        Mbf = self.mbf_hl.Mbf
-        mbfCtrl = self.mbf_hl.mbfCtrl
-
-        if "vertical" not in Mbf.mbfDevName:
-            raise ValueError(
-                "Cleaning allowed only on vertical device")
-
-        if not self.init_ok:
-            raise EnvironmentError(
-                "Error while loading Cleaning parameters")
-
-        # Stop Tune sweep during a cleaning
-        Mbf.put('TRG:SEQ:DISARM_S', 0)
-        Mbf.put('SEQ:RESET_S', 0)
-
-        sweep_bunch_enables = self.mbf_hl.gen_sweep_pattern()
+        clean_pattern, fb_patterns = self.gen_patterns(mode)
+        sweep_bunch_enables = self.gen_sweep_pattern()
         feedback_fine_gain = mbfCtrl.FeedbackFineGain
-        freq_min = self.freq_min
-        freq_max = self.freq_max
-        freq_sweeptime = self.freq_sweeptime
-        modeList = mbfCtrl.ModeList
-        mode = modeList[mbfCtrl.mode]
-        self.mbf_hl.set_banks(mode, self.cleaning_fine_gain,
-                feedback_fine_gain, sweep_bunch_enables)
-        
-        # save the PVs we are going to change
-        bk_list = []
-        bk_list.append('BUN:0:SEQ:ENABLE_S')
-        bk_list.append('BUN:2:SEQ:ENABLE_S')
-        bk_list.append('BUN:0:SEQ:GAIN_S')
-        bk_list.append('BUN:2:SEQ:GAIN_S')
-        bk_list.append('SEQ:1:DWELL_S')
-        bk_list.append('SEQ:1:COUNT_S')
-        bk_list.append('SEQ:1:START_FREQ_S')
-        bk_list.append('SEQ:1:END_FREQ_S')
-        #bk_list.append('SEQ:1:ENABLE_S')
-        seq_enable_bk = Mbf.get('SEQ:1:ENABLE_S')
-        bk_list.append('TRG:SEQ:MODE_S')
-        bk_list.append('TRG:SEQ:SOFT:BL_S')
-        bk_list.append('SEQ:SUPER:COUNT_S')
-        for source in TRIGGER_SOURCES:
-            bk_list.append('TRG:SEQ:{}:EN_S'.format(source))
-        self.bk_dict = {}
-        for pv_name in bk_list:
-            self.bk_dict[pv_name] = Mbf.get(pv_name)
+        if self.ContinuousCleaning:
+            clean_pattern, _ = self.gen_patterns('ARB_Pattern')
+        self.set_banks(clean_pattern, fb_patterns, feedback_fine_gain,
+                sweep_bunch_enables, bank_updated=[1, 3])
 
-        # Reset super-sequencer
-        Mbf.put('SEQ:SUPER:COUNT_S', 1)
-        Mbf.put('SEQ:SUPER:RESET_S', 0)
+        self.set_cleaning_sweep()
+        self.set_cleaning_state(True)
 
-        # set cleaning pattern
-        clean_pattern, fb_patterns = self.mbf_hl.gen_patterns(mode)
-        gainwf_clean = self.cleaning_fine_gain * clean_pattern
-        Mbf.put('BUN:0:SEQ:GAIN_S', gainwf_clean)
-        Mbf.put('BUN:2:SEQ:GAIN_S', gainwf_clean)
-        Mbf.put('BUN:0:SEQ:ENABLE_S', abs(clean_pattern))
-        Mbf.put('BUN:2:SEQ:ENABLE_S', abs(clean_pattern))
+        # Arm has to be done after all configuration
+        Mbf.put('TRG:SEQ:ARM_S', 0)
 
-        #  set sweep parameters:
-        # TODO: add attribute for count, dwell and wait
-        # each frequency step is 100 us
-        count = 352374000 * freq_sweeptime / (1000 * 992 * 36)
-        Mbf.put('SEQ:1:DWELL_S', 36)
-        Mbf.put('SEQ:1:COUNT_S', int(count))
-        Mbf.put('SEQ:1:START_FREQ_S', freq_min)
-        Mbf.put('SEQ:1:END_FREQ_S', freq_max)
-        
-        # switch ON sweep NCO
-        Mbf.put('SEQ:1:GAIN_S', '0dB')
-        Mbf.put('SEQ:1:ENABLE_S', 1)
-        
-        # Prepare sequence arming system
-        for source in TRIGGER_SOURCES:
-            Mbf.put('TRG:SEQ:{}:EN_S'.format(source), 0)
+        if self.ContinuousCleaning:
+            return
+
         Mbf.put('TRG:SEQ:SOFT:EN_S', 1)
         Mbf.put('TRG:SEQ:SOFT:BL_S', 0)
-        Mbf.put('TRG:SEQ:MODE_S', 'Rearm')
-        # Arm sequence
-        Mbf.put('TRG:SEQ:ARM_S', 0)
 
         # It cannot harm to wait a little before the storm...
         time.sleep(0.1)
@@ -207,43 +98,48 @@ class Cleaning(Cleaning_legacy):
             # wait for bunches to calm down after a sweep
             time.sleep(seq_dt + 0.01)
             ii += 1
+        
+        self.cleaning_stop(output_fct)
 
-        # Cancel next armed sweep
+
+    def cleaning_stop(self, output_fct):
+        Mbf = self.Mbf
+
+        Mbf.put('TRG:SEQ:SOFT:EN_S', 0)
+
+        # Stop sequencer immediately
         Mbf.put('TRG:SEQ:DISARM_S', 0)
         Mbf.put('SEQ:RESET_S', 0)
+        while Mbf.get('TRG:SEQ:STATUS') != 0:
+            time.sleep(0.001)
 
-        # Disable SEQ NCO until re-configuring the MBF
+        # Disable SEQ NCO
         Mbf.put('SEQ:1:ENABLE_S', 0)
 
-        # restore PV changed for the cleaning
-        for pv_name, val in self.bk_dict.items():
-            Mbf.put(pv_name, val)
-        self.bk_dict = {}
+        self.set_tune_sweep()
+        self.set_cleaning_state(False)
 
-        # Restore SEQ enable
-        Mbf.put('SEQ:1:ENABLE_S', seq_enable_bk)
-
-    def stop(self, output_fct):
-        if hasattr(self, 'bk_dict'):
-            # restore PV changed for the cleaning
-            Mbf = self.mbf_hl.Mbf
-            Mbf.put('SEQ:RESET_S', 0)
-            for pv_name, val in self.bk_dict.items():
-                Mbf.put(pv_name, val)
-            self.bk_dict = {}
+        # Arm has to be done after all configuration
+        Mbf.put('TRG:SEQ:ARM_S', 0)
 
 
-class MBF_HL():
-    def __init__(self, Mbf, mbfCtrl):
-        self.Mbf = Mbf
-        self.mbfCtrl = mbfCtrl
+    def set_cleaning_state(self, state=True):
+        Mbf = self.Mbf
+        bank_num = Mbf.get('SEQ:0:BANK_S')
+        if state == True:
+            bank_num_new = (bank_num | 1)
+        else:
+            bank_num_new = (bank_num & 2)
+        Mbf.put('SEQ:1:BANK_S', bank_num_new)
+        Mbf.put('SEQ:0:BANK_S', bank_num_new)
+
 
     def gen_patterns(self, sr_mode):
         bunch_count = self.Mbf.bunch_count
-        clean_pattern = zeros((bunch_count,), dtype=int)
+        clean_pattern = np.zeros((bunch_count,), dtype=int)
         fb_patterns = []
         for ii in range(4):
-            fb_patterns.append(zeros((bunch_count,), dtype=int))
+            fb_patterns.append(np.zeros((bunch_count,), dtype=int))
         if sr_mode == '7/8+1':
             gap = 61
             clean_pattern[1:2+gap] = 1
@@ -266,7 +162,7 @@ class MBF_HL():
                 clean_pattern[248*ii+1:248*(ii+1)] = (2*(ii%2)-1)
         elif sr_mode == '32*12':
             trains_l = 12
-            clean_pattern = zeros((bunch_count,), dtype=int)
+            clean_pattern = np.zeros((bunch_count,), dtype=int)
             start = trains_l
             for ii in range(32):
                 clean_pattern[start+ii*31:start+ii*31+(31-trains_l)] = \
@@ -316,29 +212,31 @@ class MBF_HL():
             raise NameError('SR mode ' + sr_mode + ' invalid')
         return clean_pattern, fb_patterns
 
-    def set_banks(self, mode, cleaning_fine_gain, feedback_fine_gain,
-            sweep_bunch_enables):
+    def set_banks(self, clean_pattern, fb_patterns, feedback_fine_gain,
+            sweep_bunch_enables, bank_updated=[0, 1, 2, 3]):
         Mbf = self.Mbf
         BUNCH_COUNT = Mbf.bunch_count
 
-        BUNCH_ONES = np.ones(BUNCH_COUNT, dtype = int)
-        BUNCH_ZEROS = np.zeros(BUNCH_COUNT, dtype = int)
+        if self.cleaning_init_ok is None:
+            self.cleaning_init()
+        cleaning_fine_gain = self.cleaning_fine_gain
+
+        BUNCH_ONES = np.ones(BUNCH_COUNT, dtype=int)
+        BUNCH_ZEROS = np.zeros(BUNCH_COUNT, dtype=int)
 
         # Configure banks #1, #2, #3 and #4
         #
-        clean_pattern, fb_patterns = self.gen_patterns(mode)
+        all_bucket = np.ones((BUNCH_COUNT,), dtype=int)
+        clean_pattern_bool = np.logical_not((clean_pattern == 0))
 
-        all_bucket = np.ones((BUNCH_COUNT,), dtype='int')
-        bunches = clean_pattern == 0
-
-        firwf = zeros(BUNCH_COUNT, dtype = int)
-        fb_pattern_any = zeros(BUNCH_COUNT, dtype = int)
+        firwf = np.zeros(BUNCH_COUNT, dtype=int)
+        fb_pattern_any = np.zeros(BUNCH_COUNT, dtype=int)
         for ii, fb_pattern in enumerate(fb_patterns):
             firwf[fb_pattern == 1] = ii
             fb_pattern_any[fb_pattern == 1] = 1
 
         outwf_fb = smc.DAC_OUT_FIR*fb_pattern_any
-        outwf_clean = smc.DAC_OUT_NCO1*np.logical_not(bunches)
+        outwf_clean = smc.DAC_OUT_SWEEP*clean_pattern_bool
         outwf_clean += smc.DAC_OUT_TUNEPLL*all_bucket
         outwf_sweep = smc.DAC_OUT_SWEEP*sweep_bunch_enables
         outwf_sweep += smc.DAC_OUT_TUNEPLL*all_bucket
@@ -348,27 +246,36 @@ class MBF_HL():
 
         # For all banks:
         #  - set FIR #0
-        #  - set the 5 gains
+        #  - set gains (except SEQ gain)
         for bank in range(4):
+            if bank not in bank_updated:
+                continue
             prefix = 'BUN:{:d}'.format(bank)
             Mbf.put(prefix + ':FIRWF_S', firwf)
-            Mbf.put(prefix + ':FIR_GAIN_S', gainwf_fb)
-            Mbf.put(prefix + ':NCO1:GAIN_S', gainwf_clean)
+            Mbf.put(prefix + ':FIR:GAIN_S', gainwf_fb)
+            Mbf.put(prefix + ':NCO1:GAIN_S', 0*all_bucket)
             Mbf.put(prefix + ':NCO2:GAIN_S', 0*all_bucket)
-            Mbf.put(prefix + ':SEQ:GAIN_S', gainwf_sweep)
             Mbf.put(prefix + ':PLL:GAIN_S', 1*all_bucket)
 
         # Bank1: Tune sweep
-        Mbf.put('BUN:0:OUTWF_S', outwf_sweep.astype(int))
+        if 0 in bank_updated:
+            Mbf.put('BUN:0:SEQ:GAIN_S', gainwf_sweep)
+            Mbf.put('BUN:0:OUTWF_S', outwf_sweep.astype(int))
 
-        # Bank2: Idle + Cleaning 
-        Mbf.put('BUN:1:OUTWF_S', outwf_clean.astype(int))
+        # Bank2: Cleaning
+        if 1 in bank_updated:
+            Mbf.put('BUN:1:SEQ:GAIN_S', gainwf_clean)
+            Mbf.put('BUN:1:OUTWF_S', outwf_clean.astype(int))
 
         # Bank3: Feedback + Tune sweep
-        Mbf.put('BUN:2:OUTWF_S', (outwf_fb + outwf_sweep).astype(int))
+        if 2 in bank_updated:
+            Mbf.put('BUN:2:SEQ:GAIN_S', gainwf_sweep)
+            Mbf.put('BUN:2:OUTWF_S', (outwf_fb + outwf_sweep).astype(int))
 
         # Bank4: Feedback + Cleaning
-        Mbf.put('BUN:3:OUTWF_S', (outwf_fb + outwf_clean).astype(int))
+        if 3 in bank_updated:
+            Mbf.put('BUN:3:SEQ:GAIN_S', gainwf_clean)
+            Mbf.put('BUN:3:OUTWF_S', (outwf_fb + outwf_clean).astype(int))
 
 
     def gen_sweep_pattern(self):
@@ -378,7 +285,7 @@ class MBF_HL():
         single_bunch = mbfCtrl.TuneOnSingleBunch
         bunch = mbfCtrl.TuneBunch
         BUNCH_COUNT = Mbf.bunch_count
-        sweep_bunch_enables = zeros(BUNCH_COUNT, dtype=int)
+        sweep_bunch_enables = np.zeros(BUNCH_COUNT, dtype=int)
         if single_bunch:
             sweep_bunch_enables[bunch] = 1
         else:
@@ -391,7 +298,15 @@ class MBF_HL():
         seq0_bank = Mbf.get('SEQ:0:BANK_S')
         # seq1 is not a good indicator because in MDT mode it can take
         # a strange value
-        if (seq0_bank == 3):
+        if (seq0_bank & 2):
+            return "ON"
+        else:
+            return "OFF"
+
+    def get_cleaning_state(self):
+        Mbf = self.Mbf
+        seq0_bank = Mbf.get('SEQ:0:BANK_S')
+        if (seq0_bank & 1):
             return "ON"
         else:
             return "OFF"
@@ -404,18 +319,22 @@ class MBF_HL():
         else:
             return "ON"
 
+
     def comm_set_feedback_on(self, state=True):
         # protect equipment against single bunches
         #reload(external_devices)
         #external_devices.set_highgain(state)
 
         Mbf = self.Mbf
+        bank_num = Mbf.get('SEQ:0:BANK_S')
+
         if state == True:
-            Mbf.put('SEQ:1:BANK_S', 2)
-            Mbf.put('SEQ:0:BANK_S', 3)
+            bank_num_new = (bank_num | 2)
         else:
-            Mbf.put('SEQ:1:BANK_S', 0)
-            Mbf.put('SEQ:0:BANK_S', 1)
+            bank_num_new = (bank_num & 1)
+
+        Mbf.put('SEQ:1:BANK_S', bank_num_new)
+        Mbf.put('SEQ:0:BANK_S', bank_num_new)
 
     def comm_set_sweep_on(self, state=True):
         Mbf = self.Mbf
@@ -428,19 +347,22 @@ class MBF_HL():
         Mbf = self.Mbf
         Mbf.put('TRG:SEQ:EXT:EN_S', 'Enable')
         Mbf.put('TRG:SEQ:EXT:BL_S', 'All')
-        Mbf.put('TRG:SEQ:MODE_S', 'Rearm')
         Mbf.put('TRG:SEQ:DELAY_S', 0)
 
-    def set_sweep(self):
+
+    def set_tune_sweep(self):
         Mbf = self.Mbf
         mbfCtrl = self.mbfCtrl
 
         # Ensure no triggers are running and the sequencer is stopped
         Mbf.put('TRG:SEQ:DISARM_S', 0)
         Mbf.put('SEQ:RESET_S', 0)
+        while Mbf.get('TRG:SEQ:STATUS') != 0:
+            time.sleep(0.001)
         # Ensure super sequencer isn't in a strange state
         Mbf.put('SEQ:SUPER:COUNT_S', 1)
-        Mbf.put('SEQ:SUPER:RESET_S', 0)
+        super_offset = np.zeros(2048)
+        Mbf.put('SEQ:SUPER:OFFSET_S', super_offset)
         # Configure sequencer for tune measurement
         Harmonic = mbfCtrl.Harmonic
         tune_sweep = mbfCtrl.Tune
@@ -461,12 +383,69 @@ class MBF_HL():
         Mbf.put('SEQ:1:GAIN_S', sweep_gain)
         Mbf.put('SEQ:1:ENWIN_S', 'Windowed')
         Mbf.put('SEQ:1:BLANK_S', 'Blanking')
+        Mbf.put('SEQ:1:TUNE_PLL_S', 'Ignore')
 
         Mbf.put('SEQ:PC_S', 1)
-        # Arm has to be done after all configuration
-        Mbf.put('TRG:SEQ:ARM_S', 0)
 
-    def set_param(self, cleaning, attName):
+        # Prepare sequence trigger and arming system
+        Mbf.put('TRG:SEQ:EXT:EN_S', 1)
+        Mbf.put('TRG:SEQ:EXT:BL_S', 0)
+        Mbf.put('TRG:SEQ:MODE_S', 'Rearm')
+
+
+    def set_cleaning_sweep(self):
+        Mbf = self.Mbf
+        mbfCtrl = self.mbfCtrl
+
+        if "vertical" not in Mbf.mbfDevName:
+            raise ValueError(
+                "Cleaning allowed only on vertical device")
+
+        if self.cleaning_init_ok is None:
+            self.cleaning_init()
+
+        if not self.cleaning_init_ok:
+            raise EnvironmentError(
+                "Error while loading Cleaning parameters")
+
+        # Stop sequencer immediately
+        Mbf.put('TRG:SEQ:DISARM_S', 0)
+        Mbf.put('SEQ:RESET_S', 0)
+        while Mbf.get('TRG:SEQ:STATUS') != 0:
+            time.sleep(0.001)
+
+        # Reset super-sequencer
+        super_offset = np.zeros(2048)
+        Mbf.put('SEQ:SUPER:OFFSET_S', super_offset)
+        if not self.ContinuousCleaning:
+            Mbf.put('SEQ:SUPER:COUNT_S', 1)
+        else:
+            Mbf.put('SEQ:SUPER:COUNT_S', 2048)
+
+        #  set sweep parameters:
+        # each frequency step is 100 us
+        freq_min = self.freq_min
+        freq_max = self.freq_max
+        freq_sweeptime = self.freq_sweeptime
+        count = 352374000 * freq_sweeptime / (1000 * 992 * 36)
+        Mbf.put('SEQ:1:DWELL_S', 36)
+        Mbf.put('SEQ:1:COUNT_S', int(count))
+        Mbf.put('SEQ:1:START_FREQ_S', freq_min)
+        Mbf.put('SEQ:1:END_FREQ_S', freq_max)
+
+        Mbf.put('SEQ:PC_S', 1)
+
+        # switch ON sweep NCO
+        Mbf.put('SEQ:1:GAIN_S', '0dB')
+        Mbf.put('SEQ:1:ENABLE_S', 1)
+        
+        # Prepare sequence trigger and arming system
+        Mbf.put('TRG:SEQ:EXT:EN_S', 1)
+        Mbf.put('TRG:SEQ:EXT:BL_S', 0)
+        Mbf.put('TRG:SEQ:MODE_S', 'Rearm')
+
+
+    def set_param(self, attName):
         Mbf = self.Mbf
         mbfCtrl = self.mbfCtrl
         str_warning = ""
@@ -498,6 +477,7 @@ class MBF_HL():
         
         sweep_state = self.get_sweep_state()
         fb_state = self.get_feedback_state()
+        cleaning_state = self.get_cleaning_state()
         detector_input = 1      # Detector input is FIR (1)
         det_gain = 0            # Don't use the -48 dB scaling (0)
         
@@ -539,10 +519,6 @@ class MBF_HL():
             Mbf.put('NCO2:ENABLE_S', 0)
             Mbf.put('PLL:NCO:ENABLE_S', 0)
 
-            # Configure bank selection
-            self.comm_set_feedback_on(fb_state == 'ON')
-            self.comm_set_sweep_on(sweep_state == 'ON')
-
         if 'set_fir' in actions:
             fir_cycles, fir_length = smc.compute_filter_size(tune_fb,
                     Mbf.n_taps)
@@ -556,10 +532,10 @@ class MBF_HL():
             Mbf.put('FIR:GAIN_S', mbfCtrl.FeedbackGain)
 
         if 'set_banks' in actions:
-            self.set_banks(mode, cleaning.cleaning_fine_gain,
-                    feedback_fine_gain, sweep_bunch_enables)
+            clean_pattern, fb_patterns = self.gen_patterns(mode)
+            self.set_banks(clean_pattern, fb_patterns, feedback_fine_gain,
+                    sweep_bunch_enables)
             # configure things for TUNEPLL blow-up
-            clean_pattern, _ = self.gen_patterns(mode)
             bunches = clean_pattern == 0
             Mbf.put('PLL:DET:BLANKING_S', 'Ignore')
             Mbf.put('PLL:DET:DWELL_S', 100)
@@ -583,7 +559,17 @@ class MBF_HL():
             Mbf.put('DET:0:BUNCHES_S', sweep_bunch_enables)
 
         if 'set_sweep' in actions:
-            self.set_sweep()
+            if cleaning_state == 'ON':
+                self.set_cleaning_sweep()
+                self.set_cleaning_state(True)
+            else:
+                self.set_tune_sweep()
+                self.set_cleaning_state(False)
+                self.comm_set_sweep_on(sweep_state == 'ON')
+            # Configure bank selection
+            self.comm_set_feedback_on(fb_state == 'ON')
+            # Arm has to be done after all configuration
+            Mbf.put('TRG:SEQ:ARM_S', 0)
 
         if 'reset_mbf' in actions:
             # Now we can go!
