@@ -207,7 +207,7 @@ class MBF_HL():
             if user_pattern.size != bunch_count:
                 raise ValueError(('CleaningPattern should have exactly {:.0f} '
                         + 'elements').format(bunch_count))
-            clean_pattern[:] = sign(user_pattern)
+            clean_pattern[:] = np.sign(user_pattern)
         else:
             raise NameError('SR mode ' + sr_mode + ' invalid')
         return clean_pattern, fb_patterns
@@ -487,6 +487,9 @@ class MBF_HL():
         # Configure external devices
         # --------------------------
         if 'reset_mbf' in actions:
+            sweep_state = False
+            fb_state = False
+            cleaning_state = False
             reload(external_devices)
             try:
                 external_devices.set_config(mode, mbfDevName)
