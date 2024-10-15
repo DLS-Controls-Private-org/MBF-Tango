@@ -74,6 +74,12 @@ class mbf_control(Macro):
                     nShots = None
                 mbf_hl.cleaning_start(self.output, nShots)
 
+            elif command=="start_permanent":
+                mbf_hl.cleaning_start(self.output, None, permanent=True)
+
+            elif command=="stop_permanent":
+                mbf_hl.cleaning_stop(self.output)
+
             elif command=="growdamp_start":
                 # attName holds mbfGrowDampDevName
                 mbf_hl.growdamp_start(mbfGrowDampDevName=attName)

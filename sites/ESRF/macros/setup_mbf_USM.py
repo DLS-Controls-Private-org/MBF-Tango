@@ -32,8 +32,6 @@ class MBF_HL():
                 self.freq_sweeptime = cleaningDS.SweepPeriod
                 self.CleaningDuration = cleaningDS.CleaningTime
                 self.cleaning_fine_gain = cleaningDS.Gain/100.
-                # Temporary solution to enable ContinuousCleaning mode
-                self.ContinuousCleaning = (cleaningDS.CleaningTime == 42)
             else:
                 self.cleaning_fine_gain = 0.
             self.cleaning_init_ok = True
@@ -46,10 +44,11 @@ class MBF_HL():
         return str_warning
 
 
-    def cleaning_start(self, output_fct, nShots=None):
+    def cleaning_start(self, output_fct, nShots=None, permanent=False):
         Mbf = self.Mbf
         mbfCtrl = self.mbfCtrl
 
+        self.PermanentCleaning = permanent
         if self.cleaning_init_ok is None:
             self.cleaning_init()
 
@@ -61,7 +60,7 @@ class MBF_HL():
         clean_pattern, fb_patterns = self.gen_patterns(mode)
         sweep_bunch_enables = self.gen_sweep_pattern()
         feedback_fine_gain = mbfCtrl.FeedbackFineGain
-        if self.ContinuousCleaning:
+        if self.PermanentCleaning:
             clean_pattern, _ = self.gen_patterns('ARB_Pattern')
         self.set_banks(clean_pattern, fb_patterns, feedback_fine_gain,
                 sweep_bunch_enables, bank_updated=[1, 3])
@@ -72,7 +71,7 @@ class MBF_HL():
         # Arm has to be done after all configuration
         Mbf.put('TRG:SEQ:ARM_S', 0)
 
-        if self.ContinuousCleaning:
+        if self.PermanentCleaning:
             return
 
         Mbf.put('TRG:SEQ:SOFT:EN_S', 1)
@@ -418,7 +417,7 @@ class MBF_HL():
         # Reset super-sequencer
         super_offset = np.zeros(2048)
         Mbf.put('SEQ:SUPER:OFFSET_S', super_offset)
-        if not self.ContinuousCleaning:
+        if not self.PermanentCleaning:
             Mbf.put('SEQ:SUPER:COUNT_S', 1)
         else:
             Mbf.put('SEQ:SUPER:COUNT_S', 2048)
