@@ -210,6 +210,7 @@ class MBF_HL():
             clean_pattern[:] = np.sign(user_pattern)
         else:
             raise NameError('SR mode ' + sr_mode + ' invalid')
+        self.mbfCtrl.CleaningPattern = clean_pattern
         return clean_pattern, fb_patterns
 
     def set_banks(self, clean_pattern, fb_patterns, feedback_fine_gain,
