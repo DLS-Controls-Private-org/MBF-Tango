@@ -1,5 +1,6 @@
 package CLEANING;
 
+import fr.esrf.tangoatk.widget.util.ATKGraphicsUtils;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -33,6 +34,8 @@ public class PreviewDialog extends JFrame implements ActionListener {
     btnPanel.add(dismissBtn);
 
     setTitle("View configuration file");
+    innerPanel.setPreferredSize(new Dimension(640,480));
+    ATKGraphicsUtils.centerFrameOnScreen(this);
 
   }
 

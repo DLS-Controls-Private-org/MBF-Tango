@@ -50,8 +50,8 @@ namespace MBFCleaning_ns
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFCleaning::is_FreqMin_allowed()
- *	Description : Execution allowed for FreqMin attribute
+ *	Method     : MBFCleaning::is_FreqMin_allowed()
+ *	Description: Execution allowed for FreqMin attribute
  */
 //--------------------------------------------------------
 bool MBFCleaning::is_FreqMin_allowed(TANGO_UNUSED(Tango::AttReqType type))
@@ -70,8 +70,8 @@ bool MBFCleaning::is_FreqMin_allowed(TANGO_UNUSED(Tango::AttReqType type))
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFCleaning::is_FreqMax_allowed()
- *	Description : Execution allowed for FreqMax attribute
+ *	Method     : MBFCleaning::is_FreqMax_allowed()
+ *	Description: Execution allowed for FreqMax attribute
  */
 //--------------------------------------------------------
 bool MBFCleaning::is_FreqMax_allowed(TANGO_UNUSED(Tango::AttReqType type))
@@ -90,8 +90,8 @@ bool MBFCleaning::is_FreqMax_allowed(TANGO_UNUSED(Tango::AttReqType type))
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFCleaning::is_SweepPeriod_allowed()
- *	Description : Execution allowed for SweepPeriod attribute
+ *	Method     : MBFCleaning::is_SweepPeriod_allowed()
+ *	Description: Execution allowed for SweepPeriod attribute
  */
 //--------------------------------------------------------
 bool MBFCleaning::is_SweepPeriod_allowed(TANGO_UNUSED(Tango::AttReqType type))
@@ -110,8 +110,8 @@ bool MBFCleaning::is_SweepPeriod_allowed(TANGO_UNUSED(Tango::AttReqType type))
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFCleaning::is_CleaningTime_allowed()
- *	Description : Execution allowed for CleaningTime attribute
+ *	Method     : MBFCleaning::is_CleaningTime_allowed()
+ *	Description: Execution allowed for CleaningTime attribute
  */
 //--------------------------------------------------------
 bool MBFCleaning::is_CleaningTime_allowed(TANGO_UNUSED(Tango::AttReqType type))
@@ -130,8 +130,8 @@ bool MBFCleaning::is_CleaningTime_allowed(TANGO_UNUSED(Tango::AttReqType type))
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFCleaning::is_Gain_allowed()
- *	Description : Execution allowed for Gain attribute
+ *	Method     : MBFCleaning::is_Gain_allowed()
+ *	Description: Execution allowed for Gain attribute
  */
 //--------------------------------------------------------
 bool MBFCleaning::is_Gain_allowed(TANGO_UNUSED(Tango::AttReqType type))
@@ -150,8 +150,8 @@ bool MBFCleaning::is_Gain_allowed(TANGO_UNUSED(Tango::AttReqType type))
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFCleaning::is_ConfigFileName_allowed()
- *	Description : Execution allowed for ConfigFileName attribute
+ *	Method     : MBFCleaning::is_ConfigFileName_allowed()
+ *	Description: Execution allowed for ConfigFileName attribute
  */
 //--------------------------------------------------------
 bool MBFCleaning::is_ConfigFileName_allowed(TANGO_UNUSED(Tango::AttReqType type))
@@ -166,8 +166,8 @@ bool MBFCleaning::is_ConfigFileName_allowed(TANGO_UNUSED(Tango::AttReqType type)
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFCleaning::is_ExternalSweep_allowed()
- *	Description : Execution allowed for ExternalSweep attribute
+ *	Method     : MBFCleaning::is_ExternalSweep_allowed()
+ *	Description: Execution allowed for ExternalSweep attribute
  */
 //--------------------------------------------------------
 bool MBFCleaning::is_ExternalSweep_allowed(TANGO_UNUSED(Tango::AttReqType type))
@@ -186,8 +186,25 @@ bool MBFCleaning::is_ExternalSweep_allowed(TANGO_UNUSED(Tango::AttReqType type))
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFCleaning::is_UsedScrapers_allowed()
- *	Description : Execution allowed for UsedScrapers attribute
+ *	Method     : MBFCleaning::is_SweepState_allowed()
+ *	Description: Execution allowed for SweepState attribute
+ */
+//--------------------------------------------------------
+bool MBFCleaning::is_SweepState_allowed(TANGO_UNUSED(Tango::AttReqType type))
+{
+
+	//	Not any excluded states for SweepState attribute in read access.
+	/*----- PROTECTED REGION ID(MBFCleaning::SweepStateStateAllowed_READ) ENABLED START -----*/
+	/* clang-format on */
+	/* clang-format off */
+	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::SweepStateStateAllowed_READ
+	return true;
+}
+
+//--------------------------------------------------------
+/**
+ *	Method     : MBFCleaning::is_UsedScrapers_allowed()
+ *	Description: Execution allowed for UsedScrapers attribute
  */
 //--------------------------------------------------------
 bool MBFCleaning::is_UsedScrapers_allowed(TANGO_UNUSED(Tango::AttReqType type))
@@ -207,8 +224,8 @@ bool MBFCleaning::is_UsedScrapers_allowed(TANGO_UNUSED(Tango::AttReqType type))
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFCleaning::is_StartCleaning_allowed()
- *	Description : Execution allowed for StartCleaning attribute
+ *	Method     : MBFCleaning::is_StartCleaning_allowed()
+ *	Description: Execution allowed for StartCleaning attribute
  */
 //--------------------------------------------------------
 bool MBFCleaning::is_StartCleaning_allowed(TANGO_UNUSED(const CORBA::Any &any))
@@ -222,8 +239,8 @@ bool MBFCleaning::is_StartCleaning_allowed(TANGO_UNUSED(const CORBA::Any &any))
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFCleaning::is_LoadConfigurationFile_allowed()
- *	Description : Execution allowed for LoadConfigurationFile attribute
+ *	Method     : MBFCleaning::is_LoadConfigurationFile_allowed()
+ *	Description: Execution allowed for LoadConfigurationFile attribute
  */
 //--------------------------------------------------------
 bool MBFCleaning::is_LoadConfigurationFile_allowed(TANGO_UNUSED(const CORBA::Any &any))
@@ -237,8 +254,8 @@ bool MBFCleaning::is_LoadConfigurationFile_allowed(TANGO_UNUSED(const CORBA::Any
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFCleaning::is_SaveConfigurationFile_allowed()
- *	Description : Execution allowed for SaveConfigurationFile attribute
+ *	Method     : MBFCleaning::is_SaveConfigurationFile_allowed()
+ *	Description: Execution allowed for SaveConfigurationFile attribute
  */
 //--------------------------------------------------------
 bool MBFCleaning::is_SaveConfigurationFile_allowed(TANGO_UNUSED(const CORBA::Any &any))
@@ -252,8 +269,8 @@ bool MBFCleaning::is_SaveConfigurationFile_allowed(TANGO_UNUSED(const CORBA::Any
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFCleaning::is_GetConfigurationFilePath_allowed()
- *	Description : Execution allowed for GetConfigurationFilePath attribute
+ *	Method     : MBFCleaning::is_GetConfigurationFilePath_allowed()
+ *	Description: Execution allowed for GetConfigurationFilePath attribute
  */
 //--------------------------------------------------------
 bool MBFCleaning::is_GetConfigurationFilePath_allowed(TANGO_UNUSED(const CORBA::Any &any))
@@ -267,8 +284,8 @@ bool MBFCleaning::is_GetConfigurationFilePath_allowed(TANGO_UNUSED(const CORBA::
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFCleaning::is_Sweep_allowed()
- *	Description : Execution allowed for Sweep attribute
+ *	Method     : MBFCleaning::is_Sweep_allowed()
+ *	Description: Execution allowed for Sweep attribute
  */
 //--------------------------------------------------------
 bool MBFCleaning::is_Sweep_allowed(TANGO_UNUSED(const CORBA::Any &any))
@@ -282,8 +299,8 @@ bool MBFCleaning::is_Sweep_allowed(TANGO_UNUSED(const CORBA::Any &any))
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFCleaning::is_EndCleaning_allowed()
- *	Description : Execution allowed for EndCleaning attribute
+ *	Method     : MBFCleaning::is_EndCleaning_allowed()
+ *	Description: Execution allowed for EndCleaning attribute
  */
 //--------------------------------------------------------
 bool MBFCleaning::is_EndCleaning_allowed(TANGO_UNUSED(const CORBA::Any &any))
@@ -297,8 +314,8 @@ bool MBFCleaning::is_EndCleaning_allowed(TANGO_UNUSED(const CORBA::Any &any))
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFCleaning::is_DoAll_allowed()
- *	Description : Execution allowed for DoAll attribute
+ *	Method     : MBFCleaning::is_DoAll_allowed()
+ *	Description: Execution allowed for DoAll attribute
  */
 //--------------------------------------------------------
 bool MBFCleaning::is_DoAll_allowed(TANGO_UNUSED(const CORBA::Any &any))
@@ -312,8 +329,8 @@ bool MBFCleaning::is_DoAll_allowed(TANGO_UNUSED(const CORBA::Any &any))
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFCleaning::is_Stop_allowed()
- *	Description : Execution allowed for Stop attribute
+ *	Method     : MBFCleaning::is_Stop_allowed()
+ *	Description: Execution allowed for Stop attribute
  */
 //--------------------------------------------------------
 bool MBFCleaning::is_Stop_allowed(TANGO_UNUSED(const CORBA::Any &any))
@@ -327,8 +344,8 @@ bool MBFCleaning::is_Stop_allowed(TANGO_UNUSED(const CORBA::Any &any))
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFCleaning::is_SelectScraper_allowed()
- *	Description : Execution allowed for SelectScraper attribute
+ *	Method     : MBFCleaning::is_SelectScraper_allowed()
+ *	Description: Execution allowed for SelectScraper attribute
  */
 //--------------------------------------------------------
 bool MBFCleaning::is_SelectScraper_allowed(TANGO_UNUSED(const CORBA::Any &any))
@@ -337,6 +354,38 @@ bool MBFCleaning::is_SelectScraper_allowed(TANGO_UNUSED(const CORBA::Any &any))
 	/*----- PROTECTED REGION ID(MBFCleaning::SelectScraperStateAllowed) ENABLED START -----*/
 	
 	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::SelectScraperStateAllowed
+	return true;
+}
+
+//--------------------------------------------------------
+/**
+ *	Method     : MBFCleaning::is_StartPermanent_allowed()
+ *	Description: Execution allowed for StartPermanent attribute
+ */
+//--------------------------------------------------------
+bool MBFCleaning::is_StartPermanent_allowed(TANGO_UNUSED(const CORBA::Any &any))
+{
+	//	Not any excluded states for StartPermanent command.
+	/*----- PROTECTED REGION ID(MBFCleaning::StartPermanentStateAllowed) ENABLED START -----*/
+	/* clang-format on */
+	/* clang-format off */
+	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::StartPermanentStateAllowed
+	return true;
+}
+
+//--------------------------------------------------------
+/**
+ *	Method     : MBFCleaning::is_StopPermanent_allowed()
+ *	Description: Execution allowed for StopPermanent attribute
+ */
+//--------------------------------------------------------
+bool MBFCleaning::is_StopPermanent_allowed(TANGO_UNUSED(const CORBA::Any &any))
+{
+	//	Not any excluded states for StopPermanent command.
+	/*----- PROTECTED REGION ID(MBFCleaning::StopPermanentStateAllowed) ENABLED START -----*/
+	/* clang-format on */
+	/* clang-format off */
+	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::StopPermanentStateAllowed
 	return true;
 }
 

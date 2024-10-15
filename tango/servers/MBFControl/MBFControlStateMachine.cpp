@@ -50,8 +50,8 @@ namespace MBFControl_ns
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFControl::is_Mode_allowed()
- *	Description : Execution allowed for Mode attribute
+ *	Method     : MBFControl::is_Mode_allowed()
+ *	Description: Execution allowed for Mode attribute
  */
 //--------------------------------------------------------
 bool MBFControl::is_Mode_allowed(TANGO_UNUSED(Tango::AttReqType type))
@@ -70,8 +70,8 @@ bool MBFControl::is_Mode_allowed(TANGO_UNUSED(Tango::AttReqType type))
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFControl::is_ConfigFileName_allowed()
- *	Description : Execution allowed for ConfigFileName attribute
+ *	Method     : MBFControl::is_ConfigFileName_allowed()
+ *	Description: Execution allowed for ConfigFileName attribute
  */
 //--------------------------------------------------------
 bool MBFControl::is_ConfigFileName_allowed(TANGO_UNUSED(Tango::AttReqType type))
@@ -86,8 +86,8 @@ bool MBFControl::is_ConfigFileName_allowed(TANGO_UNUSED(Tango::AttReqType type))
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFControl::is_Tune_allowed()
- *	Description : Execution allowed for Tune attribute
+ *	Method     : MBFControl::is_Tune_allowed()
+ *	Description: Execution allowed for Tune attribute
  */
 //--------------------------------------------------------
 bool MBFControl::is_Tune_allowed(TANGO_UNUSED(Tango::AttReqType type))
@@ -106,8 +106,8 @@ bool MBFControl::is_Tune_allowed(TANGO_UNUSED(Tango::AttReqType type))
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFControl::is_FeedbackGain_allowed()
- *	Description : Execution allowed for FeedbackGain attribute
+ *	Method     : MBFControl::is_FeedbackGain_allowed()
+ *	Description: Execution allowed for FeedbackGain attribute
  */
 //--------------------------------------------------------
 bool MBFControl::is_FeedbackGain_allowed(TANGO_UNUSED(Tango::AttReqType type))
@@ -126,8 +126,8 @@ bool MBFControl::is_FeedbackGain_allowed(TANGO_UNUSED(Tango::AttReqType type))
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFControl::is_FeedbackFineGain_allowed()
- *	Description : Execution allowed for FeedbackFineGain attribute
+ *	Method     : MBFControl::is_FeedbackFineGain_allowed()
+ *	Description: Execution allowed for FeedbackFineGain attribute
  */
 //--------------------------------------------------------
 bool MBFControl::is_FeedbackFineGain_allowed(TANGO_UNUSED(Tango::AttReqType type))
@@ -146,8 +146,8 @@ bool MBFControl::is_FeedbackFineGain_allowed(TANGO_UNUSED(Tango::AttReqType type
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFControl::is_FeedbackPhase_allowed()
- *	Description : Execution allowed for FeedbackPhase attribute
+ *	Method     : MBFControl::is_FeedbackPhase_allowed()
+ *	Description: Execution allowed for FeedbackPhase attribute
  */
 //--------------------------------------------------------
 bool MBFControl::is_FeedbackPhase_allowed(TANGO_UNUSED(Tango::AttReqType type))
@@ -166,8 +166,8 @@ bool MBFControl::is_FeedbackPhase_allowed(TANGO_UNUSED(Tango::AttReqType type))
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFControl::is_Harmonic_allowed()
- *	Description : Execution allowed for Harmonic attribute
+ *	Method     : MBFControl::is_Harmonic_allowed()
+ *	Description: Execution allowed for Harmonic attribute
  */
 //--------------------------------------------------------
 bool MBFControl::is_Harmonic_allowed(TANGO_UNUSED(Tango::AttReqType type))
@@ -186,8 +186,8 @@ bool MBFControl::is_Harmonic_allowed(TANGO_UNUSED(Tango::AttReqType type))
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFControl::is_SweepRange_allowed()
- *	Description : Execution allowed for SweepRange attribute
+ *	Method     : MBFControl::is_SweepRange_allowed()
+ *	Description: Execution allowed for SweepRange attribute
  */
 //--------------------------------------------------------
 bool MBFControl::is_SweepRange_allowed(TANGO_UNUSED(Tango::AttReqType type))
@@ -206,8 +206,8 @@ bool MBFControl::is_SweepRange_allowed(TANGO_UNUSED(Tango::AttReqType type))
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFControl::is_SweepDwellTime_allowed()
- *	Description : Execution allowed for SweepDwellTime attribute
+ *	Method     : MBFControl::is_SweepDwellTime_allowed()
+ *	Description: Execution allowed for SweepDwellTime attribute
  */
 //--------------------------------------------------------
 bool MBFControl::is_SweepDwellTime_allowed(TANGO_UNUSED(Tango::AttReqType type))
@@ -226,8 +226,8 @@ bool MBFControl::is_SweepDwellTime_allowed(TANGO_UNUSED(Tango::AttReqType type))
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFControl::is_SweepGainSingleBunch_allowed()
- *	Description : Execution allowed for SweepGainSingleBunch attribute
+ *	Method     : MBFControl::is_SweepGainSingleBunch_allowed()
+ *	Description: Execution allowed for SweepGainSingleBunch attribute
  */
 //--------------------------------------------------------
 bool MBFControl::is_SweepGainSingleBunch_allowed(TANGO_UNUSED(Tango::AttReqType type))
@@ -246,8 +246,8 @@ bool MBFControl::is_SweepGainSingleBunch_allowed(TANGO_UNUSED(Tango::AttReqType 
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFControl::is_SweepGainAllBunches_allowed()
- *	Description : Execution allowed for SweepGainAllBunches attribute
+ *	Method     : MBFControl::is_SweepGainAllBunches_allowed()
+ *	Description: Execution allowed for SweepGainAllBunches attribute
  */
 //--------------------------------------------------------
 bool MBFControl::is_SweepGainAllBunches_allowed(TANGO_UNUSED(Tango::AttReqType type))
@@ -266,8 +266,8 @@ bool MBFControl::is_SweepGainAllBunches_allowed(TANGO_UNUSED(Tango::AttReqType t
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFControl::is_BlankingInterval_allowed()
- *	Description : Execution allowed for BlankingInterval attribute
+ *	Method     : MBFControl::is_BlankingInterval_allowed()
+ *	Description: Execution allowed for BlankingInterval attribute
  */
 //--------------------------------------------------------
 bool MBFControl::is_BlankingInterval_allowed(TANGO_UNUSED(Tango::AttReqType type))
@@ -282,8 +282,8 @@ bool MBFControl::is_BlankingInterval_allowed(TANGO_UNUSED(Tango::AttReqType type
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFControl::is_TuneOnSingleBunch_allowed()
- *	Description : Execution allowed for TuneOnSingleBunch attribute
+ *	Method     : MBFControl::is_TuneOnSingleBunch_allowed()
+ *	Description: Execution allowed for TuneOnSingleBunch attribute
  */
 //--------------------------------------------------------
 bool MBFControl::is_TuneOnSingleBunch_allowed(TANGO_UNUSED(Tango::AttReqType type))
@@ -302,8 +302,8 @@ bool MBFControl::is_TuneOnSingleBunch_allowed(TANGO_UNUSED(Tango::AttReqType typ
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFControl::is_TuneBunch_allowed()
- *	Description : Execution allowed for TuneBunch attribute
+ *	Method     : MBFControl::is_TuneBunch_allowed()
+ *	Description: Execution allowed for TuneBunch attribute
  */
 //--------------------------------------------------------
 bool MBFControl::is_TuneBunch_allowed(TANGO_UNUSED(Tango::AttReqType type))
@@ -322,8 +322,8 @@ bool MBFControl::is_TuneBunch_allowed(TANGO_UNUSED(Tango::AttReqType type))
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFControl::is_SweepState_allowed()
- *	Description : Execution allowed for SweepState attribute
+ *	Method     : MBFControl::is_SweepState_allowed()
+ *	Description: Execution allowed for SweepState attribute
  */
 //--------------------------------------------------------
 bool MBFControl::is_SweepState_allowed(TANGO_UNUSED(Tango::AttReqType type))
@@ -338,8 +338,8 @@ bool MBFControl::is_SweepState_allowed(TANGO_UNUSED(Tango::AttReqType type))
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFControl::is_MacroHistory_allowed()
- *	Description : Execution allowed for MacroHistory attribute
+ *	Method     : MBFControl::is_MacroHistory_allowed()
+ *	Description: Execution allowed for MacroHistory attribute
  */
 //--------------------------------------------------------
 bool MBFControl::is_MacroHistory_allowed(TANGO_UNUSED(Tango::AttReqType type))
@@ -354,8 +354,8 @@ bool MBFControl::is_MacroHistory_allowed(TANGO_UNUSED(Tango::AttReqType type))
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFControl::is_ModeList_allowed()
- *	Description : Execution allowed for ModeList attribute
+ *	Method     : MBFControl::is_ModeList_allowed()
+ *	Description: Execution allowed for ModeList attribute
  */
 //--------------------------------------------------------
 bool MBFControl::is_ModeList_allowed(TANGO_UNUSED(Tango::AttReqType type))
@@ -370,8 +370,8 @@ bool MBFControl::is_ModeList_allowed(TANGO_UNUSED(Tango::AttReqType type))
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFControl::is_CleaningPattern_allowed()
- *	Description : Execution allowed for CleaningPattern attribute
+ *	Method     : MBFControl::is_CleaningPattern_allowed()
+ *	Description: Execution allowed for CleaningPattern attribute
  */
 //--------------------------------------------------------
 bool MBFControl::is_CleaningPattern_allowed(TANGO_UNUSED(Tango::AttReqType type))
@@ -395,8 +395,8 @@ bool MBFControl::is_CleaningPattern_allowed(TANGO_UNUSED(Tango::AttReqType type)
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFControl::is_LoadConfigurationFile_allowed()
- *	Description : Execution allowed for LoadConfigurationFile attribute
+ *	Method     : MBFControl::is_LoadConfigurationFile_allowed()
+ *	Description: Execution allowed for LoadConfigurationFile attribute
  */
 //--------------------------------------------------------
 bool MBFControl::is_LoadConfigurationFile_allowed(TANGO_UNUSED(const CORBA::Any &any))
@@ -410,8 +410,8 @@ bool MBFControl::is_LoadConfigurationFile_allowed(TANGO_UNUSED(const CORBA::Any 
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFControl::is_SaveConfigurationFile_allowed()
- *	Description : Execution allowed for SaveConfigurationFile attribute
+ *	Method     : MBFControl::is_SaveConfigurationFile_allowed()
+ *	Description: Execution allowed for SaveConfigurationFile attribute
  */
 //--------------------------------------------------------
 bool MBFControl::is_SaveConfigurationFile_allowed(TANGO_UNUSED(const CORBA::Any &any))
@@ -425,8 +425,8 @@ bool MBFControl::is_SaveConfigurationFile_allowed(TANGO_UNUSED(const CORBA::Any 
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFControl::is_GetConfigurationFilePath_allowed()
- *	Description : Execution allowed for GetConfigurationFilePath attribute
+ *	Method     : MBFControl::is_GetConfigurationFilePath_allowed()
+ *	Description: Execution allowed for GetConfigurationFilePath attribute
  */
 //--------------------------------------------------------
 bool MBFControl::is_GetConfigurationFilePath_allowed(TANGO_UNUSED(const CORBA::Any &any))
@@ -440,8 +440,8 @@ bool MBFControl::is_GetConfigurationFilePath_allowed(TANGO_UNUSED(const CORBA::A
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFControl::is_On_allowed()
- *	Description : Execution allowed for On attribute
+ *	Method     : MBFControl::is_On_allowed()
+ *	Description: Execution allowed for On attribute
  */
 //--------------------------------------------------------
 bool MBFControl::is_On_allowed(TANGO_UNUSED(const CORBA::Any &any))
@@ -455,8 +455,8 @@ bool MBFControl::is_On_allowed(TANGO_UNUSED(const CORBA::Any &any))
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFControl::is_Off_allowed()
- *	Description : Execution allowed for Off attribute
+ *	Method     : MBFControl::is_Off_allowed()
+ *	Description: Execution allowed for Off attribute
  */
 //--------------------------------------------------------
 bool MBFControl::is_Off_allowed(TANGO_UNUSED(const CORBA::Any &any))
@@ -470,8 +470,8 @@ bool MBFControl::is_Off_allowed(TANGO_UNUSED(const CORBA::Any &any))
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFControl::is_SweepOn_allowed()
- *	Description : Execution allowed for SweepOn attribute
+ *	Method     : MBFControl::is_SweepOn_allowed()
+ *	Description: Execution allowed for SweepOn attribute
  */
 //--------------------------------------------------------
 bool MBFControl::is_SweepOn_allowed(TANGO_UNUSED(const CORBA::Any &any))
@@ -485,8 +485,8 @@ bool MBFControl::is_SweepOn_allowed(TANGO_UNUSED(const CORBA::Any &any))
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFControl::is_SweepOff_allowed()
- *	Description : Execution allowed for SweepOff attribute
+ *	Method     : MBFControl::is_SweepOff_allowed()
+ *	Description: Execution allowed for SweepOff attribute
  */
 //--------------------------------------------------------
 bool MBFControl::is_SweepOff_allowed(TANGO_UNUSED(const CORBA::Any &any))
@@ -500,8 +500,8 @@ bool MBFControl::is_SweepOff_allowed(TANGO_UNUSED(const CORBA::Any &any))
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFControl::is_Clean_allowed()
- *	Description : Execution allowed for Clean attribute
+ *	Method     : MBFControl::is_Clean_allowed()
+ *	Description: Execution allowed for Clean attribute
  */
 //--------------------------------------------------------
 bool MBFControl::is_Clean_allowed(TANGO_UNUSED(const CORBA::Any &any))
@@ -515,8 +515,8 @@ bool MBFControl::is_Clean_allowed(TANGO_UNUSED(const CORBA::Any &any))
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFControl::is_Reset_allowed()
- *	Description : Execution allowed for Reset attribute
+ *	Method     : MBFControl::is_Reset_allowed()
+ *	Description: Execution allowed for Reset attribute
  */
 //--------------------------------------------------------
 bool MBFControl::is_Reset_allowed(TANGO_UNUSED(const CORBA::Any &any))
@@ -530,8 +530,8 @@ bool MBFControl::is_Reset_allowed(TANGO_UNUSED(const CORBA::Any &any))
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFControl::is_ReLoad_allowed()
- *	Description : Execution allowed for ReLoad attribute
+ *	Method     : MBFControl::is_ReLoad_allowed()
+ *	Description: Execution allowed for ReLoad attribute
  */
 //--------------------------------------------------------
 bool MBFControl::is_ReLoad_allowed(TANGO_UNUSED(const CORBA::Any &any))
@@ -540,6 +540,38 @@ bool MBFControl::is_ReLoad_allowed(TANGO_UNUSED(const CORBA::Any &any))
 	/*----- PROTECTED REGION ID(MBFControl::ReLoadStateAllowed) ENABLED START -----*/
 	
 	/*----- PROTECTED REGION END -----*/	//	MBFControl::ReLoadStateAllowed
+	return true;
+}
+
+//--------------------------------------------------------
+/**
+ *	Method     : MBFControl::is_StartPermanent_allowed()
+ *	Description: Execution allowed for StartPermanent attribute
+ */
+//--------------------------------------------------------
+bool MBFControl::is_StartPermanent_allowed(TANGO_UNUSED(const CORBA::Any &any))
+{
+	//	Not any excluded states for StartPermanent command.
+	/*----- PROTECTED REGION ID(MBFControl::StartPermanentStateAllowed) ENABLED START -----*/
+	/* clang-format on */
+	/* clang-format off */
+	/*----- PROTECTED REGION END -----*/	//	MBFControl::StartPermanentStateAllowed
+	return true;
+}
+
+//--------------------------------------------------------
+/**
+ *	Method     : MBFControl::is_StopPermanent_allowed()
+ *	Description: Execution allowed for StopPermanent attribute
+ */
+//--------------------------------------------------------
+bool MBFControl::is_StopPermanent_allowed(TANGO_UNUSED(const CORBA::Any &any))
+{
+	//	Not any excluded states for StopPermanent command.
+	/*----- PROTECTED REGION ID(MBFControl::StopPermanentStateAllowed) ENABLED START -----*/
+	/* clang-format on */
+	/* clang-format off */
+	/*----- PROTECTED REGION END -----*/	//	MBFControl::StopPermanentStateAllowed
 	return true;
 }
 

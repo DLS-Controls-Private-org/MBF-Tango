@@ -67,17 +67,23 @@ namespace MBFControl_ns
 //===================================================================
 MBFControlClass *MBFControlClass::_instance = NULL;
 
+//===================================================================
+//	Class constants
+//===================================================================
+constexpr long MacroHistoryAttrib::X_DATA_SIZE;
+constexpr long ModeListAttrib::X_DATA_SIZE;
+constexpr long CleaningPatternAttrib::X_DATA_SIZE;
 //--------------------------------------------------------
 /**
- * method : 		MBFControlClass::MBFControlClass(string &s)
+ * method : 		MBFControlClass::MBFControlClass(std::string &s)
  * description : 	constructor for the MBFControlClass
  *
  * @param s	The class name
  */
 //--------------------------------------------------------
-MBFControlClass::MBFControlClass(string &s):Tango::DeviceClass(s)
+MBFControlClass::MBFControlClass(std::string &s):Tango::DeviceClass(s)
 {
-	cout2 << "Entering MBFControlClass constructor" << endl;
+	TANGO_LOG_INFO << "Entering MBFControlClass constructor" << std::endl;
 	set_default_property();
 	write_class_property();
 
@@ -85,7 +91,7 @@ MBFControlClass::MBFControlClass(string &s):Tango::DeviceClass(s)
 	
 	/*----- PROTECTED REGION END -----*/	//	MBFControlClass::constructor
 
-	cout2 << "Leaving MBFControlClass constructor" << endl;
+	TANGO_LOG_INFO << "Leaving MBFControlClass constructor" << std::endl;
 }
 
 //--------------------------------------------------------
@@ -119,10 +125,10 @@ MBFControlClass *MBFControlClass::init(const char *name)
 	{
 		try
 		{
-			string s(name);
+			std::string s(name);
 			_instance = new MBFControlClass(s);
 		}
-		catch (bad_alloc &)
+		catch (std::bad_alloc &)
 		{
 			throw;
 		}
@@ -141,7 +147,7 @@ MBFControlClass *MBFControlClass::instance()
 {
 	if (_instance == NULL)
 	{
-		cerr << "Class is not initialised !!" << endl;
+		std::cerr << "Class is not initialized !!" << std::endl;
 		exit(-1);
 	}
 	return _instance;
@@ -165,7 +171,7 @@ MBFControlClass *MBFControlClass::instance()
 //--------------------------------------------------------
 CORBA::Any *LoadConfigurationFileClass::execute(Tango::DeviceImpl *device, const CORBA::Any &in_any)
 {
-	cout2 << "LoadConfigurationFileClass::execute(): arrived" << endl;
+	TANGO_LOG_INFO << "LoadConfigurationFileClass::execute(): arrived" << std::endl;
 	Tango::DevString argin;
 	extract(in_any, argin);
 	((static_cast<MBFControl *>(device))->load_configuration_file(argin));
@@ -185,7 +191,7 @@ CORBA::Any *LoadConfigurationFileClass::execute(Tango::DeviceImpl *device, const
 //--------------------------------------------------------
 CORBA::Any *SaveConfigurationFileClass::execute(Tango::DeviceImpl *device, const CORBA::Any &in_any)
 {
-	cout2 << "SaveConfigurationFileClass::execute(): arrived" << endl;
+	TANGO_LOG_INFO << "SaveConfigurationFileClass::execute(): arrived" << std::endl;
 	Tango::DevString argin;
 	extract(in_any, argin);
 	((static_cast<MBFControl *>(device))->save_configuration_file(argin));
@@ -205,7 +211,7 @@ CORBA::Any *SaveConfigurationFileClass::execute(Tango::DeviceImpl *device, const
 //--------------------------------------------------------
 CORBA::Any *GetConfigurationFilePathClass::execute(Tango::DeviceImpl *device, TANGO_UNUSED(const CORBA::Any &in_any))
 {
-	cout2 << "GetConfigurationFilePathClass::execute(): arrived" << endl;
+	TANGO_LOG_INFO << "GetConfigurationFilePathClass::execute(): arrived" << std::endl;
 	return insert((static_cast<MBFControl *>(device))->get_configuration_file_path());
 }
 
@@ -222,7 +228,7 @@ CORBA::Any *GetConfigurationFilePathClass::execute(Tango::DeviceImpl *device, TA
 //--------------------------------------------------------
 CORBA::Any *OnClass::execute(Tango::DeviceImpl *device, TANGO_UNUSED(const CORBA::Any &in_any))
 {
-	cout2 << "OnClass::execute(): arrived" << endl;
+	TANGO_LOG_INFO << "OnClass::execute(): arrived" << std::endl;
 	((static_cast<MBFControl *>(device))->on());
 	return new CORBA::Any();
 }
@@ -240,7 +246,7 @@ CORBA::Any *OnClass::execute(Tango::DeviceImpl *device, TANGO_UNUSED(const CORBA
 //--------------------------------------------------------
 CORBA::Any *OffClass::execute(Tango::DeviceImpl *device, TANGO_UNUSED(const CORBA::Any &in_any))
 {
-	cout2 << "OffClass::execute(): arrived" << endl;
+	TANGO_LOG_INFO << "OffClass::execute(): arrived" << std::endl;
 	((static_cast<MBFControl *>(device))->off());
 	return new CORBA::Any();
 }
@@ -258,7 +264,7 @@ CORBA::Any *OffClass::execute(Tango::DeviceImpl *device, TANGO_UNUSED(const CORB
 //--------------------------------------------------------
 CORBA::Any *SweepOnClass::execute(Tango::DeviceImpl *device, TANGO_UNUSED(const CORBA::Any &in_any))
 {
-	cout2 << "SweepOnClass::execute(): arrived" << endl;
+	TANGO_LOG_INFO << "SweepOnClass::execute(): arrived" << std::endl;
 	((static_cast<MBFControl *>(device))->sweep_on());
 	return new CORBA::Any();
 }
@@ -276,7 +282,7 @@ CORBA::Any *SweepOnClass::execute(Tango::DeviceImpl *device, TANGO_UNUSED(const 
 //--------------------------------------------------------
 CORBA::Any *SweepOffClass::execute(Tango::DeviceImpl *device, TANGO_UNUSED(const CORBA::Any &in_any))
 {
-	cout2 << "SweepOffClass::execute(): arrived" << endl;
+	TANGO_LOG_INFO << "SweepOffClass::execute(): arrived" << std::endl;
 	((static_cast<MBFControl *>(device))->sweep_off());
 	return new CORBA::Any();
 }
@@ -294,7 +300,7 @@ CORBA::Any *SweepOffClass::execute(Tango::DeviceImpl *device, TANGO_UNUSED(const
 //--------------------------------------------------------
 CORBA::Any *CleanClass::execute(Tango::DeviceImpl *device, TANGO_UNUSED(const CORBA::Any &in_any))
 {
-	cout2 << "CleanClass::execute(): arrived" << endl;
+	TANGO_LOG_INFO << "CleanClass::execute(): arrived" << std::endl;
 	((static_cast<MBFControl *>(device))->clean());
 	return new CORBA::Any();
 }
@@ -312,7 +318,7 @@ CORBA::Any *CleanClass::execute(Tango::DeviceImpl *device, TANGO_UNUSED(const CO
 //--------------------------------------------------------
 CORBA::Any *ResetClass::execute(Tango::DeviceImpl *device, TANGO_UNUSED(const CORBA::Any &in_any))
 {
-	cout2 << "ResetClass::execute(): arrived" << endl;
+	TANGO_LOG_INFO << "ResetClass::execute(): arrived" << std::endl;
 	((static_cast<MBFControl *>(device))->reset());
 	return new CORBA::Any();
 }
@@ -330,8 +336,44 @@ CORBA::Any *ResetClass::execute(Tango::DeviceImpl *device, TANGO_UNUSED(const CO
 //--------------------------------------------------------
 CORBA::Any *ReLoadClass::execute(Tango::DeviceImpl *device, TANGO_UNUSED(const CORBA::Any &in_any))
 {
-	cout2 << "ReLoadClass::execute(): arrived" << endl;
+	TANGO_LOG_INFO << "ReLoadClass::execute(): arrived" << std::endl;
 	((static_cast<MBFControl *>(device))->re_load());
+	return new CORBA::Any();
+}
+
+//--------------------------------------------------------
+/**
+ * method : 		StartPermanentClass::execute()
+ * description : 	method to trigger the execution of the command.
+ *
+ * @param	device	The device on which the command must be executed
+ * @param	in_any	The command input data
+ *
+ *	returns The command output data (packed in the Any object)
+ */
+//--------------------------------------------------------
+CORBA::Any *StartPermanentClass::execute(Tango::DeviceImpl *device, TANGO_UNUSED(const CORBA::Any &in_any))
+{
+	TANGO_LOG_INFO << "StartPermanentClass::execute(): arrived" << std::endl;
+	((static_cast<MBFControl *>(device))->start_permanent());
+	return new CORBA::Any();
+}
+
+//--------------------------------------------------------
+/**
+ * method : 		StopPermanentClass::execute()
+ * description : 	method to trigger the execution of the command.
+ *
+ * @param	device	The device on which the command must be executed
+ * @param	in_any	The command input data
+ *
+ *	returns The command output data (packed in the Any object)
+ */
+//--------------------------------------------------------
+CORBA::Any *StopPermanentClass::execute(Tango::DeviceImpl *device, TANGO_UNUSED(const CORBA::Any &in_any))
+{
+	TANGO_LOG_INFO << "StopPermanentClass::execute(): arrived" << std::endl;
+	((static_cast<MBFControl *>(device))->stop_permanent());
 	return new CORBA::Any();
 }
 
@@ -341,11 +383,11 @@ CORBA::Any *ReLoadClass::execute(Tango::DeviceImpl *device, TANGO_UNUSED(const C
 //===================================================================
 //--------------------------------------------------------
 /**
- *	Method      : MBFControlClass::get_class_property()
- *	Description : Get the class property for specified name.
+ *	Method     : MBFControlClass::get_class_property()
+ *	Description: Get the class property for specified name.
  */
 //--------------------------------------------------------
-Tango::DbDatum MBFControlClass::get_class_property(string &prop_name)
+Tango::DbDatum MBFControlClass::get_class_property(std::string &prop_name)
 {
 	for (unsigned int i=0 ; i<cl_prop.size() ; i++)
 		if (cl_prop[i].name == prop_name)
@@ -356,11 +398,11 @@ Tango::DbDatum MBFControlClass::get_class_property(string &prop_name)
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFControlClass::get_default_device_property()
- *	Description : Return the default value for device property.
+ *	Method     : MBFControlClass::get_default_device_property()
+ *	Description: Return the default value for device property.
  */
 //--------------------------------------------------------
-Tango::DbDatum MBFControlClass::get_default_device_property(string &prop_name)
+Tango::DbDatum MBFControlClass::get_default_device_property(std::string &prop_name)
 {
 	for (unsigned int i=0 ; i<dev_def_prop.size() ; i++)
 		if (dev_def_prop[i].name == prop_name)
@@ -371,11 +413,11 @@ Tango::DbDatum MBFControlClass::get_default_device_property(string &prop_name)
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFControlClass::get_default_class_property()
- *	Description : Return the default value for class property.
+ *	Method     : MBFControlClass::get_default_class_property()
+ *	Description: Return the default value for class property.
  */
 //--------------------------------------------------------
-Tango::DbDatum MBFControlClass::get_default_class_property(string &prop_name)
+Tango::DbDatum MBFControlClass::get_default_class_property(std::string &prop_name)
 {
 	for (unsigned int i=0 ; i<cl_def_prop.size() ; i++)
 		if (cl_def_prop[i].name == prop_name)
@@ -387,8 +429,8 @@ Tango::DbDatum MBFControlClass::get_default_class_property(string &prop_name)
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFControlClass::set_default_property()
- *	Description : Set default property (class and device) for wizard.
+ *	Method     : MBFControlClass::set_default_property()
+ *	Description: Set default property (class and device) for wizard.
  *                For each property, add to wizard property name and description.
  *                If default value has been set, add it to wizard property and
  *                store it in a DbDatum.
@@ -396,10 +438,10 @@ Tango::DbDatum MBFControlClass::get_default_class_property(string &prop_name)
 //--------------------------------------------------------
 void MBFControlClass::set_default_property()
 {
-	string	prop_name;
-	string	prop_desc;
-	string	prop_def;
-	vector<string>	vect_data;
+	std::string	prop_name;
+	std::string	prop_desc;
+	std::string	prop_def;
+	std::vector<std::string>	vect_data;
 
 	//	Set Default Class Properties
 
@@ -486,8 +528,8 @@ void MBFControlClass::set_default_property()
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFControlClass::write_class_property()
- *	Description : Set class description fields as property in database
+ *	Method     : MBFControlClass::write_class_property()
+ *	Description: Set class description fields as property in database
  */
 //--------------------------------------------------------
 void MBFControlClass::write_class_property()
@@ -497,26 +539,25 @@ void MBFControlClass::write_class_property()
 		return;
 
 	Tango::DbData	data;
-	string	classname = get_name();
-	string	header;
-	string::size_type	start, end;
+	std::string	classname = get_name();
+	std::string	header;
 
 	//	Put title
 	Tango::DbDatum	title("ProjectTitle");
-	string	str_title("MBFControl");
+	std::string	str_title("MBFControl");
 	title << str_title;
 	data.push_back(title);
 
 	//	Put Description
 	Tango::DbDatum	description("Description");
-	vector<string>	str_desc;
+	std::vector<std::string>	str_desc;
 	str_desc.push_back("A high level class to control MBF startup, configuration sequence and configuration file");
 	description << str_desc;
 	data.push_back(description);
 
 	//  Put inheritance
 	Tango::DbDatum	inher_datum("InheritedFrom");
-	vector<string> inheritance;
+	std::vector<std::string> inheritance;
 	inheritance.push_back("TANGO_BASE_CLASS");
 	inher_datum << inheritance;
 	data.push_back(inher_datum);
@@ -531,8 +572,8 @@ void MBFControlClass::write_class_property()
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFControlClass::device_factory()
- *	Description : Create the device object(s)
+ *	Method     : MBFControlClass::device_factory()
+ *	Description: Create the device object(s)
  *                and store them in the device list
  */
 //--------------------------------------------------------
@@ -547,7 +588,7 @@ void MBFControlClass::device_factory(const Tango::DevVarStringArray *devlist_ptr
 	//	Create devices and add it into the device list
 	for (unsigned long i=0 ; i<devlist_ptr->length() ; i++)
 	{
-		cout4 << "Device name : " << (*devlist_ptr)[i].in() << endl;
+		TANGO_LOG_DEBUG << "Device name : " << (*devlist_ptr)[i].in() << std::endl;
 		device_list.push_back(new MBFControl(this, (*devlist_ptr)[i]));
 	}
 
@@ -576,12 +617,12 @@ void MBFControlClass::device_factory(const Tango::DevVarStringArray *devlist_ptr
 }
 //--------------------------------------------------------
 /**
- *	Method      : MBFControlClass::attribute_factory()
- *	Description : Create the attribute object(s)
+ *	Method     : MBFControlClass::attribute_factory()
+ *	Description: Create the attribute object(s)
  *                and store them in the attribute list
  */
 //--------------------------------------------------------
-void MBFControlClass::attribute_factory(vector<Tango::Attr *> &att_list)
+void MBFControlClass::attribute_factory(std::vector<Tango::Attr *> &att_list)
 {
 	/*----- PROTECTED REGION ID(MBFControlClass::attribute_factory_before) ENABLED START -----*/
 	
@@ -605,7 +646,6 @@ void MBFControlClass::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	min_warning	not set for Mode
 	//	delta_t	not set for Mode
 	//	delta_val	not set for Mode
-	
 	mode->set_default_properties(mode_prop);
 	//	Not Polled
 	mode->set_disp_level(Tango::OPERATOR);
@@ -630,7 +670,6 @@ void MBFControlClass::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	min_warning	not set for ConfigFileName
 	//	delta_t	not set for ConfigFileName
 	//	delta_val	not set for ConfigFileName
-	
 	configfilename->set_default_properties(configfilename_prop);
 	//	Not Polled
 	configfilename->set_disp_level(Tango::OPERATOR);
@@ -654,7 +693,6 @@ void MBFControlClass::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	min_warning	not set for Tune
 	//	delta_t	not set for Tune
 	//	delta_val	not set for Tune
-	
 	tune->set_default_properties(tune_prop);
 	//	Not Polled
 	tune->set_disp_level(Tango::OPERATOR);
@@ -679,7 +717,6 @@ void MBFControlClass::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	min_warning	not set for FeedbackGain
 	//	delta_t	not set for FeedbackGain
 	//	delta_val	not set for FeedbackGain
-	
 	feedbackgain->set_default_properties(feedbackgain_prop);
 	//	Not Polled
 	feedbackgain->set_disp_level(Tango::OPERATOR);
@@ -704,7 +741,6 @@ void MBFControlClass::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	min_warning	not set for FeedbackFineGain
 	//	delta_t	not set for FeedbackFineGain
 	//	delta_val	not set for FeedbackFineGain
-	
 	feedbackfinegain->set_default_properties(feedbackfinegain_prop);
 	//	Not Polled
 	feedbackfinegain->set_disp_level(Tango::OPERATOR);
@@ -729,7 +765,6 @@ void MBFControlClass::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	min_warning	not set for FeedbackPhase
 	//	delta_t	not set for FeedbackPhase
 	//	delta_val	not set for FeedbackPhase
-	
 	feedbackphase->set_default_properties(feedbackphase_prop);
 	//	Not Polled
 	feedbackphase->set_disp_level(Tango::OPERATOR);
@@ -754,7 +789,6 @@ void MBFControlClass::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	min_warning	not set for Harmonic
 	//	delta_t	not set for Harmonic
 	//	delta_val	not set for Harmonic
-	
 	harmonic->set_default_properties(harmonic_prop);
 	//	Not Polled
 	harmonic->set_disp_level(Tango::OPERATOR);
@@ -779,7 +813,6 @@ void MBFControlClass::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	min_warning	not set for SweepRange
 	//	delta_t	not set for SweepRange
 	//	delta_val	not set for SweepRange
-	
 	sweeprange->set_default_properties(sweeprange_prop);
 	//	Not Polled
 	sweeprange->set_disp_level(Tango::OPERATOR);
@@ -804,7 +837,6 @@ void MBFControlClass::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	min_warning	not set for SweepDwellTime
 	//	delta_t	not set for SweepDwellTime
 	//	delta_val	not set for SweepDwellTime
-	
 	sweepdwelltime->set_default_properties(sweepdwelltime_prop);
 	//	Not Polled
 	sweepdwelltime->set_disp_level(Tango::OPERATOR);
@@ -829,7 +861,6 @@ void MBFControlClass::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	min_warning	not set for SweepGainSingleBunch
 	//	delta_t	not set for SweepGainSingleBunch
 	//	delta_val	not set for SweepGainSingleBunch
-	
 	sweepgainsinglebunch->set_default_properties(sweepgainsinglebunch_prop);
 	//	Not Polled
 	sweepgainsinglebunch->set_disp_level(Tango::OPERATOR);
@@ -854,7 +885,6 @@ void MBFControlClass::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	min_warning	not set for SweepGainAllBunches
 	//	delta_t	not set for SweepGainAllBunches
 	//	delta_val	not set for SweepGainAllBunches
-	
 	sweepgainallbunches->set_default_properties(sweepgainallbunches_prop);
 	//	Not Polled
 	sweepgainallbunches->set_disp_level(Tango::OPERATOR);
@@ -879,7 +909,6 @@ void MBFControlClass::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	min_warning	not set for BlankingInterval
 	//	delta_t	not set for BlankingInterval
 	//	delta_val	not set for BlankingInterval
-	
 	blankinginterval->set_default_properties(blankinginterval_prop);
 	//	Not Polled
 	blankinginterval->set_disp_level(Tango::OPERATOR);
@@ -903,7 +932,6 @@ void MBFControlClass::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	min_warning	not set for TuneOnSingleBunch
 	//	delta_t	not set for TuneOnSingleBunch
 	//	delta_val	not set for TuneOnSingleBunch
-	
 	tuneonsinglebunch->set_default_properties(tuneonsinglebunch_prop);
 	//	Not Polled
 	tuneonsinglebunch->set_disp_level(Tango::OPERATOR);
@@ -928,7 +956,6 @@ void MBFControlClass::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	min_warning	not set for TuneBunch
 	//	delta_t	not set for TuneBunch
 	//	delta_val	not set for TuneBunch
-	
 	tunebunch->set_default_properties(tunebunch_prop);
 	//	Not Polled
 	tunebunch->set_disp_level(Tango::OPERATOR);
@@ -953,7 +980,6 @@ void MBFControlClass::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	min_warning	not set for SweepState
 	//	delta_t	not set for SweepState
 	//	delta_val	not set for SweepState
-	
 	sweepstate->set_default_properties(sweepstate_prop);
 	//	Not Polled
 	sweepstate->set_disp_level(Tango::OPERATOR);
@@ -977,7 +1003,6 @@ void MBFControlClass::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	min_warning	not set for MacroHistory
 	//	delta_t	not set for MacroHistory
 	//	delta_val	not set for MacroHistory
-	
 	macrohistory->set_default_properties(macrohistory_prop);
 	//	Not Polled
 	macrohistory->set_disp_level(Tango::OPERATOR);
@@ -1001,7 +1026,6 @@ void MBFControlClass::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	min_warning	not set for ModeList
 	//	delta_t	not set for ModeList
 	//	delta_val	not set for ModeList
-	
 	modelist->set_default_properties(modelist_prop);
 	//	Not Polled
 	modelist->set_disp_level(Tango::OPERATOR);
@@ -1025,7 +1049,6 @@ void MBFControlClass::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	min_warning	not set for CleaningPattern
 	//	delta_t	not set for CleaningPattern
 	//	delta_val	not set for CleaningPattern
-	
 	cleaningpattern->set_default_properties(cleaningpattern_prop);
 	//	Not Polled
 	cleaningpattern->set_disp_level(Tango::OPERATOR);
@@ -1043,8 +1066,8 @@ void MBFControlClass::attribute_factory(vector<Tango::Attr *> &att_list)
 }
 //--------------------------------------------------------
 /**
- *	Method      : MBFControlClass::pipe_factory()
- *	Description : Create the pipe object(s)
+ *	Method     : MBFControlClass::pipe_factory()
+ *	Description: Create the pipe object(s)
  *                and store them in the pipe list
  */
 //--------------------------------------------------------
@@ -1063,8 +1086,8 @@ void MBFControlClass::pipe_factory()
 }
 //--------------------------------------------------------
 /**
- *	Method      : MBFControlClass::command_factory()
- *	Description : Create the command object(s)
+ *	Method     : MBFControlClass::command_factory()
+ *	Description: Create the command object(s)
  *                and store them in the command list
  */
 //--------------------------------------------------------
@@ -1171,6 +1194,24 @@ void MBFControlClass::command_factory()
 			Tango::OPERATOR);
 	command_list.push_back(pReLoadCmd);
 
+	//	Command StartPermanent
+	StartPermanentClass	*pStartPermanentCmd =
+		new StartPermanentClass("StartPermanent",
+			Tango::DEV_VOID, Tango::DEV_VOID,
+			"",
+			"",
+			Tango::OPERATOR);
+	command_list.push_back(pStartPermanentCmd);
+
+	//	Command StopPermanent
+	StopPermanentClass	*pStopPermanentCmd =
+		new StopPermanentClass("StopPermanent",
+			Tango::DEV_VOID, Tango::DEV_VOID,
+			"",
+			"",
+			Tango::OPERATOR);
+	command_list.push_back(pStopPermanentCmd);
+
 	/*----- PROTECTED REGION ID(MBFControlClass::command_factory_after) ENABLED START -----*/
 	
 	//	Add your own code
@@ -1187,19 +1228,19 @@ void MBFControlClass::command_factory()
  * method : 		MBFControlClass::create_static_attribute_list
  * description : 	Create the a list of static attributes
  *
- * @param	att_list	the ceated attribute list
+ * @param	att_list	the created attribute list
  */
 //--------------------------------------------------------
-void MBFControlClass::create_static_attribute_list(vector<Tango::Attr *> &att_list)
+void MBFControlClass::create_static_attribute_list(std::vector<Tango::Attr *> &att_list)
 {
 	for (unsigned long i=0 ; i<att_list.size() ; i++)
 	{
-		string att_name(att_list[i]->get_name());
-		transform(att_name.begin(), att_name.end(), att_name.begin(), ::tolower);
+		std::string att_name(att_list[i]->get_name());
+		std::transform(att_name.begin(), att_name.end(), att_name.begin(), ::tolower);
 		defaultAttList.push_back(att_name);
 	}
 
-	cout2 << defaultAttList.size() << " attributes in default list" << endl;
+	TANGO_LOG_INFO << defaultAttList.size() << " attributes in default list" << std::endl;
 
 	/*----- PROTECTED REGION ID(MBFControlClass::create_static_att_list) ENABLED START -----*/
 	
@@ -1216,26 +1257,26 @@ void MBFControlClass::create_static_attribute_list(vector<Tango::Attr *> &att_li
  * @param	list of all attributes
  */
 //--------------------------------------------------------
-void MBFControlClass::erase_dynamic_attributes(const Tango::DevVarStringArray *devlist_ptr, vector<Tango::Attr *> &att_list)
+void MBFControlClass::erase_dynamic_attributes(const Tango::DevVarStringArray *devlist_ptr, std::vector<Tango::Attr *> &att_list)
 {
 	Tango::Util *tg = Tango::Util::instance();
 
 	for (unsigned long i=0 ; i<devlist_ptr->length() ; i++)
 	{
-		Tango::DeviceImpl *dev_impl = tg->get_device_by_name(((string)(*devlist_ptr)[i]).c_str());
+		Tango::DeviceImpl *dev_impl = tg->get_device_by_name(((std::string)(*devlist_ptr)[i]).c_str());
 		MBFControl *dev = static_cast<MBFControl *> (dev_impl);
 
-		vector<Tango::Attribute *> &dev_att_list = dev->get_device_attr()->get_attribute_list();
-		vector<Tango::Attribute *>::iterator ite_att;
+		std::vector<Tango::Attribute *> &dev_att_list = dev->get_device_attr()->get_attribute_list();
+		std::vector<Tango::Attribute *>::iterator ite_att;
 		for (ite_att=dev_att_list.begin() ; ite_att != dev_att_list.end() ; ++ite_att)
 		{
-			string att_name((*ite_att)->get_name_lower());
+			std::string att_name((*ite_att)->get_name_lower());
 			if ((att_name == "state") || (att_name == "status"))
 				continue;
-			vector<string>::iterator ite_str = find(defaultAttList.begin(), defaultAttList.end(), att_name);
+			std::vector<std::string>::iterator ite_str = find(defaultAttList.begin(), defaultAttList.end(), att_name);
 			if (ite_str == defaultAttList.end())
 			{
-				cout2 << att_name << " is a UNWANTED dynamic attribute for device " << (*devlist_ptr)[i] << endl;
+				TANGO_LOG_INFO << att_name << " is a UNWANTED dynamic attribute for device " << (*devlist_ptr)[i] << std::endl;
 				Tango::Attribute &att = dev->get_device_attr()->get_attr_by_name(att_name.c_str());
 				dev->remove_attribute(att_list[att.get_attr_idx()], true, false);
 				--ite_att;
@@ -1249,13 +1290,13 @@ void MBFControlClass::erase_dynamic_attributes(const Tango::DevVarStringArray *d
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFControlClass::get_attr_object_by_name()
- *	Description : returns Tango::Attr * object found by name
+ *	Method     : MBFControlClass::get_attr_object_by_name()
+ *	Description: returns Tango::Attr * object found by name
  */
 //--------------------------------------------------------
-Tango::Attr *MBFControlClass::get_attr_object_by_name(vector<Tango::Attr *> &att_list, string attname)
+Tango::Attr *MBFControlClass::get_attr_object_by_name(std::vector<Tango::Attr *> &att_list, std::string attname)
 {
-	vector<Tango::Attr *>::iterator it;
+	std::vector<Tango::Attr *>::iterator it;
 	for (it=att_list.begin() ; it<att_list.end() ; ++it)
 		if ((*it)->get_name()==attname)
 			return (*it);

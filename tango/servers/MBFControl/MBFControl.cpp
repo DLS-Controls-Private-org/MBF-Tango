@@ -47,7 +47,7 @@
   (const char *)cmd,\
   (const char *)"MBFControl::[load][save]_config");
 
-#define ARB_MODE (modeList.size()-1)
+#define ARB_MODE ((int)modeList.size()-1)
 
 /*----- PROTECTED REGION END -----*/	//	MBFControl.cpp
 
@@ -74,6 +74,8 @@
 //  Clean                     |  clean
 //  Reset                     |  reset
 //  ReLoad                    |  re_load
+//  StartPermanent            |  start_permanent
+//  StopPermanent             |  stop_permanent
 //================================================================
 
 //================================================================
@@ -109,12 +111,12 @@ namespace MBFControl_ns
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFControl::MBFControl()
- *	Description : Constructors for a Tango device
+ *	Method     : MBFControl::MBFControl()
+ *	Description: Constructors for a Tango device
  *                implementing the classMBFControl
  */
 //--------------------------------------------------------
-MBFControl::MBFControl(Tango::DeviceClass *cl, string &s)
+MBFControl::MBFControl(Tango::DeviceClass *cl, std::string &s)
  : TANGO_BASE_CLASS(cl, s.c_str())
 {
 	/*----- PROTECTED REGION ID(MBFControl::constructor_1) ENABLED START -----*/
@@ -140,16 +142,21 @@ MBFControl::MBFControl(Tango::DeviceClass *cl, const char *s, const char *d)
 	
 	/*----- PROTECTED REGION END -----*/	//	MBFControl::constructor_3
 }
+//--------------------------------------------------------
+MBFControl::~MBFControl()
+{
+	delete_device();
+}
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFControl::delete_device()
- *	Description : will be called at device destruction or at init command
+ *	Method     : MBFControl::delete_device()
+ *	Description: will be called at device destruction or at init command
  */
 //--------------------------------------------------------
 void MBFControl::delete_device()
 {
-	DEBUG_STREAM << "MBFControl::delete_device() " << device_name << endl;
+	DEBUG_STREAM << "MBFControl::delete_device() " << device_name << std::endl;
 	/*----- PROTECTED REGION ID(MBFControl::delete_device) ENABLED START -----*/
 	
 	//	Delete device allocated objects
@@ -175,23 +182,23 @@ void MBFControl::delete_device()
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFControl::init_device()
- *	Description : will be called at device initialization.
+ *	Method     : MBFControl::init_device()
+ *	Description: will be called at device initialization.
  */
 //--------------------------------------------------------
 void MBFControl::init_device()
 {
-	DEBUG_STREAM << "MBFControl::init_device() create device " << device_name << endl;
+	DEBUG_STREAM << "MBFControl::init_device() create device " << device_name << std::endl;
 	/*----- PROTECTED REGION ID(MBFControl::init_device_before) ENABLED START -----*/
 	
 	//	Initialization before get_device_property() call
 	
 	/*----- PROTECTED REGION END -----*/	//	MBFControl::init_device_before
-	
+
 
 	//	Get the device properties from database
 	get_device_property();
-	
+
 	attr_Mode_read = new ModeEnum[1];
 	attr_ConfigFileName_read = new Tango::DevString[1];
 	attr_Tune_read = new Tango::DevDouble[1];
@@ -251,8 +258,8 @@ void MBFControl::init_device()
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFControl::get_device_property()
- *	Description : Read database to initialize property data members.
+ *	Method     : MBFControl::get_device_property()
+ *	Description: Read database to initialize property data members.
  */
 //--------------------------------------------------------
 void MBFControl::get_device_property()
@@ -283,7 +290,7 @@ void MBFControl::get_device_property()
 		//	Call database and extract values
 		if (Tango::Util::instance()->_UseDb==true)
 			get_db_device()->get_property(dev_prop);
-	
+
 		//	get instance on MBFControlClass to get class property
 		Tango::DbDatum	def_prop, cl_prop;
 		MBFControlClass	*ds_class =
@@ -367,13 +374,13 @@ void MBFControl::get_device_property()
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFControl::always_executed_hook()
- *	Description : method always executed before any command is executed
+ *	Method     : MBFControl::always_executed_hook()
+ *	Description: method always executed before any command is executed
  */
 //--------------------------------------------------------
 void MBFControl::always_executed_hook()
 {
-	DEBUG_STREAM << "MBFControl::always_executed_hook()  " << device_name << endl;
+	DEBUG_STREAM << "MBFControl::always_executed_hook()  " << device_name << std::endl;
 	/*----- PROTECTED REGION ID(MBFControl::always_executed_hook) ENABLED START -----*/
 	
 	//	code always executed before all requests
@@ -383,13 +390,13 @@ void MBFControl::always_executed_hook()
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFControl::read_attr_hardware()
- *	Description : Hardware acquisition for attributes
+ *	Method     : MBFControl::read_attr_hardware()
+ *	Description: Hardware acquisition for attributes
  */
 //--------------------------------------------------------
-void MBFControl::read_attr_hardware(TANGO_UNUSED(vector<long> &attr_list))
+void MBFControl::read_attr_hardware(TANGO_UNUSED(std::vector<long> &attr_list))
 {
-	DEBUG_STREAM << "MBFControl::read_attr_hardware(vector<long> &attr_list) entering... " << endl;
+	DEBUG_STREAM << "MBFControl::read_attr_hardware(std::vector<long> &attr_list) entering... " << std::endl;
 	/*----- PROTECTED REGION ID(MBFControl::read_attr_hardware) ENABLED START -----*/
 	
 	//	Add your own code
@@ -398,13 +405,13 @@ void MBFControl::read_attr_hardware(TANGO_UNUSED(vector<long> &attr_list))
 }
 //--------------------------------------------------------
 /**
- *	Method      : MBFControl::write_attr_hardware()
- *	Description : Hardware writing for attributes
+ *	Method     : MBFControl::write_attr_hardware()
+ *	Description: Hardware writing for attributes
  */
 //--------------------------------------------------------
-void MBFControl::write_attr_hardware(TANGO_UNUSED(vector<long> &attr_list))
+void MBFControl::write_attr_hardware(TANGO_UNUSED(std::vector<long> &attr_list))
 {
-	DEBUG_STREAM << "MBFControl::write_attr_hardware(vector<long> &attr_list) entering... " << endl;
+	DEBUG_STREAM << "MBFControl::write_attr_hardware(std::vector<long> &attr_list) entering... " << std::endl;
 	/*----- PROTECTED REGION ID(MBFControl::write_attr_hardware) ENABLED START -----*/
 	
 	//	Add your own code
@@ -415,7 +422,7 @@ void MBFControl::write_attr_hardware(TANGO_UNUSED(vector<long> &attr_list))
 //--------------------------------------------------------
 /**
  *	Read attribute Mode related method
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevEnum (ModeEnum)
  *	Attr type:	Scalar
@@ -423,7 +430,7 @@ void MBFControl::write_attr_hardware(TANGO_UNUSED(vector<long> &attr_list))
 //--------------------------------------------------------
 void MBFControl::read_Mode(Tango::Attribute &attr)
 {
-	DEBUG_STREAM << "MBFControl::read_Mode(Tango::Attribute &attr) entering... " << endl;
+	DEBUG_STREAM << "MBFControl::read_Mode(Tango::Attribute &attr) entering... " << std::endl;
 	/*----- PROTECTED REGION ID(MBFControl::read_Mode) ENABLED START -----*/
 
 	attr.set_value(attr_Mode_read);
@@ -433,7 +440,7 @@ void MBFControl::read_Mode(Tango::Attribute &attr)
 //--------------------------------------------------------
 /**
  *	Write attribute Mode related method
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevEnum (ModeEnum)
  *	Attr type:	Scalar
@@ -441,7 +448,7 @@ void MBFControl::read_Mode(Tango::Attribute &attr)
 //--------------------------------------------------------
 void MBFControl::write_Mode(Tango::WAttribute &attr)
 {
-	DEBUG_STREAM << "MBFControl::write_Mode(Tango::WAttribute &attr) entering... " << endl;
+	DEBUG_STREAM << "MBFControl::write_Mode(Tango::WAttribute &attr) entering... " << std::endl;
 	//	Retrieve write value
 	ModeEnum	w_val;
 	attr.get_write_value(w_val);
@@ -456,7 +463,7 @@ void MBFControl::write_Mode(Tango::WAttribute &attr)
 //--------------------------------------------------------
 /**
  *	Read attribute ConfigFileName related method
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevString
  *	Attr type:	Scalar
@@ -464,7 +471,7 @@ void MBFControl::write_Mode(Tango::WAttribute &attr)
 //--------------------------------------------------------
 void MBFControl::read_ConfigFileName(Tango::Attribute &attr)
 {
-	DEBUG_STREAM << "MBFControl::read_ConfigFileName(Tango::Attribute &attr) entering... " << endl;
+	DEBUG_STREAM << "MBFControl::read_ConfigFileName(Tango::Attribute &attr) entering... " << std::endl;
 	/*----- PROTECTED REGION ID(MBFControl::read_ConfigFileName) ENABLED START -----*/
 
   attr_ConfigFileName_read[0] = (char *)configFile.c_str();
@@ -480,7 +487,7 @@ void MBFControl::read_ConfigFileName(Tango::Attribute &attr)
 //--------------------------------------------------------
 /**
  *	Read attribute Tune related method
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevDouble
  *	Attr type:	Scalar
@@ -488,7 +495,7 @@ void MBFControl::read_ConfigFileName(Tango::Attribute &attr)
 //--------------------------------------------------------
 void MBFControl::read_Tune(Tango::Attribute &attr)
 {
-	DEBUG_STREAM << "MBFControl::read_Tune(Tango::Attribute &attr) entering... " << endl;
+	DEBUG_STREAM << "MBFControl::read_Tune(Tango::Attribute &attr) entering... " << std::endl;
 	/*----- PROTECTED REGION ID(MBFControl::read_Tune) ENABLED START -----*/
 
 	attr.set_value(attr_Tune_read);
@@ -498,7 +505,7 @@ void MBFControl::read_Tune(Tango::Attribute &attr)
 //--------------------------------------------------------
 /**
  *	Write attribute Tune related method
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevDouble
  *	Attr type:	Scalar
@@ -506,7 +513,7 @@ void MBFControl::read_Tune(Tango::Attribute &attr)
 //--------------------------------------------------------
 void MBFControl::write_Tune(Tango::WAttribute &attr)
 {
-	DEBUG_STREAM << "MBFControl::write_Tune(Tango::WAttribute &attr) entering... " << endl;
+	DEBUG_STREAM << "MBFControl::write_Tune(Tango::WAttribute &attr) entering... " << std::endl;
 	//	Retrieve write value
 	Tango::DevDouble	w_val;
 	attr.get_write_value(w_val);
@@ -521,7 +528,7 @@ void MBFControl::write_Tune(Tango::WAttribute &attr)
 //--------------------------------------------------------
 /**
  *	Read attribute FeedbackGain related method
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevShort
  *	Attr type:	Scalar
@@ -529,7 +536,7 @@ void MBFControl::write_Tune(Tango::WAttribute &attr)
 //--------------------------------------------------------
 void MBFControl::read_FeedbackGain(Tango::Attribute &attr)
 {
-	DEBUG_STREAM << "MBFControl::read_FeedbackGain(Tango::Attribute &attr) entering... " << endl;
+	DEBUG_STREAM << "MBFControl::read_FeedbackGain(Tango::Attribute &attr) entering... " << std::endl;
 	/*----- PROTECTED REGION ID(MBFControl::read_FeedbackGain) ENABLED START -----*/
 
 	attr.set_value(attr_FeedbackGain_read);
@@ -539,7 +546,7 @@ void MBFControl::read_FeedbackGain(Tango::Attribute &attr)
 //--------------------------------------------------------
 /**
  *	Write attribute FeedbackGain related method
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevShort
  *	Attr type:	Scalar
@@ -547,7 +554,7 @@ void MBFControl::read_FeedbackGain(Tango::Attribute &attr)
 //--------------------------------------------------------
 void MBFControl::write_FeedbackGain(Tango::WAttribute &attr)
 {
-	DEBUG_STREAM << "MBFControl::write_FeedbackGain(Tango::WAttribute &attr) entering... " << endl;
+	DEBUG_STREAM << "MBFControl::write_FeedbackGain(Tango::WAttribute &attr) entering... " << std::endl;
 	//	Retrieve write value
 	Tango::DevShort	w_val;
 	attr.get_write_value(w_val);
@@ -562,7 +569,7 @@ void MBFControl::write_FeedbackGain(Tango::WAttribute &attr)
 //--------------------------------------------------------
 /**
  *	Read attribute FeedbackFineGain related method
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevDouble
  *	Attr type:	Scalar
@@ -570,7 +577,7 @@ void MBFControl::write_FeedbackGain(Tango::WAttribute &attr)
 //--------------------------------------------------------
 void MBFControl::read_FeedbackFineGain(Tango::Attribute &attr)
 {
-	DEBUG_STREAM << "MBFControl::read_FeedbackFineGain(Tango::Attribute &attr) entering... " << endl;
+	DEBUG_STREAM << "MBFControl::read_FeedbackFineGain(Tango::Attribute &attr) entering... " << std::endl;
 	/*----- PROTECTED REGION ID(MBFControl::read_FeedbackFineGain) ENABLED START -----*/
 
 	attr.set_value(attr_FeedbackFineGain_read);
@@ -580,7 +587,7 @@ void MBFControl::read_FeedbackFineGain(Tango::Attribute &attr)
 //--------------------------------------------------------
 /**
  *	Write attribute FeedbackFineGain related method
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevDouble
  *	Attr type:	Scalar
@@ -588,7 +595,7 @@ void MBFControl::read_FeedbackFineGain(Tango::Attribute &attr)
 //--------------------------------------------------------
 void MBFControl::write_FeedbackFineGain(Tango::WAttribute &attr)
 {
-	DEBUG_STREAM << "MBFControl::write_FeedbackFineGain(Tango::WAttribute &attr) entering... " << endl;
+	DEBUG_STREAM << "MBFControl::write_FeedbackFineGain(Tango::WAttribute &attr) entering... " << std::endl;
 	//	Retrieve write value
 	Tango::DevDouble	w_val;
 	attr.get_write_value(w_val);
@@ -603,7 +610,7 @@ void MBFControl::write_FeedbackFineGain(Tango::WAttribute &attr)
 //--------------------------------------------------------
 /**
  *	Read attribute FeedbackPhase related method
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevDouble
  *	Attr type:	Scalar
@@ -611,7 +618,7 @@ void MBFControl::write_FeedbackFineGain(Tango::WAttribute &attr)
 //--------------------------------------------------------
 void MBFControl::read_FeedbackPhase(Tango::Attribute &attr)
 {
-	DEBUG_STREAM << "MBFControl::read_FeedbackPhase(Tango::Attribute &attr) entering... " << endl;
+	DEBUG_STREAM << "MBFControl::read_FeedbackPhase(Tango::Attribute &attr) entering... " << std::endl;
 	/*----- PROTECTED REGION ID(MBFControl::read_FeedbackPhase) ENABLED START -----*/
 
 	attr.set_value(attr_FeedbackPhase_read);
@@ -621,7 +628,7 @@ void MBFControl::read_FeedbackPhase(Tango::Attribute &attr)
 //--------------------------------------------------------
 /**
  *	Write attribute FeedbackPhase related method
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevDouble
  *	Attr type:	Scalar
@@ -629,7 +636,7 @@ void MBFControl::read_FeedbackPhase(Tango::Attribute &attr)
 //--------------------------------------------------------
 void MBFControl::write_FeedbackPhase(Tango::WAttribute &attr)
 {
-	DEBUG_STREAM << "MBFControl::write_FeedbackPhase(Tango::WAttribute &attr) entering... " << endl;
+	DEBUG_STREAM << "MBFControl::write_FeedbackPhase(Tango::WAttribute &attr) entering... " << std::endl;
 	//	Retrieve write value
 	Tango::DevDouble	w_val;
 	attr.get_write_value(w_val);
@@ -644,7 +651,7 @@ void MBFControl::write_FeedbackPhase(Tango::WAttribute &attr)
 //--------------------------------------------------------
 /**
  *	Read attribute Harmonic related method
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevDouble
  *	Attr type:	Scalar
@@ -652,7 +659,7 @@ void MBFControl::write_FeedbackPhase(Tango::WAttribute &attr)
 //--------------------------------------------------------
 void MBFControl::read_Harmonic(Tango::Attribute &attr)
 {
-	DEBUG_STREAM << "MBFControl::read_Harmonic(Tango::Attribute &attr) entering... " << endl;
+	DEBUG_STREAM << "MBFControl::read_Harmonic(Tango::Attribute &attr) entering... " << std::endl;
 	/*----- PROTECTED REGION ID(MBFControl::read_Harmonic) ENABLED START -----*/
 
 	attr.set_value(attr_Harmonic_read);
@@ -662,7 +669,7 @@ void MBFControl::read_Harmonic(Tango::Attribute &attr)
 //--------------------------------------------------------
 /**
  *	Write attribute Harmonic related method
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevDouble
  *	Attr type:	Scalar
@@ -670,7 +677,7 @@ void MBFControl::read_Harmonic(Tango::Attribute &attr)
 //--------------------------------------------------------
 void MBFControl::write_Harmonic(Tango::WAttribute &attr)
 {
-	DEBUG_STREAM << "MBFControl::write_Harmonic(Tango::WAttribute &attr) entering... " << endl;
+	DEBUG_STREAM << "MBFControl::write_Harmonic(Tango::WAttribute &attr) entering... " << std::endl;
 	//	Retrieve write value
 	Tango::DevDouble	w_val;
 	attr.get_write_value(w_val);
@@ -685,7 +692,7 @@ void MBFControl::write_Harmonic(Tango::WAttribute &attr)
 //--------------------------------------------------------
 /**
  *	Read attribute SweepRange related method
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevDouble
  *	Attr type:	Scalar
@@ -693,7 +700,7 @@ void MBFControl::write_Harmonic(Tango::WAttribute &attr)
 //--------------------------------------------------------
 void MBFControl::read_SweepRange(Tango::Attribute &attr)
 {
-	DEBUG_STREAM << "MBFControl::read_SweepRange(Tango::Attribute &attr) entering... " << endl;
+	DEBUG_STREAM << "MBFControl::read_SweepRange(Tango::Attribute &attr) entering... " << std::endl;
 	/*----- PROTECTED REGION ID(MBFControl::read_SweepRange) ENABLED START -----*/
 
 	attr.set_value(attr_SweepRange_read);
@@ -703,7 +710,7 @@ void MBFControl::read_SweepRange(Tango::Attribute &attr)
 //--------------------------------------------------------
 /**
  *	Write attribute SweepRange related method
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevDouble
  *	Attr type:	Scalar
@@ -711,7 +718,7 @@ void MBFControl::read_SweepRange(Tango::Attribute &attr)
 //--------------------------------------------------------
 void MBFControl::write_SweepRange(Tango::WAttribute &attr)
 {
-	DEBUG_STREAM << "MBFControl::write_SweepRange(Tango::WAttribute &attr) entering... " << endl;
+	DEBUG_STREAM << "MBFControl::write_SweepRange(Tango::WAttribute &attr) entering... " << std::endl;
 	//	Retrieve write value
 	Tango::DevDouble	w_val;
 	attr.get_write_value(w_val);
@@ -726,7 +733,7 @@ void MBFControl::write_SweepRange(Tango::WAttribute &attr)
 //--------------------------------------------------------
 /**
  *	Read attribute SweepDwellTime related method
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevLong
  *	Attr type:	Scalar
@@ -734,7 +741,7 @@ void MBFControl::write_SweepRange(Tango::WAttribute &attr)
 //--------------------------------------------------------
 void MBFControl::read_SweepDwellTime(Tango::Attribute &attr)
 {
-	DEBUG_STREAM << "MBFControl::read_SweepDwellTime(Tango::Attribute &attr) entering... " << endl;
+	DEBUG_STREAM << "MBFControl::read_SweepDwellTime(Tango::Attribute &attr) entering... " << std::endl;
 	/*----- PROTECTED REGION ID(MBFControl::read_SweepDwellTime) ENABLED START -----*/
 
 	attr.set_value(attr_SweepDwellTime_read);
@@ -744,7 +751,7 @@ void MBFControl::read_SweepDwellTime(Tango::Attribute &attr)
 //--------------------------------------------------------
 /**
  *	Write attribute SweepDwellTime related method
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevLong
  *	Attr type:	Scalar
@@ -752,7 +759,7 @@ void MBFControl::read_SweepDwellTime(Tango::Attribute &attr)
 //--------------------------------------------------------
 void MBFControl::write_SweepDwellTime(Tango::WAttribute &attr)
 {
-	DEBUG_STREAM << "MBFControl::write_SweepDwellTime(Tango::WAttribute &attr) entering... " << endl;
+	DEBUG_STREAM << "MBFControl::write_SweepDwellTime(Tango::WAttribute &attr) entering... " << std::endl;
 	//	Retrieve write value
 	Tango::DevLong	w_val;
 	attr.get_write_value(w_val);
@@ -767,7 +774,7 @@ void MBFControl::write_SweepDwellTime(Tango::WAttribute &attr)
 //--------------------------------------------------------
 /**
  *	Read attribute SweepGainSingleBunch related method
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevShort
  *	Attr type:	Scalar
@@ -775,7 +782,7 @@ void MBFControl::write_SweepDwellTime(Tango::WAttribute &attr)
 //--------------------------------------------------------
 void MBFControl::read_SweepGainSingleBunch(Tango::Attribute &attr)
 {
-	DEBUG_STREAM << "MBFControl::read_SweepGainSingleBunch(Tango::Attribute &attr) entering... " << endl;
+	DEBUG_STREAM << "MBFControl::read_SweepGainSingleBunch(Tango::Attribute &attr) entering... " << std::endl;
 	/*----- PROTECTED REGION ID(MBFControl::read_SweepGainSingleBunch) ENABLED START -----*/
 	//	Set the attribute value
 	attr.set_value(attr_SweepGainSingleBunch_read);
@@ -785,7 +792,7 @@ void MBFControl::read_SweepGainSingleBunch(Tango::Attribute &attr)
 //--------------------------------------------------------
 /**
  *	Write attribute SweepGainSingleBunch related method
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevShort
  *	Attr type:	Scalar
@@ -793,7 +800,7 @@ void MBFControl::read_SweepGainSingleBunch(Tango::Attribute &attr)
 //--------------------------------------------------------
 void MBFControl::write_SweepGainSingleBunch(Tango::WAttribute &attr)
 {
-	DEBUG_STREAM << "MBFControl::write_SweepGainSingleBunch(Tango::WAttribute &attr) entering... " << endl;
+	DEBUG_STREAM << "MBFControl::write_SweepGainSingleBunch(Tango::WAttribute &attr) entering... " << std::endl;
 	//	Retrieve write value
 	Tango::DevShort	w_val;
 	attr.get_write_value(w_val);
@@ -808,7 +815,7 @@ void MBFControl::write_SweepGainSingleBunch(Tango::WAttribute &attr)
 //--------------------------------------------------------
 /**
  *	Read attribute SweepGainAllBunches related method
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevShort
  *	Attr type:	Scalar
@@ -816,7 +823,7 @@ void MBFControl::write_SweepGainSingleBunch(Tango::WAttribute &attr)
 //--------------------------------------------------------
 void MBFControl::read_SweepGainAllBunches(Tango::Attribute &attr)
 {
-	DEBUG_STREAM << "MBFControl::read_SweepGainAllBunches(Tango::Attribute &attr) entering... " << endl;
+	DEBUG_STREAM << "MBFControl::read_SweepGainAllBunches(Tango::Attribute &attr) entering... " << std::endl;
 	/*----- PROTECTED REGION ID(MBFControl::read_SweepGainAllBunches) ENABLED START -----*/
 	//	Set the attribute value
 	attr.set_value(attr_SweepGainAllBunches_read);
@@ -826,7 +833,7 @@ void MBFControl::read_SweepGainAllBunches(Tango::Attribute &attr)
 //--------------------------------------------------------
 /**
  *	Write attribute SweepGainAllBunches related method
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevShort
  *	Attr type:	Scalar
@@ -834,7 +841,7 @@ void MBFControl::read_SweepGainAllBunches(Tango::Attribute &attr)
 //--------------------------------------------------------
 void MBFControl::write_SweepGainAllBunches(Tango::WAttribute &attr)
 {
-	DEBUG_STREAM << "MBFControl::write_SweepGainAllBunches(Tango::WAttribute &attr) entering... " << endl;
+	DEBUG_STREAM << "MBFControl::write_SweepGainAllBunches(Tango::WAttribute &attr) entering... " << std::endl;
 	//	Retrieve write value
 	Tango::DevShort	w_val;
 	attr.get_write_value(w_val);
@@ -849,7 +856,7 @@ void MBFControl::write_SweepGainAllBunches(Tango::WAttribute &attr)
 //--------------------------------------------------------
 /**
  *	Read attribute BlankingInterval related method
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevLong
  *	Attr type:	Scalar
@@ -857,7 +864,7 @@ void MBFControl::write_SweepGainAllBunches(Tango::WAttribute &attr)
 //--------------------------------------------------------
 void MBFControl::read_BlankingInterval(Tango::Attribute &attr)
 {
-	DEBUG_STREAM << "MBFControl::read_BlankingInterval(Tango::Attribute &attr) entering... " << endl;
+	DEBUG_STREAM << "MBFControl::read_BlankingInterval(Tango::Attribute &attr) entering... " << std::endl;
 	/*----- PROTECTED REGION ID(MBFControl::read_BlankingInterval) ENABLED START -----*/
 
 	attr.set_value(attr_BlankingInterval_read);
@@ -867,7 +874,7 @@ void MBFControl::read_BlankingInterval(Tango::Attribute &attr)
 //--------------------------------------------------------
 /**
  *	Read attribute TuneOnSingleBunch related method
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevBoolean
  *	Attr type:	Scalar
@@ -875,7 +882,7 @@ void MBFControl::read_BlankingInterval(Tango::Attribute &attr)
 //--------------------------------------------------------
 void MBFControl::read_TuneOnSingleBunch(Tango::Attribute &attr)
 {
-	DEBUG_STREAM << "MBFControl::read_TuneOnSingleBunch(Tango::Attribute &attr) entering... " << endl;
+	DEBUG_STREAM << "MBFControl::read_TuneOnSingleBunch(Tango::Attribute &attr) entering... " << std::endl;
 	/*----- PROTECTED REGION ID(MBFControl::read_TuneOnSingleBunch) ENABLED START -----*/
 
 	attr.set_value(attr_TuneOnSingleBunch_read);
@@ -885,7 +892,7 @@ void MBFControl::read_TuneOnSingleBunch(Tango::Attribute &attr)
 //--------------------------------------------------------
 /**
  *	Write attribute TuneOnSingleBunch related method
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevBoolean
  *	Attr type:	Scalar
@@ -893,7 +900,7 @@ void MBFControl::read_TuneOnSingleBunch(Tango::Attribute &attr)
 //--------------------------------------------------------
 void MBFControl::write_TuneOnSingleBunch(Tango::WAttribute &attr)
 {
-	DEBUG_STREAM << "MBFControl::write_TuneOnSingleBunch(Tango::WAttribute &attr) entering... " << endl;
+	DEBUG_STREAM << "MBFControl::write_TuneOnSingleBunch(Tango::WAttribute &attr) entering... " << std::endl;
 	//	Retrieve write value
 	Tango::DevBoolean	w_val;
 	attr.get_write_value(w_val);
@@ -908,7 +915,7 @@ void MBFControl::write_TuneOnSingleBunch(Tango::WAttribute &attr)
 //--------------------------------------------------------
 /**
  *	Read attribute TuneBunch related method
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevShort
  *	Attr type:	Scalar
@@ -916,7 +923,7 @@ void MBFControl::write_TuneOnSingleBunch(Tango::WAttribute &attr)
 //--------------------------------------------------------
 void MBFControl::read_TuneBunch(Tango::Attribute &attr)
 {
-	DEBUG_STREAM << "MBFControl::read_TuneBunch(Tango::Attribute &attr) entering... " << endl;
+	DEBUG_STREAM << "MBFControl::read_TuneBunch(Tango::Attribute &attr) entering... " << std::endl;
 	/*----- PROTECTED REGION ID(MBFControl::read_TuneBunch) ENABLED START -----*/
 
 	attr.set_value(attr_TuneBunch_read);
@@ -926,7 +933,7 @@ void MBFControl::read_TuneBunch(Tango::Attribute &attr)
 //--------------------------------------------------------
 /**
  *	Write attribute TuneBunch related method
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevShort
  *	Attr type:	Scalar
@@ -934,7 +941,7 @@ void MBFControl::read_TuneBunch(Tango::Attribute &attr)
 //--------------------------------------------------------
 void MBFControl::write_TuneBunch(Tango::WAttribute &attr)
 {
-	DEBUG_STREAM << "MBFControl::write_TuneBunch(Tango::WAttribute &attr) entering... " << endl;
+	DEBUG_STREAM << "MBFControl::write_TuneBunch(Tango::WAttribute &attr) entering... " << std::endl;
 	//	Retrieve write value
 	Tango::DevShort	w_val;
 	attr.get_write_value(w_val);
@@ -949,7 +956,7 @@ void MBFControl::write_TuneBunch(Tango::WAttribute &attr)
 //--------------------------------------------------------
 /**
  *	Read attribute SweepState related method
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevState
  *	Attr type:	Scalar
@@ -957,7 +964,7 @@ void MBFControl::write_TuneBunch(Tango::WAttribute &attr)
 //--------------------------------------------------------
 void MBFControl::read_SweepState(Tango::Attribute &attr)
 {
-	DEBUG_STREAM << "MBFControl::read_SweepState(Tango::Attribute &attr) entering... " << endl;
+	DEBUG_STREAM << "MBFControl::read_SweepState(Tango::Attribute &attr) entering... " << std::endl;
 	/*----- PROTECTED REGION ID(MBFControl::read_SweepState) ENABLED START -----*/
 	//	Set the attribute value
 	attr.set_value(attr_SweepState_read);
@@ -967,7 +974,7 @@ void MBFControl::read_SweepState(Tango::Attribute &attr)
 //--------------------------------------------------------
 /**
  *	Read attribute MacroHistory related method
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevString
  *	Attr type:	Spectrum max = 1024
@@ -975,7 +982,7 @@ void MBFControl::read_SweepState(Tango::Attribute &attr)
 //--------------------------------------------------------
 void MBFControl::read_MacroHistory(Tango::Attribute &attr)
 {
-	DEBUG_STREAM << "MBFControl::read_MacroHistory(Tango::Attribute &attr) entering... " << endl;
+	DEBUG_STREAM << "MBFControl::read_MacroHistory(Tango::Attribute &attr) entering... " << std::endl;
 	/*----- PROTECTED REGION ID(MBFControl::read_MacroHistory) ENABLED START -----*/
 
 	vector<string> history = read_macro_history();
@@ -991,7 +998,7 @@ void MBFControl::read_MacroHistory(Tango::Attribute &attr)
 //--------------------------------------------------------
 /**
  *	Read attribute ModeList related method
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevString
  *	Attr type:	Spectrum max = 32
@@ -999,7 +1006,7 @@ void MBFControl::read_MacroHistory(Tango::Attribute &attr)
 //--------------------------------------------------------
 void MBFControl::read_ModeList(Tango::Attribute &attr)
 {
-	DEBUG_STREAM << "MBFControl::read_ModeList(Tango::Attribute &attr) entering... " << endl;
+	DEBUG_STREAM << "MBFControl::read_ModeList(Tango::Attribute &attr) entering... " << std::endl;
 	/*----- PROTECTED REGION ID(MBFControl::read_ModeList) ENABLED START -----*/
 
   attr.set_value(make_string_array(modeList), modeList.size(), 0, true);
@@ -1009,7 +1016,7 @@ void MBFControl::read_ModeList(Tango::Attribute &attr)
 //--------------------------------------------------------
 /**
  *	Read attribute CleaningPattern related method
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevShort
  *	Attr type:	Spectrum max = 1024
@@ -1017,7 +1024,7 @@ void MBFControl::read_ModeList(Tango::Attribute &attr)
 //--------------------------------------------------------
 void MBFControl::read_CleaningPattern(Tango::Attribute &attr)
 {
-	DEBUG_STREAM << "MBFControl::read_CleaningPattern(Tango::Attribute &attr) entering... " << endl;
+	DEBUG_STREAM << "MBFControl::read_CleaningPattern(Tango::Attribute &attr) entering... " << std::endl;
 	/*----- PROTECTED REGION ID(MBFControl::read_CleaningPattern) ENABLED START -----*/
 
 	attr.set_value(attr_CleaningPattern_read, pattern_length);
@@ -1027,7 +1034,7 @@ void MBFControl::read_CleaningPattern(Tango::Attribute &attr)
 //--------------------------------------------------------
 /**
  *	Write attribute CleaningPattern related method
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevShort
  *	Attr type:	Spectrum max = 1024
@@ -1035,7 +1042,7 @@ void MBFControl::read_CleaningPattern(Tango::Attribute &attr)
 //--------------------------------------------------------
 void MBFControl::write_CleaningPattern(Tango::WAttribute &attr)
 {
-	DEBUG_STREAM << "MBFControl::write_CleaningPattern(Tango::WAttribute &attr) entering... " << endl;
+	DEBUG_STREAM << "MBFControl::write_CleaningPattern(Tango::WAttribute &attr) entering... " << std::endl;
 	//	Retrieve number of write values
 	int	w_length = attr.get_write_value_length();
 
@@ -1044,18 +1051,19 @@ void MBFControl::write_CleaningPattern(Tango::WAttribute &attr)
 	attr.get_write_value(w_val);
 	/*----- PROTECTED REGION ID(MBFControl::write_CleaningPattern) ENABLED START -----*/
 
+  if(w_length != 992)
+    RAISE_EXCEPTION((get_name() + "/CleaningPattern must have 992 values, but got " + to_string(w_length)).c_str());
+
 	pattern_length = w_length;
 	for(int i=0;i<w_length;i++) attr_CleaningPattern_read[i] = w_val[i];
-  if( !is_srv_starting() )
-    run_macro("set_param","CleaningPattern");
 
 	/*----- PROTECTED REGION END -----*/	//	MBFControl::write_CleaningPattern
 }
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFControl::add_dynamic_attributes()
- *	Description : Create the dynamic attributes if any
+ *	Method     : MBFControl::add_dynamic_attributes()
+ *	Description: Create the dynamic attributes if any
  *                for specified device.
  */
 //--------------------------------------------------------
@@ -1078,7 +1086,7 @@ void MBFControl::add_dynamic_attributes()
 //--------------------------------------------------------
 Tango::DevState MBFControl::dev_state()
 {
-	DEBUG_STREAM << "MBFControl::State()  - " << device_name << endl;
+	DEBUG_STREAM << "MBFControl::State()  - " << device_name << std::endl;
 	/*----- PROTECTED REGION ID(MBFControl::dev_state) ENABLED START -----*/
 	
 	Tango::DevState	argout = Tango::UNKNOWN;
@@ -1091,24 +1099,34 @@ Tango::DevState MBFControl::dev_state()
     mbfDS->read_attribute("SEQ_0_BANK_S") >> s0;
     mbfDS->read_attribute("SEQ_1_BANK_S") >> s1;
 
-    if( s0==3 && s1==2 ) {
-      argout = Tango::ON;
-      status = "Feedbak: On\n";
-    } else {
-      argout = Tango::OFF;
-      status = "Feedbak: Off\n";
+    if( s0!=s1 || s0>3 ) {
+      attr_SweepState_read[0] = Tango::UNKNOWN;
+      set_state(Tango::UNKNOWN);
+      set_status("Invalid bank configuration\n");
+      return get_state();
     }
 
-    // Compute Sweep state
-    Tango::DevUShort s1ena;
-    mbfDS->read_attribute("SEQ_1_ENABLE_S") >> s1ena;
-
-    if( s1ena ) {
-			attr_SweepState_read[0] = Tango::ON;
-      status += "Sweep: On\n";
-    } else {
-			attr_SweepState_read[0] = Tango::OFF;
-      status += "Sweep: Off\n";
+    switch(s0) {
+      case 0: // tune sweep mode
+        argout = Tango::OFF;
+        attr_SweepState_read[0] = Tango::OFF;
+        status = "Feedbak: OFF\nCleaning: OFF\n";
+        break;
+      case 1: // cleaning mode
+        argout = Tango::OFF;
+        attr_SweepState_read[0] = Tango::ON;
+        status = "Feedbak: OFF\nCleaning: ON\n";
+        break;
+      case 2: // tune sweep mode, with feedback
+        argout = Tango::ON;
+        attr_SweepState_read[0] = Tango::OFF;
+        status = "Feedbak: ON\nCleaning: OFF\n";
+        break;
+      case 3: // cleaning mode, with feedback
+        argout = Tango::ON;
+        attr_SweepState_read[0] = Tango::ON;
+        status = "Feedbak: ON\nCleaning: ON\n";
+        break;
     }
 
     // Read Blanking window
@@ -1210,7 +1228,7 @@ Tango::DevState MBFControl::dev_state()
 //--------------------------------------------------------
 void MBFControl::load_configuration_file(Tango::DevString argin)
 {
-	DEBUG_STREAM << "MBFControl::LoadConfigurationFile()  - " << device_name << endl;
+	DEBUG_STREAM << "MBFControl::LoadConfigurationFile()  - " << device_name << std::endl;
 	/*----- PROTECTED REGION ID(MBFControl::load_configuration_file) ENABLED START -----*/
 
   if( get_state()==Tango::MOVING )
@@ -1379,10 +1397,10 @@ void MBFControl::load_configuration_file(Tango::DevString argin)
 //--------------------------------------------------------
 void MBFControl::save_configuration_file(Tango::DevString argin)
 {
-	DEBUG_STREAM << "MBFControl::SaveConfigurationFile()  - " << device_name << endl;
+	DEBUG_STREAM << "MBFControl::SaveConfigurationFile()  - " << device_name << std::endl;
 	/*----- PROTECTED REGION ID(MBFControl::save_configuration_file) ENABLED START -----*/
 
-	if( attr_Mode_read[0]==ARB_MODE ) {
+	if( (int)attr_Mode_read[0]==ARB_MODE ) {
 		// ARB Pattern
 		if( pattern_length==0 ) {
 			RAISE_EXCEPTION("Cleaning pattern not defined for ARB Pattern mode");
@@ -1404,7 +1422,7 @@ void MBFControl::save_configuration_file(Tango::DevString argin)
     conf << "FeedbackGain\t" <<  attr_FeedbackGain_read[0] << endl;
     conf << "FeedbackPhase\t" <<  attr_FeedbackPhase_read[0] << endl;
     conf << "Harmonic\t" <<  attr_Harmonic_read[0] << endl;
-    conf << "Mode\t" <<  modeList[attr_Mode_read[0]] << endl;
+    conf << "Mode\t" <<  modeList[(int)attr_Mode_read[0]] << endl;
     conf << "SweepDwellTime\t" <<  attr_SweepDwellTime_read[0] << endl;
     conf << "SweepGainAllBunches\t" <<  attr_SweepGainAllBunches_read[0] << endl;
 		conf << "SweepGainSingleBunch\t" <<  attr_SweepGainSingleBunch_read[0] << endl;
@@ -1412,7 +1430,7 @@ void MBFControl::save_configuration_file(Tango::DevString argin)
     conf << "Tune\t" <<  attr_Tune_read[0] << endl;
     conf << "TuneBunch\t" <<  attr_TuneBunch_read[0] << endl;
     conf << "TuneOnSingleBunch\t" <<  attr_TuneOnSingleBunch_read[0] << endl;
-    if( attr_Mode_read[0]==ARB_MODE ) {
+    if( (int)attr_Mode_read[0]==ARB_MODE ) {
     	conf << "CleaningPattern\t" << get_pattern_string() << endl;
     }
     conf.close();
@@ -1440,7 +1458,7 @@ void MBFControl::save_configuration_file(Tango::DevString argin)
 Tango::DevString MBFControl::get_configuration_file_path()
 {
 	Tango::DevString argout;
-	DEBUG_STREAM << "MBFControl::GetConfigurationFilePath()  - " << device_name << endl;
+	DEBUG_STREAM << "MBFControl::GetConfigurationFilePath()  - " << device_name << std::endl;
 	/*----- PROTECTED REGION ID(MBFControl::get_configuration_file_path) ENABLED START -----*/
 
   argout  = new char[configFilePath.length()+1];
@@ -1458,10 +1476,10 @@ Tango::DevString MBFControl::get_configuration_file_path()
 //--------------------------------------------------------
 void MBFControl::on()
 {
-	DEBUG_STREAM << "MBFControl::On()  - " << device_name << endl;
+	DEBUG_STREAM << "MBFControl::On()  - " << device_name << std::endl;
 	/*----- PROTECTED REGION ID(MBFControl::on) ENABLED START -----*/
 
-  if(attr_Mode_read[0]<0 || attr_Mode_read[0]>modeList.size())
+  if((int)attr_Mode_read[0]<0 || (int)attr_Mode_read[0]>(int)modeList.size())
     Tango::Except::throw_exception(
             (const char*)"Error",
             (const char*)"Invalid operation mode",
@@ -1480,10 +1498,10 @@ void MBFControl::on()
 //--------------------------------------------------------
 void MBFControl::off()
 {
-	DEBUG_STREAM << "MBFControl::Off()  - " << device_name << endl;
+	DEBUG_STREAM << "MBFControl::Off()  - " << device_name << std::endl;
 	/*----- PROTECTED REGION ID(MBFControl::off) ENABLED START -----*/
 
-  if(attr_Mode_read[0]<0 || attr_Mode_read[0]>modeList.size())
+  if((int)attr_Mode_read[0]<0 || (int)attr_Mode_read[0]>(int)modeList.size())
     Tango::Except::throw_exception(
             (const char*)"Error",
             (const char*)"Invalid operation mode",
@@ -1502,10 +1520,10 @@ void MBFControl::off()
 //--------------------------------------------------------
 void MBFControl::sweep_on()
 {
-	DEBUG_STREAM << "MBFControl::SweepOn()  - " << device_name << endl;
+	DEBUG_STREAM << "MBFControl::SweepOn()  - " << device_name << std::endl;
 	/*----- PROTECTED REGION ID(MBFControl::sweep_on) ENABLED START -----*/
 	
-  if(attr_Mode_read[0]<0 || attr_Mode_read[0]>modeList.size())
+  if((int)attr_Mode_read[0]<0 || (int)attr_Mode_read[0]>(int)modeList.size())
     Tango::Except::throw_exception(
             (const char*)"Error",
             (const char*)"Invalid operation mode",
@@ -1530,10 +1548,10 @@ void MBFControl::sweep_on()
 //--------------------------------------------------------
 void MBFControl::sweep_off()
 {
-	DEBUG_STREAM << "MBFControl::SweepOff()  - " << device_name << endl;
+	DEBUG_STREAM << "MBFControl::SweepOff()  - " << device_name << std::endl;
 	/*----- PROTECTED REGION ID(MBFControl::sweep_off) ENABLED START -----*/
 
-  if(attr_Mode_read[0]<0 || attr_Mode_read[0]>modeList.size())
+  if((int)attr_Mode_read[0]<0 || (int)attr_Mode_read[0]>(int)modeList.size())
     Tango::Except::throw_exception(
             (const char*)"Error",
             (const char*)"Invalid operation mode",
@@ -1552,10 +1570,10 @@ void MBFControl::sweep_off()
 //--------------------------------------------------------
 void MBFControl::clean()
 {
-	DEBUG_STREAM << "MBFControl::Clean()  - " << device_name << endl;
+	DEBUG_STREAM << "MBFControl::Clean()  - " << device_name << std::endl;
 	/*----- PROTECTED REGION ID(MBFControl::clean) ENABLED START -----*/
 	
-  if(attr_Mode_read[0]<0 || attr_Mode_read[0]>modeList.size())
+  if((int)attr_Mode_read[0]<0 || (int)attr_Mode_read[0]>(int)modeList.size())
     Tango::Except::throw_exception(
             (const char*)"Error",
             (const char*)"Invalid operation mode",
@@ -1580,7 +1598,7 @@ void MBFControl::clean()
 //--------------------------------------------------------
 void MBFControl::reset()
 {
-	DEBUG_STREAM << "MBFControl::Reset()  - " << device_name << endl;
+	DEBUG_STREAM << "MBFControl::Reset()  - " << device_name << std::endl;
 	/*----- PROTECTED REGION ID(MBFControl::reset) ENABLED START -----*/
 	
   doorDS->command_inout("AbortMacro");
@@ -1598,7 +1616,7 @@ void MBFControl::reset()
 //--------------------------------------------------------
 void MBFControl::re_load()
 {
-	DEBUG_STREAM << "MBFControl::ReLoad()  - " << device_name << endl;
+	DEBUG_STREAM << "MBFControl::ReLoad()  - " << device_name << std::endl;
 	/*----- PROTECTED REGION ID(MBFControl::re_load) ENABLED START -----*/
 
 	if( get_state()==Tango::MOVING )
@@ -1610,8 +1628,64 @@ void MBFControl::re_load()
 }
 //--------------------------------------------------------
 /**
- *	Method      : MBFControl::add_dynamic_commands()
- *	Description : Create the dynamic commands if any
+ *	Command StartPermanent related method
+ *	Description: Start permanent mode
+ *
+ */
+//--------------------------------------------------------
+void MBFControl::start_permanent()
+{
+	DEBUG_STREAM << "MBFControl::StartPermanent()  - " << device_name << std::endl;
+	/*----- PROTECTED REGION ID(MBFControl::start_permanent) ENABLED START -----*/
+	
+  if((int)attr_Mode_read[0]<0 || (int)attr_Mode_read[0]>(int)modeList.size())
+    Tango::Except::throw_exception(
+            (const char*)"Error",
+            (const char*)"Invalid operation mode",
+            (const char*)"MBFControl::start_permanent");
+
+  if( get_state()==Tango::FAULT )
+    Tango::Except::throw_exception(
+            (const char*)"Error",
+            (const char*)"Cannot start cleaning (synchro error)",
+            (const char*)"MBFControl::start_permanent");
+
+  run_macro("start_permanent","None");
+
+	/*----- PROTECTED REGION END -----*/	//	MBFControl::start_permanent
+}
+//--------------------------------------------------------
+/**
+ *	Command StopPermanent related method
+ *	Description: Stop permanent cleaning
+ *
+ */
+//--------------------------------------------------------
+void MBFControl::stop_permanent()
+{
+	DEBUG_STREAM << "MBFControl::StopPermanent()  - " << device_name << std::endl;
+	/*----- PROTECTED REGION ID(MBFControl::stop_permanent) ENABLED START -----*/
+	
+  if((int)attr_Mode_read[0]<0 || (int)attr_Mode_read[0]>(int)modeList.size())
+    Tango::Except::throw_exception(
+            (const char*)"Error",
+            (const char*)"Invalid operation mode",
+            (const char*)"MBFControl::stop_permanent");
+
+  if( get_state()==Tango::FAULT )
+    Tango::Except::throw_exception(
+            (const char*)"Error",
+            (const char*)"Cannot start cleaning (synchro error)",
+            (const char*)"MBFControl::stop_permanent");
+
+  run_macro("stop_permanent","None");
+
+	/*----- PROTECTED REGION END -----*/	//	MBFControl::stop_permanent
+}
+//--------------------------------------------------------
+/**
+ *	Method     : MBFControl::add_dynamic_commands()
+ *	Description: Create the dynamic commands if any
  *                for specified device.
  */
 //--------------------------------------------------------

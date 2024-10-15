@@ -29,13 +29,17 @@ public:
     // Constructor.
     CleaningTask(MBFCleaning *, omni_mutex &);
 
-    bool scrapper_up(bool updateState);
-    bool scrapper_down(bool updateState);
-    bool sweep(bool updateState);
+    bool scrapper_up();
+    bool scrapper_down();
+    bool sweep();
+    bool start_permanent();
+    bool stop_permanent();
 
 private:
     omni_mutex &mutex;
     MBFCleaning *ds;
+
+    bool run_macro(std::string name);
 
 }; // class CleaningTask
 } // namespace MultiBunchCleaninig

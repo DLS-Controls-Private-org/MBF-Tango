@@ -42,14 +42,25 @@
 
 /*----- PROTECTED REGION END -----*/	//	MBFControl.h
 
+#ifdef TANGO_LOG
+	// cppTango after c934adea (Merge branch 'remove-cout-definition' into 'main', 2022-05-23)
+	// nothing to do
+#else
+	// cppTango 9.3-backports and older
+	#define TANGO_LOG       cout
+	#define TANGO_LOG_INFO  cout2
+	#define TANGO_LOG_DEBUG cout3
+#endif // TANGO_LOG
+
 /**
  *  MBFControl class description:
  *    A high level class to control MBF startup, configuration sequence and configuration file
  */
 
+
 namespace MBFControl_ns
 {
-enum _ModeEnum {
+enum class _ModeEnum : short {
 } ;
 typedef _ModeEnum ModeEnum;
 
@@ -90,15 +101,15 @@ class MBFControl : public TANGO_BASE_CLASS
 public:
 	//	ConfigFilePath:	This is `root` file base path. This string will be concatenated with parameter
 	//  of loadConfigFile command, to obtain an absolute filename.
-	string	configFilePath;
+	std::string	configFilePath;
 	//	MBFDevice:	Device name of the MultiBunch Feedback
-	string	mBFDevice;
+	std::string	mBFDevice;
 	//	DoorDevice:	Name of the door device
-	string	doorDevice;
+	std::string	doorDevice;
 	//	ModeList:	List of machine mode
-	vector<string>	modeList;
+	std::vector<std::string>	modeList;
 	//	GMBFDevice:	Name of the global MBF device
-	string	gMBFDevice;
+	std::string	gMBFDevice;
 	//	CheckSynchro:	True to check MBF synchronisation
 	Tango::DevBoolean	checkSynchro;
 
@@ -131,7 +142,7 @@ public:
 	 *	@param cl	Class.
 	 *	@param s 	Device Name
 	 */
-	MBFControl(Tango::DeviceClass *cl,string &s);
+	MBFControl(Tango::DeviceClass *cl,std::string &s);
 	/**
 	 * Constructs a newly device object.
 	 *
@@ -150,7 +161,7 @@ public:
 	/**
 	 * The device object destructor.
 	 */
-	~MBFControl() {delete_device();};
+	~MBFControl();
 
 
 //	Miscellaneous methods
@@ -177,22 +188,22 @@ public:
 public:
 	//--------------------------------------------------------
 	/*
-	 *	Method      : MBFControl::read_attr_hardware()
-	 *	Description : Hardware acquisition for attributes.
+	 *	Method     : MBFControl::read_attr_hardware()
+	 *	Description: Hardware acquisition for attributes.
 	 */
 	//--------------------------------------------------------
-	virtual void read_attr_hardware(vector<long> &attr_list);
+	virtual void read_attr_hardware(std::vector<long> &attr_list);
 	//--------------------------------------------------------
 	/*
-	 *	Method      : MBFControl::write_attr_hardware()
-	 *	Description : Hardware writing for attributes.
+	 *	Method     : MBFControl::write_attr_hardware()
+	 *	Description: Hardware writing for attributes.
 	 */
 	//--------------------------------------------------------
-	virtual void write_attr_hardware(vector<long> &attr_list);
+	virtual void write_attr_hardware(std::vector<long> &attr_list);
 
 /**
  *	Attribute Mode related methods
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevEnum
  *	Attr type:	Scalar
@@ -202,7 +213,7 @@ public:
 	virtual bool is_Mode_allowed(Tango::AttReqType type);
 /**
  *	Attribute ConfigFileName related methods
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevString
  *	Attr type:	Scalar
@@ -211,7 +222,7 @@ public:
 	virtual bool is_ConfigFileName_allowed(Tango::AttReqType type);
 /**
  *	Attribute Tune related methods
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevDouble
  *	Attr type:	Scalar
@@ -221,7 +232,7 @@ public:
 	virtual bool is_Tune_allowed(Tango::AttReqType type);
 /**
  *	Attribute FeedbackGain related methods
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevShort
  *	Attr type:	Scalar
@@ -231,7 +242,7 @@ public:
 	virtual bool is_FeedbackGain_allowed(Tango::AttReqType type);
 /**
  *	Attribute FeedbackFineGain related methods
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevDouble
  *	Attr type:	Scalar
@@ -241,7 +252,7 @@ public:
 	virtual bool is_FeedbackFineGain_allowed(Tango::AttReqType type);
 /**
  *	Attribute FeedbackPhase related methods
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevDouble
  *	Attr type:	Scalar
@@ -251,7 +262,7 @@ public:
 	virtual bool is_FeedbackPhase_allowed(Tango::AttReqType type);
 /**
  *	Attribute Harmonic related methods
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevDouble
  *	Attr type:	Scalar
@@ -261,7 +272,7 @@ public:
 	virtual bool is_Harmonic_allowed(Tango::AttReqType type);
 /**
  *	Attribute SweepRange related methods
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevDouble
  *	Attr type:	Scalar
@@ -271,7 +282,7 @@ public:
 	virtual bool is_SweepRange_allowed(Tango::AttReqType type);
 /**
  *	Attribute SweepDwellTime related methods
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevLong
  *	Attr type:	Scalar
@@ -281,7 +292,7 @@ public:
 	virtual bool is_SweepDwellTime_allowed(Tango::AttReqType type);
 /**
  *	Attribute SweepGainSingleBunch related methods
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevShort
  *	Attr type:	Scalar
@@ -291,7 +302,7 @@ public:
 	virtual bool is_SweepGainSingleBunch_allowed(Tango::AttReqType type);
 /**
  *	Attribute SweepGainAllBunches related methods
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevShort
  *	Attr type:	Scalar
@@ -301,7 +312,7 @@ public:
 	virtual bool is_SweepGainAllBunches_allowed(Tango::AttReqType type);
 /**
  *	Attribute BlankingInterval related methods
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevLong
  *	Attr type:	Scalar
@@ -310,7 +321,7 @@ public:
 	virtual bool is_BlankingInterval_allowed(Tango::AttReqType type);
 /**
  *	Attribute TuneOnSingleBunch related methods
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevBoolean
  *	Attr type:	Scalar
@@ -320,7 +331,7 @@ public:
 	virtual bool is_TuneOnSingleBunch_allowed(Tango::AttReqType type);
 /**
  *	Attribute TuneBunch related methods
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevShort
  *	Attr type:	Scalar
@@ -330,7 +341,7 @@ public:
 	virtual bool is_TuneBunch_allowed(Tango::AttReqType type);
 /**
  *	Attribute SweepState related methods
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevState
  *	Attr type:	Scalar
@@ -339,7 +350,7 @@ public:
 	virtual bool is_SweepState_allowed(Tango::AttReqType type);
 /**
  *	Attribute MacroHistory related methods
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevString
  *	Attr type:	Spectrum max = 1024
@@ -348,7 +359,7 @@ public:
 	virtual bool is_MacroHistory_allowed(Tango::AttReqType type);
 /**
  *	Attribute ModeList related methods
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevString
  *	Attr type:	Spectrum max = 32
@@ -357,7 +368,7 @@ public:
 	virtual bool is_ModeList_allowed(Tango::AttReqType type);
 /**
  *	Attribute CleaningPattern related methods
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevShort
  *	Attr type:	Spectrum max = 1024
@@ -369,8 +380,8 @@ public:
 
 	//--------------------------------------------------------
 	/**
-	 *	Method      : MBFControl::add_dynamic_attributes()
-	 *	Description : Add dynamic attributes if any.
+	 *	Method     : MBFControl::add_dynamic_attributes()
+	 *	Description: Add dynamic attributes if any.
 	 */
 	//--------------------------------------------------------
 	void add_dynamic_attributes();
@@ -460,12 +471,26 @@ public:
 	 */
 	virtual void re_load();
 	virtual bool is_ReLoad_allowed(const CORBA::Any &any);
+	/**
+	 *	Command StartPermanent related method
+	 *	Description: Start permanent mode
+	 *
+	 */
+	virtual void start_permanent();
+	virtual bool is_StartPermanent_allowed(const CORBA::Any &any);
+	/**
+	 *	Command StopPermanent related method
+	 *	Description: Stop permanent cleaning
+	 *
+	 */
+	virtual void stop_permanent();
+	virtual bool is_StopPermanent_allowed(const CORBA::Any &any);
 
 
 	//--------------------------------------------------------
 	/**
-	 *	Method      : MBFControl::add_dynamic_commands()
-	 *	Description : Add dynamic commands if any.
+	 *	Method     : MBFControl::add_dynamic_commands()
+	 *	Description: Add dynamic commands if any.
 	 */
 	//--------------------------------------------------------
 	void add_dynamic_commands();

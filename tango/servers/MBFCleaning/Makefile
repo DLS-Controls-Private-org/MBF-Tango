@@ -132,26 +132,15 @@ SVC_INHERITANCE_OBJ =  \
 #------------ Object files for additional files ------------
 ADDITIONAL_OBJS = \
 		$(OBJDIR)/CleaningTask.o \
-		$(OBJDIR)/DoAllThread.o \
-		$(OBJDIR)/ScraperDownThread.o \
-		$(OBJDIR)/ScraperUpThread.o \
-		$(OBJDIR)/SweepThread.o
+		$(OBJDIR)/RunMacro.o
 
 #=============================================================================
 #	include common targets
 #
 include $(MAKE_ENV)/common_target.opt
 
-
-
 $(OBJDIR)/CleaningTask.o:  CleaningTask.cpp $(SVC_INCL)
 	$(CXX) $(CXXFLAGS) -c $< -o $(OBJDIR)/CleaningTask.o
-$(OBJDIR)/DoAllThread.o:  DoAllThread.cpp $(SVC_INCL)
-	$(CXX) $(CXXFLAGS) -c $< -o $(OBJDIR)/DoAllThread.o
-$(OBJDIR)/ScraperDownThread.o:  ScraperDownThread.cpp $(SVC_INCL)
-	$(CXX) $(CXXFLAGS) -c $< -o $(OBJDIR)/ScraperDownThread.o
-$(OBJDIR)/ScraperUpThread.o:  ScraperUpThread.cpp $(SVC_INCL)
-	$(CXX) $(CXXFLAGS) -c $< -o $(OBJDIR)/ScraperUpThread.o
-$(OBJDIR)/SweepThread.o:  SweepThread.cpp $(SVC_INCL)
-	$(CXX) $(CXXFLAGS) -c $< -o $(OBJDIR)/SweepThread.o
+$(OBJDIR)/SweepThread.o:  RunMacro.cpp $(SVC_INCL)
+	$(CXX) $(CXXFLAGS) -c $< -o $(OBJDIR)/RunMacro.o
 

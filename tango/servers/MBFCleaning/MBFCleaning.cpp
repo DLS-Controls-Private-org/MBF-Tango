@@ -40,10 +40,7 @@
 
 #include <MBFCleaning.h>
 #include <MBFCleaningClass.h>
-#include <SweepThread.h>
-#include <ScraperDownThread.h>
-#include <ScraperUpThread.h>
-#include <DoAllThread.h>
+#include <RunMacro.h>
 
 /*----- PROTECTED REGION END -----*/	//	MBFCleaning.cpp
 
@@ -58,7 +55,7 @@
 //
 //  Command name              |  Method name
 //================================================================
-//  State                     |  Inherited (no method)
+//  State                     |  dev_state
 //  Status                    |  Inherited (no method)
 //  StartCleaning             |  start_cleaning
 //  LoadConfigurationFile     |  load_configuration_file
@@ -69,6 +66,8 @@
 //  DoAll                     |  do_all
 //  Stop                      |  stop
 //  SelectScraper             |  select_scraper
+//  StartPermanent            |  start_permanent
+//  StopPermanent             |  stop_permanent
 //================================================================
 
 //================================================================
@@ -81,6 +80,7 @@
 //  Gain            |  Tango::DevDouble	Scalar
 //  ConfigFileName  |  Tango::DevString	Scalar
 //  ExternalSweep   |  Tango::DevBoolean	Scalar
+//  SweepState      |  Tango::DevState	Scalar
 //  UsedScrapers    |  Tango::DevBoolean	Spectrum  ( max = 16)
 //================================================================
 
@@ -96,12 +96,12 @@ namespace MBFCleaning_ns
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFCleaning::MBFCleaning()
- *	Description : Constructors for a Tango device
+ *	Method     : MBFCleaning::MBFCleaning()
+ *	Description: Constructors for a Tango device
  *                implementing the classMBFCleaning
  */
 //--------------------------------------------------------
-MBFCleaning::MBFCleaning(Tango::DeviceClass *cl, string &s)
+MBFCleaning::MBFCleaning(Tango::DeviceClass *cl, std::string &s)
  : TANGO_BASE_CLASS(cl, s.c_str())
 {
 	/*----- PROTECTED REGION ID(MBFCleaning::constructor_1) ENABLED START -----*/
@@ -127,16 +127,21 @@ MBFCleaning::MBFCleaning(Tango::DeviceClass *cl, const char *s, const char *d)
 	
 	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::constructor_3
 }
+//--------------------------------------------------------
+MBFCleaning::~MBFCleaning()
+{
+	delete_device();
+}
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFCleaning::delete_device()
- *	Description : will be called at device destruction or at init command
+ *	Method     : MBFCleaning::delete_device()
+ *	Description: will be called at device destruction or at init command
  */
 //--------------------------------------------------------
 void MBFCleaning::delete_device()
 {
-	DEBUG_STREAM << "MBFCleaning::delete_device() " << device_name << endl;
+	DEBUG_STREAM << "MBFCleaning::delete_device() " << device_name << std::endl;
 	/*----- PROTECTED REGION ID(MBFCleaning::delete_device) ENABLED START -----*/
 	
 	//	Delete device allocated objects
@@ -154,18 +159,19 @@ void MBFCleaning::delete_device()
 	delete[] attr_Gain_read;
 	delete[] attr_ConfigFileName_read;
 	delete[] attr_ExternalSweep_read;
+	delete[] attr_SweepState_read;
 	delete[] attr_UsedScrapers_read;
 }
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFCleaning::init_device()
- *	Description : will be called at device initialization.
+ *	Method     : MBFCleaning::init_device()
+ *	Description: will be called at device initialization.
  */
 //--------------------------------------------------------
 void MBFCleaning::init_device()
 {
-	DEBUG_STREAM << "MBFCleaning::init_device() create device " << device_name << endl;
+	DEBUG_STREAM << "MBFCleaning::init_device() create device " << device_name << std::endl;
 	/*----- PROTECTED REGION ID(MBFCleaning::init_device_before) ENABLED START -----*/
 	
 	//	Initialization before get_device_property() call
@@ -175,11 +181,11 @@ void MBFCleaning::init_device()
   scrAttNames.clear();
 
 	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::init_device_before
-	
+
 
 	//	Get the device properties from database
 	get_device_property();
-	
+
 	attr_FreqMin_read = new Tango::DevDouble[1];
 	attr_FreqMax_read = new Tango::DevDouble[1];
 	attr_SweepPeriod_read = new Tango::DevDouble[1];
@@ -187,6 +193,7 @@ void MBFCleaning::init_device()
 	attr_Gain_read = new Tango::DevDouble[1];
 	attr_ConfigFileName_read = new Tango::DevString[1];
 	attr_ExternalSweep_read = new Tango::DevBoolean[1];
+	attr_SweepState_read = new Tango::DevState[1];
 	attr_UsedScrapers_read = new Tango::DevBoolean[16];
 	/*----- PROTECTED REGION ID(MBFCleaning::init_device) ENABLED START -----*/
 	
@@ -205,7 +212,6 @@ void MBFCleaning::init_device()
   if(usedScrapers.size() != scraperNames.size()) {
     cerr << "ERROR: ScraperNames and UsedScrapers properties must have same length " << endl;
     exit(0);
-
   }
 
   nbScrapers = (int)scraperNames.size();
@@ -257,17 +263,19 @@ void MBFCleaning::init_device()
   }
 	configurationLoadFailed = false;
   attr_ExternalSweep_read[0] = false;
+  attr_SweepState_read[0] = Tango::UNKNOWN;
 
-  set_state(Tango::OFF);
-  set_status("Device ready");
+  macroStatus = "Device ready";
+  macroHasFail = false;
+  macroRunning = false;
 
 	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::init_device
 }
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFCleaning::get_device_property()
- *	Description : Read database to initialize property data members.
+ *	Method     : MBFCleaning::get_device_property()
+ *	Description: Read database to initialize property data members.
  */
 //--------------------------------------------------------
 void MBFCleaning::get_device_property()
@@ -295,7 +303,7 @@ void MBFCleaning::get_device_property()
 		//	Call database and extract values
 		if (Tango::Util::instance()->_UseDb==true)
 			get_db_device()->get_property(dev_prop);
-	
+
 		//	get instance on MBFCleaningClass to get class property
 		Tango::DbDatum	def_prop, cl_prop;
 		MBFCleaningClass	*ds_class =
@@ -368,13 +376,13 @@ void MBFCleaning::get_device_property()
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFCleaning::always_executed_hook()
- *	Description : method always executed before any command is executed
+ *	Method     : MBFCleaning::always_executed_hook()
+ *	Description: method always executed before any command is executed
  */
 //--------------------------------------------------------
 void MBFCleaning::always_executed_hook()
 {
-	DEBUG_STREAM << "MBFCleaning::always_executed_hook()  " << device_name << endl;
+	DEBUG_STREAM << "MBFCleaning::always_executed_hook()  " << device_name << std::endl;
 	/*----- PROTECTED REGION ID(MBFCleaning::always_executed_hook) ENABLED START -----*/
 	
 	//	code always executed before all requests
@@ -384,13 +392,13 @@ void MBFCleaning::always_executed_hook()
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFCleaning::read_attr_hardware()
- *	Description : Hardware acquisition for attributes
+ *	Method     : MBFCleaning::read_attr_hardware()
+ *	Description: Hardware acquisition for attributes
  */
 //--------------------------------------------------------
-void MBFCleaning::read_attr_hardware(TANGO_UNUSED(vector<long> &attr_list))
+void MBFCleaning::read_attr_hardware(TANGO_UNUSED(std::vector<long> &attr_list))
 {
-	DEBUG_STREAM << "MBFCleaning::read_attr_hardware(vector<long> &attr_list) entering... " << endl;
+	DEBUG_STREAM << "MBFCleaning::read_attr_hardware(std::vector<long> &attr_list) entering... " << std::endl;
 	/*----- PROTECTED REGION ID(MBFCleaning::read_attr_hardware) ENABLED START -----*/
 	
 	//	Add your own code
@@ -399,13 +407,13 @@ void MBFCleaning::read_attr_hardware(TANGO_UNUSED(vector<long> &attr_list))
 }
 //--------------------------------------------------------
 /**
- *	Method      : MBFCleaning::write_attr_hardware()
- *	Description : Hardware writing for attributes
+ *	Method     : MBFCleaning::write_attr_hardware()
+ *	Description: Hardware writing for attributes
  */
 //--------------------------------------------------------
-void MBFCleaning::write_attr_hardware(TANGO_UNUSED(vector<long> &attr_list))
+void MBFCleaning::write_attr_hardware(TANGO_UNUSED(std::vector<long> &attr_list))
 {
-	DEBUG_STREAM << "MBFCleaning::write_attr_hardware(vector<long> &attr_list) entering... " << endl;
+	DEBUG_STREAM << "MBFCleaning::write_attr_hardware(std::vector<long> &attr_list) entering... " << std::endl;
 	/*----- PROTECTED REGION ID(MBFCleaning::write_attr_hardware) ENABLED START -----*/
 	
 	//	Add your own code
@@ -416,7 +424,7 @@ void MBFCleaning::write_attr_hardware(TANGO_UNUSED(vector<long> &attr_list))
 //--------------------------------------------------------
 /**
  *	Read attribute FreqMin related method
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevDouble
  *	Attr type:	Scalar
@@ -424,7 +432,7 @@ void MBFCleaning::write_attr_hardware(TANGO_UNUSED(vector<long> &attr_list))
 //--------------------------------------------------------
 void MBFCleaning::read_FreqMin(Tango::Attribute &attr)
 {
-	DEBUG_STREAM << "MBFCleaning::read_FreqMin(Tango::Attribute &attr) entering... " << endl;
+	DEBUG_STREAM << "MBFCleaning::read_FreqMin(Tango::Attribute &attr) entering... " << std::endl;
 	/*----- PROTECTED REGION ID(MBFCleaning::read_FreqMin) ENABLED START -----*/
 
 	attr.set_value(attr_FreqMin_read);
@@ -434,7 +442,7 @@ void MBFCleaning::read_FreqMin(Tango::Attribute &attr)
 //--------------------------------------------------------
 /**
  *	Write attribute FreqMin related method
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevDouble
  *	Attr type:	Scalar
@@ -442,7 +450,7 @@ void MBFCleaning::read_FreqMin(Tango::Attribute &attr)
 //--------------------------------------------------------
 void MBFCleaning::write_FreqMin(Tango::WAttribute &attr)
 {
-	DEBUG_STREAM << "MBFCleaning::write_FreqMin(Tango::WAttribute &attr) entering... " << endl;
+	DEBUG_STREAM << "MBFCleaning::write_FreqMin(Tango::WAttribute &attr) entering... " << std::endl;
 	//	Retrieve write value
 	Tango::DevDouble	w_val;
 	attr.get_write_value(w_val);
@@ -457,7 +465,7 @@ void MBFCleaning::write_FreqMin(Tango::WAttribute &attr)
 //--------------------------------------------------------
 /**
  *	Read attribute FreqMax related method
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevDouble
  *	Attr type:	Scalar
@@ -465,7 +473,7 @@ void MBFCleaning::write_FreqMin(Tango::WAttribute &attr)
 //--------------------------------------------------------
 void MBFCleaning::read_FreqMax(Tango::Attribute &attr)
 {
-	DEBUG_STREAM << "MBFCleaning::read_FreqMax(Tango::Attribute &attr) entering... " << endl;
+	DEBUG_STREAM << "MBFCleaning::read_FreqMax(Tango::Attribute &attr) entering... " << std::endl;
 	/*----- PROTECTED REGION ID(MBFCleaning::read_FreqMax) ENABLED START -----*/
 
 	attr.set_value(attr_FreqMax_read);
@@ -475,7 +483,7 @@ void MBFCleaning::read_FreqMax(Tango::Attribute &attr)
 //--------------------------------------------------------
 /**
  *	Write attribute FreqMax related method
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevDouble
  *	Attr type:	Scalar
@@ -483,7 +491,7 @@ void MBFCleaning::read_FreqMax(Tango::Attribute &attr)
 //--------------------------------------------------------
 void MBFCleaning::write_FreqMax(Tango::WAttribute &attr)
 {
-	DEBUG_STREAM << "MBFCleaning::write_FreqMax(Tango::WAttribute &attr) entering... " << endl;
+	DEBUG_STREAM << "MBFCleaning::write_FreqMax(Tango::WAttribute &attr) entering... " << std::endl;
 	//	Retrieve write value
 	Tango::DevDouble	w_val;
 	attr.get_write_value(w_val);
@@ -498,7 +506,7 @@ void MBFCleaning::write_FreqMax(Tango::WAttribute &attr)
 //--------------------------------------------------------
 /**
  *	Read attribute SweepPeriod related method
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevDouble
  *	Attr type:	Scalar
@@ -506,7 +514,7 @@ void MBFCleaning::write_FreqMax(Tango::WAttribute &attr)
 //--------------------------------------------------------
 void MBFCleaning::read_SweepPeriod(Tango::Attribute &attr)
 {
-	DEBUG_STREAM << "MBFCleaning::read_SweepPeriod(Tango::Attribute &attr) entering... " << endl;
+	DEBUG_STREAM << "MBFCleaning::read_SweepPeriod(Tango::Attribute &attr) entering... " << std::endl;
 	/*----- PROTECTED REGION ID(MBFCleaning::read_SweepPeriod) ENABLED START -----*/
 	//	Set the attribute value
 	attr.set_value(attr_SweepPeriod_read);
@@ -516,7 +524,7 @@ void MBFCleaning::read_SweepPeriod(Tango::Attribute &attr)
 //--------------------------------------------------------
 /**
  *	Write attribute SweepPeriod related method
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevDouble
  *	Attr type:	Scalar
@@ -524,7 +532,7 @@ void MBFCleaning::read_SweepPeriod(Tango::Attribute &attr)
 //--------------------------------------------------------
 void MBFCleaning::write_SweepPeriod(Tango::WAttribute &attr)
 {
-	DEBUG_STREAM << "MBFCleaning::write_SweepPeriod(Tango::WAttribute &attr) entering... " << endl;
+	DEBUG_STREAM << "MBFCleaning::write_SweepPeriod(Tango::WAttribute &attr) entering... " << std::endl;
 	//	Retrieve write value
 	Tango::DevDouble	w_val;
 	attr.get_write_value(w_val);
@@ -539,7 +547,7 @@ void MBFCleaning::write_SweepPeriod(Tango::WAttribute &attr)
 //--------------------------------------------------------
 /**
  *	Read attribute CleaningTime related method
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevDouble
  *	Attr type:	Scalar
@@ -547,7 +555,7 @@ void MBFCleaning::write_SweepPeriod(Tango::WAttribute &attr)
 //--------------------------------------------------------
 void MBFCleaning::read_CleaningTime(Tango::Attribute &attr)
 {
-	DEBUG_STREAM << "MBFCleaning::read_CleaningTime(Tango::Attribute &attr) entering... " << endl;
+	DEBUG_STREAM << "MBFCleaning::read_CleaningTime(Tango::Attribute &attr) entering... " << std::endl;
 	/*----- PROTECTED REGION ID(MBFCleaning::read_CleaningTime) ENABLED START -----*/
 	//	Set the attribute value
 	attr.set_value(attr_CleaningTime_read);
@@ -557,7 +565,7 @@ void MBFCleaning::read_CleaningTime(Tango::Attribute &attr)
 //--------------------------------------------------------
 /**
  *	Write attribute CleaningTime related method
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevDouble
  *	Attr type:	Scalar
@@ -565,7 +573,7 @@ void MBFCleaning::read_CleaningTime(Tango::Attribute &attr)
 //--------------------------------------------------------
 void MBFCleaning::write_CleaningTime(Tango::WAttribute &attr)
 {
-	DEBUG_STREAM << "MBFCleaning::write_CleaningTime(Tango::WAttribute &attr) entering... " << endl;
+	DEBUG_STREAM << "MBFCleaning::write_CleaningTime(Tango::WAttribute &attr) entering... " << std::endl;
 	//	Retrieve write value
 	Tango::DevDouble	w_val;
 	attr.get_write_value(w_val);
@@ -580,7 +588,7 @@ void MBFCleaning::write_CleaningTime(Tango::WAttribute &attr)
 //--------------------------------------------------------
 /**
  *	Read attribute Gain related method
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevDouble
  *	Attr type:	Scalar
@@ -588,7 +596,7 @@ void MBFCleaning::write_CleaningTime(Tango::WAttribute &attr)
 //--------------------------------------------------------
 void MBFCleaning::read_Gain(Tango::Attribute &attr)
 {
-	DEBUG_STREAM << "MBFCleaning::read_Gain(Tango::Attribute &attr) entering... " << endl;
+	DEBUG_STREAM << "MBFCleaning::read_Gain(Tango::Attribute &attr) entering... " << std::endl;
 	/*----- PROTECTED REGION ID(MBFCleaning::read_Gain) ENABLED START -----*/
 
 	attr.set_value(attr_Gain_read);
@@ -598,7 +606,7 @@ void MBFCleaning::read_Gain(Tango::Attribute &attr)
 //--------------------------------------------------------
 /**
  *	Write attribute Gain related method
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevDouble
  *	Attr type:	Scalar
@@ -606,7 +614,7 @@ void MBFCleaning::read_Gain(Tango::Attribute &attr)
 //--------------------------------------------------------
 void MBFCleaning::write_Gain(Tango::WAttribute &attr)
 {
-	DEBUG_STREAM << "MBFCleaning::write_Gain(Tango::WAttribute &attr) entering... " << endl;
+	DEBUG_STREAM << "MBFCleaning::write_Gain(Tango::WAttribute &attr) entering... " << std::endl;
 	//	Retrieve write value
 	Tango::DevDouble	w_val;
 	attr.get_write_value(w_val);
@@ -621,7 +629,7 @@ void MBFCleaning::write_Gain(Tango::WAttribute &attr)
 //--------------------------------------------------------
 /**
  *	Read attribute ConfigFileName related method
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevString
  *	Attr type:	Scalar
@@ -629,7 +637,7 @@ void MBFCleaning::write_Gain(Tango::WAttribute &attr)
 //--------------------------------------------------------
 void MBFCleaning::read_ConfigFileName(Tango::Attribute &attr)
 {
-	DEBUG_STREAM << "MBFCleaning::read_ConfigFileName(Tango::Attribute &attr) entering... " << endl;
+	DEBUG_STREAM << "MBFCleaning::read_ConfigFileName(Tango::Attribute &attr) entering... " << std::endl;
 	/*----- PROTECTED REGION ID(MBFCleaning::read_ConfigFileName) ENABLED START -----*/
 
 
@@ -646,7 +654,7 @@ void MBFCleaning::read_ConfigFileName(Tango::Attribute &attr)
 //--------------------------------------------------------
 /**
  *	Read attribute ExternalSweep related method
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevBoolean
  *	Attr type:	Scalar
@@ -654,7 +662,7 @@ void MBFCleaning::read_ConfigFileName(Tango::Attribute &attr)
 //--------------------------------------------------------
 void MBFCleaning::read_ExternalSweep(Tango::Attribute &attr)
 {
-	DEBUG_STREAM << "MBFCleaning::read_ExternalSweep(Tango::Attribute &attr) entering... " << endl;
+	DEBUG_STREAM << "MBFCleaning::read_ExternalSweep(Tango::Attribute &attr) entering... " << std::endl;
 	/*----- PROTECTED REGION ID(MBFCleaning::read_ExternalSweep) ENABLED START -----*/
 
 	attr.set_value(attr_ExternalSweep_read);
@@ -664,7 +672,7 @@ void MBFCleaning::read_ExternalSweep(Tango::Attribute &attr)
 //--------------------------------------------------------
 /**
  *	Write attribute ExternalSweep related method
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevBoolean
  *	Attr type:	Scalar
@@ -672,11 +680,13 @@ void MBFCleaning::read_ExternalSweep(Tango::Attribute &attr)
 //--------------------------------------------------------
 void MBFCleaning::write_ExternalSweep(Tango::WAttribute &attr)
 {
-	DEBUG_STREAM << "MBFCleaning::write_ExternalSweep(Tango::WAttribute &attr) entering... " << endl;
+	DEBUG_STREAM << "MBFCleaning::write_ExternalSweep(Tango::WAttribute &attr) entering... " << std::endl;
 	//	Retrieve write value
 	Tango::DevBoolean	w_val;
 	attr.get_write_value(w_val);
 	/*----- PROTECTED REGION ID(MBFCleaning::write_ExternalSweep) ENABLED START -----*/
+
+  RAISE_EXCEPTION("ExternalSweep is deprecated");
 
   if( get_state()==Tango::MOVING )
     RAISE_EXCEPTION("Parameter change not allowed while moving.");
@@ -686,8 +696,27 @@ void MBFCleaning::write_ExternalSweep(Tango::WAttribute &attr)
 }
 //--------------------------------------------------------
 /**
+ *	Read attribute SweepState related method
+ *
+ *
+ *	Data type:	Tango::DevState
+ *	Attr type:	Scalar
+ */
+//--------------------------------------------------------
+void MBFCleaning::read_SweepState(Tango::Attribute &attr)
+{
+	DEBUG_STREAM << "MBFCleaning::read_SweepState(Tango::Attribute &attr) entering... " << std::endl;
+	/*----- PROTECTED REGION ID(MBFCleaning::read_SweepState) ENABLED START -----*/
+	/* clang-format on */
+	//	Set the attribute value
+	attr.set_value(attr_SweepState_read);
+	/* clang-format off */
+	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::read_SweepState
+}
+//--------------------------------------------------------
+/**
  *	Read attribute UsedScrapers related method
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevBoolean
  *	Attr type:	Spectrum max = 16
@@ -695,7 +724,7 @@ void MBFCleaning::write_ExternalSweep(Tango::WAttribute &attr)
 //--------------------------------------------------------
 void MBFCleaning::read_UsedScrapers(Tango::Attribute &attr)
 {
-	DEBUG_STREAM << "MBFCleaning::read_UsedScrapers(Tango::Attribute &attr) entering... " << endl;
+	DEBUG_STREAM << "MBFCleaning::read_UsedScrapers(Tango::Attribute &attr) entering... " << std::endl;
 	/*----- PROTECTED REGION ID(MBFCleaning::read_UsedScrapers) ENABLED START -----*/
 
 	for(int i=0;i<nbScrapers;i++)
@@ -707,8 +736,8 @@ void MBFCleaning::read_UsedScrapers(Tango::Attribute &attr)
 
 //--------------------------------------------------------
 /**
- *	Method      : MBFCleaning::add_dynamic_attributes()
- *	Description : Create the dynamic attributes if any
+ *	Method     : MBFCleaning::add_dynamic_attributes()
+ *	Description: Create the dynamic attributes if any
  *                for specified device.
  */
 //--------------------------------------------------------
@@ -738,6 +767,52 @@ void MBFCleaning::add_dynamic_attributes()
 
 //--------------------------------------------------------
 /**
+ *	Command State related method
+ *	Description: This command gets the device state (stored in its device_state data member) and returns it to the caller.
+ *
+ *	@returns Device state
+ */
+//--------------------------------------------------------
+Tango::DevState MBFCleaning::dev_state()
+{
+	DEBUG_STREAM << "MBFCleaning::State()  - " << device_name << std::endl;
+	/*----- PROTECTED REGION ID(MBFCleaning::dev_state) ENABLED START -----*/
+	/* clang-format on */
+
+  Tango::DevState argout;
+
+  string sweepStatus;
+  Tango::DevState sweepState = Tango::UNKNOWN;
+  attr_SweepState_read[0] = sweepState;
+  try {
+    mbfDS->read_attribute("SweepState") >> sweepState;
+    sweepStatus = "Sweep: " + string(Tango::DevStateName[sweepState]);
+    attr_SweepState_read[0] = sweepState;
+  } catch (Tango::DevFailed& e) {
+    sweepStatus = "Sweep: " + string(e.errors[0].desc);
+  }
+
+  {
+    omni_mutex_lock l(mutexmacro);
+    if (macroRunning) {
+      argout = Tango::MOVING;
+    } else if(macroHasFail) {
+      argout = Tango::FAULT;
+    } else {
+      argout = sweepState;
+    }
+    set_status(macroStatus + "\n" + sweepStatus);
+  }
+
+	/* clang-format off */
+	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::dev_state
+	set_state(argout);    // Give the state to Tango.
+	if (argout!=Tango::ALARM)
+		Tango::DeviceImpl::dev_state();
+	return get_state();  // Return it after Tango management.
+}
+//--------------------------------------------------------
+/**
  *	Command StartCleaning related method
  *	Description: Starts the cleaning (Move scrapper down)
  *
@@ -745,16 +820,16 @@ void MBFCleaning::add_dynamic_attributes()
 //--------------------------------------------------------
 void MBFCleaning::start_cleaning()
 {
-	DEBUG_STREAM << "MBFCleaning::StartCleaning()  - " << device_name << endl;
+	DEBUG_STREAM << "MBFCleaning::StartCleaning()  - " << device_name << std::endl;
 	/*----- PROTECTED REGION ID(MBFCleaning::start_cleaning) ENABLED START -----*/
 
-  if( get_state()==Tango::MOVING )
+  if( macroRunning )
     RAISE_EXCEPTION("Start cleaning not allowed while moving.");
 
-  set_state(Tango::MOVING);
-  set_status("Moving scrapers");
-  ScraperDownThread *t = new ScraperDownThread(this, mutexsweep);
-
+  macroStatus = "Closing scrapers";
+  macroHasFail = false;
+  macroRunning = true;
+  new RunMacro(this, MACRO_DOWN, mutexmacro);
 
 	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::start_cleaning
 }
@@ -768,7 +843,7 @@ void MBFCleaning::start_cleaning()
 //--------------------------------------------------------
 void MBFCleaning::load_configuration_file(Tango::DevString argin)
 {
-	DEBUG_STREAM << "MBFCleaning::LoadConfigurationFile()  - " << device_name << endl;
+	DEBUG_STREAM << "MBFCleaning::LoadConfigurationFile()  - " << device_name << std::endl;
 	/*----- PROTECTED REGION ID(MBFCleaning::load_configuration_file) ENABLED START -----*/
 
 	if( get_state()==Tango::MOVING )
@@ -781,13 +856,13 @@ void MBFCleaning::load_configuration_file(Tango::DevString argin)
 	ifstream conf(absolute_name, ios::in);
 	if (conf.is_open()) {
 
-		char buffer[512];
+		char buffer[16384];
 		int line_number = 0;
 		int end = 0;
 
 		// Check header
 		strcpy(buffer,"");
-		conf.getline(buffer, 512);
+		conf.getline(buffer, 16384);
 		if( strcmp(buffer,"## Multibunch cleaning  CONFIG  FILE ##")!=0 ) {
 			conf.close();
 			configurationLoadFailed = true;
@@ -798,7 +873,7 @@ void MBFCleaning::load_configuration_file(Tango::DevString argin)
 
 			// Read a line from file.
 			stringstream ss;
-			conf.getline(buffer, 512);
+			conf.getline(buffer, 16384);
 			line_number++;
 			string rd = string(buffer);
 			string att_name;
@@ -861,7 +936,20 @@ void MBFCleaning::load_configuration_file(Tango::DevString argin)
 				Tango::WAttribute &att = dev_attr->get_w_attr_by_name("ExternalSweep");
 				att.set_write_value(attr_ExternalSweep_read[0]);
 				save_attribute_property("ExternalSweep","__value",attr_ExternalSweep_read[0]);
-			}  else  {
+			} else if (att_name=="CleaningPattern") {
+        string strValue;
+        ss >> strValue;
+        vector<string> values;
+        vector<short> setValues;
+        split(values,strValue,',');
+        size_t pattern_length = values.size();
+        for(size_t i=0;i<pattern_length;i++) {
+          short s = (short)atoi(values[i].c_str());
+          setValues.push_back(s);
+        }
+        Tango::DeviceAttribute da("CleaningPattern",setValues);
+        mbfDS->write_attribute(da);
+      }  else  {
 
         int scrIdx = get_scr_idx(att_name);
         if(scrIdx<0) {
@@ -906,14 +994,14 @@ void MBFCleaning::load_configuration_file(Tango::DevString argin)
 //--------------------------------------------------------
 /**
  *	Command SaveConfigurationFile related method
- *	Description: 
+ *
  *
  *	@param argin Configuration file name (without the path)
  */
 //--------------------------------------------------------
 void MBFCleaning::save_configuration_file(Tango::DevString argin)
 {
-	DEBUG_STREAM << "MBFCleaning::SaveConfigurationFile()  - " << device_name << endl;
+	DEBUG_STREAM << "MBFCleaning::SaveConfigurationFile()  - " << device_name << std::endl;
 	/*----- PROTECTED REGION ID(MBFCleaning::save_configuration_file) ENABLED START -----*/
 
 	if(attr_FreqMin_read[0]>=attr_FreqMax_read[0]) {
@@ -949,6 +1037,8 @@ void MBFCleaning::save_configuration_file(Tango::DevString argin)
       }
     }
 
+    conf << "CleaningPattern\t" << get_pattern_string() << endl;
+
 		conf.close();
 		configFile = string(argin);
 	}
@@ -973,7 +1063,7 @@ void MBFCleaning::save_configuration_file(Tango::DevString argin)
 Tango::DevString MBFCleaning::get_configuration_file_path()
 {
 	Tango::DevString argout;
-	DEBUG_STREAM << "MBFCleaning::GetConfigurationFilePath()  - " << device_name << endl;
+	DEBUG_STREAM << "MBFCleaning::GetConfigurationFilePath()  - " << device_name << std::endl;
 	/*----- PROTECTED REGION ID(MBFCleaning::get_configuration_file_path) ENABLED START -----*/
 
 	argout  = new char[configFilePath.length()+1];
@@ -991,18 +1081,14 @@ Tango::DevString MBFCleaning::get_configuration_file_path()
 //--------------------------------------------------------
 void MBFCleaning::sweep()
 {
-	DEBUG_STREAM << "MBFCleaning::Sweep()  - " << device_name << endl;
+	DEBUG_STREAM << "MBFCleaning::Sweep()  - " << device_name << std::endl;
 	/*----- PROTECTED REGION ID(MBFCleaning::sweep) ENABLED START -----*/
 
-	if( get_state()==Tango::MOVING )
+	if( macroRunning )
 		RAISE_EXCEPTION("Cannot sweep while moving.");
 
-	if(attr_FreqMin_read[0]>=attr_FreqMax_read[0]) {
-		RAISE_EXCEPTION("FreqMin must be lower than FreqMax");
-	}
-
 	if(attr_CleaningTime_read[0]<=0.0) {
-		RAISE_EXCEPTION("SweepTime must be srictly positive");
+		RAISE_EXCEPTION("SweepTime must be positive");
 	}
 
   Tango::DevState mState;
@@ -1010,10 +1096,12 @@ void MBFCleaning::sweep()
   if( mState==Tango::FAULT ) {
     RAISE_EXCEPTION("MBF is not synchronized, SR Cleaning cannot be performed");
   }
+  if( macroRunning )
 
-	set_state(Tango::MOVING);
-	set_status("Starting sweep");
-	SweepThread *t = new SweepThread(this, mutexsweep);
+	macroStatus = "Starting sweep";
+  macroHasFail = false;
+  macroRunning = true;
+	new RunMacro(this, MACRO_SWEEP, mutexmacro);
 
 	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::sweep
 }
@@ -1026,15 +1114,16 @@ void MBFCleaning::sweep()
 //--------------------------------------------------------
 void MBFCleaning::end_cleaning()
 {
-	DEBUG_STREAM << "MBFCleaning::EndCleaning()  - " << device_name << endl;
+	DEBUG_STREAM << "MBFCleaning::EndCleaning()  - " << device_name << std::endl;
 	/*----- PROTECTED REGION ID(MBFCleaning::end_cleaning) ENABLED START -----*/
 
-	if( get_state()==Tango::MOVING )
+	if( macroRunning )
 		RAISE_EXCEPTION("Cannot stop cleaning while moving.");
 
-	set_state(Tango::MOVING);
-	set_status("Moving scrapers");
-	ScraperUpThread *t = new ScraperUpThread(this, mutexsweep);
+  macroStatus = "Opening scrapers";
+  macroHasFail = false;
+  macroRunning = true;
+	new RunMacro(this, MACRO_UP, mutexmacro);
 
 	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::end_cleaning
 }
@@ -1047,18 +1136,14 @@ void MBFCleaning::end_cleaning()
 //--------------------------------------------------------
 void MBFCleaning::do_all()
 {
-	DEBUG_STREAM << "MBFCleaning::DoAll()  - " << device_name << endl;
+	DEBUG_STREAM << "MBFCleaning::DoAll()  - " << device_name << std::endl;
 	/*----- PROTECTED REGION ID(MBFCleaning::do_all) ENABLED START -----*/
 
-	if( get_state()==Tango::MOVING )
+	if( macroRunning )
 		RAISE_EXCEPTION("Cannot clean while moving.");
 
-	if(attr_FreqMin_read[0]>=attr_FreqMax_read[0]) {
-		RAISE_EXCEPTION("FreqMin must be lower than FreqMax");
-	}
-
 	if(attr_CleaningTime_read[0]<=0.0) {
-		RAISE_EXCEPTION("CleaningTime must be srictly positive");
+		RAISE_EXCEPTION("CleaningTime must be positive");
 	}
 
   Tango::DevState mState;
@@ -1067,9 +1152,10 @@ void MBFCleaning::do_all()
     RAISE_EXCEPTION("MBF is not synchronized, SR Cleaning cannot be performed");
   }
 
-	set_state(Tango::MOVING);
-	set_status("Moving scrapers");
-	DoAllThread *t = new DoAllThread(this, mutexsweep);
+	macroStatus = "Closing scrapers";
+  macroHasFail = false;
+  macroRunning = true;
+	new RunMacro(this, MACRO_DOALL, mutexmacro);
 	
 	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::do_all
 }
@@ -1082,7 +1168,7 @@ void MBFCleaning::do_all()
 //--------------------------------------------------------
 void MBFCleaning::stop()
 {
-	DEBUG_STREAM << "MBFCleaning::Stop()  - " << device_name << endl;
+	DEBUG_STREAM << "MBFCleaning::Stop()  - " << device_name << std::endl;
 	/*----- PROTECTED REGION ID(MBFCleaning::stop) ENABLED START -----*/
 
 	// Abort scraper motion
@@ -1099,15 +1185,15 @@ void MBFCleaning::stop()
 //--------------------------------------------------------
 /**
  *	Command SelectScraper related method
- *	Description: 
+ *
  *
  *	@param argin [0] = Scraper index
- *               [1] = Scraper enable=1 / disable=0
+ *	[1] = Scraper enable=1 / disable=0
  */
 //--------------------------------------------------------
 void MBFCleaning::select_scraper(const Tango::DevVarShortArray *argin)
 {
-	DEBUG_STREAM << "MBFCleaning::SelectScraper()  - " << device_name << endl;
+	DEBUG_STREAM << "MBFCleaning::SelectScraper()  - " << device_name << std::endl;
 	/*----- PROTECTED REGION ID(MBFCleaning::select_scraper) ENABLED START -----*/
 
 	if(argin->length()!=2) {
@@ -1132,8 +1218,68 @@ void MBFCleaning::select_scraper(const Tango::DevVarShortArray *argin)
 }
 //--------------------------------------------------------
 /**
- *	Method      : MBFCleaning::add_dynamic_commands()
- *	Description : Create the dynamic commands if any
+ *	Command StartPermanent related method
+ *	Description: Start permanent sweep
+ *
+ */
+//--------------------------------------------------------
+void MBFCleaning::start_permanent()
+{
+	DEBUG_STREAM << "MBFCleaning::StartPermanent()  - " << device_name << std::endl;
+	/*----- PROTECTED REGION ID(MBFCleaning::start_permanent) ENABLED START -----*/
+	/* clang-format on */
+
+  if( macroRunning )
+    RAISE_EXCEPTION("Cannot sweep while moving.");
+
+  Tango::DevState mState;
+  mbfDS->read_attribute("State") >> mState;
+  if( mState==Tango::FAULT ) {
+    RAISE_EXCEPTION("MBF is not synchronized, SR Cleaning cannot be performed");
+  }
+
+  macroStatus = "Enabling permanent sweep";
+  macroHasFail = false;
+  macroRunning = true;
+  new RunMacro(this, MACRO_START_PERMANENT, mutexmacro);
+
+	/* clang-format off */
+	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::start_permanent
+}
+//--------------------------------------------------------
+/**
+ *	Command StopPermanent related method
+ *	Description: Stop permanent sweep
+ *
+ */
+//--------------------------------------------------------
+void MBFCleaning::stop_permanent()
+{
+	DEBUG_STREAM << "MBFCleaning::StopPermanent()  - " << device_name << std::endl;
+	/*----- PROTECTED REGION ID(MBFCleaning::stop_permanent) ENABLED START -----*/
+	/* clang-format on */
+
+  if( macroRunning )
+    RAISE_EXCEPTION("Cannot sweep while moving.");
+
+  Tango::DevState mState;
+  mbfDS->read_attribute("State") >> mState;
+  if( mState==Tango::FAULT ) {
+    RAISE_EXCEPTION("MBF is not synchronized, SR Cleaning cannot be performed");
+  }
+
+  macroStatus = "Stopping permanent sweep";
+  macroHasFail = false;
+  macroRunning = true;
+  new RunMacro(this, MACRO_STOP_PERMANENT, mutexmacro);
+
+	/* clang-format off */
+	/*----- PROTECTED REGION END -----*/	//	MBFCleaning::stop_permanent
+}
+//--------------------------------------------------------
+/**
+ *	Method     : MBFCleaning::add_dynamic_commands()
+ *	Description: Create the dynamic commands if any
  *                for specified device.
  */
 //--------------------------------------------------------
@@ -1215,6 +1361,29 @@ string MBFCleaning::get_last_field(string name) {
   } else {
     return name;
   }
+
+}
+
+string MBFCleaning::get_pattern_string() {
+
+  Tango::DeviceAttribute da = mbfDS->read_attribute("CleaningPattern");
+  if(da.is_empty())
+    RAISE_EXCEPTION((mBFDevice + "/CleaningPattern is empty").c_str());
+
+  vector<Tango::DevShort> values;
+  da >> values;
+
+  if(da.get_nb_read() != 992)
+    RAISE_EXCEPTION((mBFDevice + "/CleaningPattern must have 992 values").c_str());
+
+  stringstream str;
+  for(int i=0;i<992;i++) {
+    str << values[i];
+    if(i<991) str << ",";
+  }
+  string ret;
+  str >> ret;
+  return ret;
 
 }
 

@@ -63,16 +63,16 @@ class ModeAttrib: public Tango::Attr
 {
 public:
 	ModeAttrib():Attr("Mode",
-			Tango::DEV_ENUM, Tango::READ_WRITE) {};
-	~ModeAttrib() {};
+			Tango::DEV_ENUM, Tango::READ_WRITE) {}
+	~ModeAttrib() {}
 	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
 		{(static_cast<MBFControl *>(dev))->read_Mode(att);}
 	virtual void write(Tango::DeviceImpl *dev,Tango::WAttribute &att)
 		{(static_cast<MBFControl *>(dev))->write_Mode(att);}
 	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
 		{return (static_cast<MBFControl *>(dev))->is_Mode_allowed(ty);}
-	virtual bool same_type(const type_info &in_type) {return typeid(ModeEnum) == in_type;}
-	virtual string get_enum_type() {return string("ModeEnum");}
+	virtual bool same_type(const std::type_info &in_type) {return typeid(ModeEnum) == in_type;}
+	virtual std::string get_enum_type() {return std::string("ModeEnum");}
 };
 
 //	Attribute ConfigFileName class definition
@@ -80,8 +80,8 @@ class ConfigFileNameAttrib: public Tango::Attr
 {
 public:
 	ConfigFileNameAttrib():Attr("ConfigFileName",
-			Tango::DEV_STRING, Tango::READ) {};
-	~ConfigFileNameAttrib() {};
+			Tango::DEV_STRING, Tango::READ) {}
+	~ConfigFileNameAttrib() {}
 	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
 		{(static_cast<MBFControl *>(dev))->read_ConfigFileName(att);}
 	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
@@ -93,8 +93,8 @@ class TuneAttrib: public Tango::Attr
 {
 public:
 	TuneAttrib():Attr("Tune",
-			Tango::DEV_DOUBLE, Tango::READ_WRITE) {};
-	~TuneAttrib() {};
+			Tango::DEV_DOUBLE, Tango::READ_WRITE) {}
+	~TuneAttrib() {}
 	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
 		{(static_cast<MBFControl *>(dev))->read_Tune(att);}
 	virtual void write(Tango::DeviceImpl *dev,Tango::WAttribute &att)
@@ -108,8 +108,8 @@ class FeedbackGainAttrib: public Tango::Attr
 {
 public:
 	FeedbackGainAttrib():Attr("FeedbackGain",
-			Tango::DEV_SHORT, Tango::READ_WRITE) {};
-	~FeedbackGainAttrib() {};
+			Tango::DEV_SHORT, Tango::READ_WRITE) {}
+	~FeedbackGainAttrib() {}
 	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
 		{(static_cast<MBFControl *>(dev))->read_FeedbackGain(att);}
 	virtual void write(Tango::DeviceImpl *dev,Tango::WAttribute &att)
@@ -123,8 +123,8 @@ class FeedbackFineGainAttrib: public Tango::Attr
 {
 public:
 	FeedbackFineGainAttrib():Attr("FeedbackFineGain",
-			Tango::DEV_DOUBLE, Tango::READ_WRITE) {};
-	~FeedbackFineGainAttrib() {};
+			Tango::DEV_DOUBLE, Tango::READ_WRITE) {}
+	~FeedbackFineGainAttrib() {}
 	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
 		{(static_cast<MBFControl *>(dev))->read_FeedbackFineGain(att);}
 	virtual void write(Tango::DeviceImpl *dev,Tango::WAttribute &att)
@@ -138,8 +138,8 @@ class FeedbackPhaseAttrib: public Tango::Attr
 {
 public:
 	FeedbackPhaseAttrib():Attr("FeedbackPhase",
-			Tango::DEV_DOUBLE, Tango::READ_WRITE) {};
-	~FeedbackPhaseAttrib() {};
+			Tango::DEV_DOUBLE, Tango::READ_WRITE) {}
+	~FeedbackPhaseAttrib() {}
 	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
 		{(static_cast<MBFControl *>(dev))->read_FeedbackPhase(att);}
 	virtual void write(Tango::DeviceImpl *dev,Tango::WAttribute &att)
@@ -153,8 +153,8 @@ class HarmonicAttrib: public Tango::Attr
 {
 public:
 	HarmonicAttrib():Attr("Harmonic",
-			Tango::DEV_DOUBLE, Tango::READ_WRITE) {};
-	~HarmonicAttrib() {};
+			Tango::DEV_DOUBLE, Tango::READ_WRITE) {}
+	~HarmonicAttrib() {}
 	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
 		{(static_cast<MBFControl *>(dev))->read_Harmonic(att);}
 	virtual void write(Tango::DeviceImpl *dev,Tango::WAttribute &att)
@@ -168,8 +168,8 @@ class SweepRangeAttrib: public Tango::Attr
 {
 public:
 	SweepRangeAttrib():Attr("SweepRange",
-			Tango::DEV_DOUBLE, Tango::READ_WRITE) {};
-	~SweepRangeAttrib() {};
+			Tango::DEV_DOUBLE, Tango::READ_WRITE) {}
+	~SweepRangeAttrib() {}
 	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
 		{(static_cast<MBFControl *>(dev))->read_SweepRange(att);}
 	virtual void write(Tango::DeviceImpl *dev,Tango::WAttribute &att)
@@ -183,8 +183,8 @@ class SweepDwellTimeAttrib: public Tango::Attr
 {
 public:
 	SweepDwellTimeAttrib():Attr("SweepDwellTime",
-			Tango::DEV_LONG, Tango::READ_WRITE) {};
-	~SweepDwellTimeAttrib() {};
+			Tango::DEV_LONG, Tango::READ_WRITE) {}
+	~SweepDwellTimeAttrib() {}
 	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
 		{(static_cast<MBFControl *>(dev))->read_SweepDwellTime(att);}
 	virtual void write(Tango::DeviceImpl *dev,Tango::WAttribute &att)
@@ -198,8 +198,8 @@ class SweepGainSingleBunchAttrib: public Tango::Attr
 {
 public:
 	SweepGainSingleBunchAttrib():Attr("SweepGainSingleBunch",
-			Tango::DEV_SHORT, Tango::READ_WRITE) {};
-	~SweepGainSingleBunchAttrib() {};
+			Tango::DEV_SHORT, Tango::READ_WRITE) {}
+	~SweepGainSingleBunchAttrib() {}
 	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
 		{(static_cast<MBFControl *>(dev))->read_SweepGainSingleBunch(att);}
 	virtual void write(Tango::DeviceImpl *dev,Tango::WAttribute &att)
@@ -213,8 +213,8 @@ class SweepGainAllBunchesAttrib: public Tango::Attr
 {
 public:
 	SweepGainAllBunchesAttrib():Attr("SweepGainAllBunches",
-			Tango::DEV_SHORT, Tango::READ_WRITE) {};
-	~SweepGainAllBunchesAttrib() {};
+			Tango::DEV_SHORT, Tango::READ_WRITE) {}
+	~SweepGainAllBunchesAttrib() {}
 	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
 		{(static_cast<MBFControl *>(dev))->read_SweepGainAllBunches(att);}
 	virtual void write(Tango::DeviceImpl *dev,Tango::WAttribute &att)
@@ -228,8 +228,8 @@ class BlankingIntervalAttrib: public Tango::Attr
 {
 public:
 	BlankingIntervalAttrib():Attr("BlankingInterval",
-			Tango::DEV_LONG, Tango::READ) {};
-	~BlankingIntervalAttrib() {};
+			Tango::DEV_LONG, Tango::READ) {}
+	~BlankingIntervalAttrib() {}
 	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
 		{(static_cast<MBFControl *>(dev))->read_BlankingInterval(att);}
 	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
@@ -241,8 +241,8 @@ class TuneOnSingleBunchAttrib: public Tango::Attr
 {
 public:
 	TuneOnSingleBunchAttrib():Attr("TuneOnSingleBunch",
-			Tango::DEV_BOOLEAN, Tango::READ_WRITE) {};
-	~TuneOnSingleBunchAttrib() {};
+			Tango::DEV_BOOLEAN, Tango::READ_WRITE) {}
+	~TuneOnSingleBunchAttrib() {}
 	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
 		{(static_cast<MBFControl *>(dev))->read_TuneOnSingleBunch(att);}
 	virtual void write(Tango::DeviceImpl *dev,Tango::WAttribute &att)
@@ -256,8 +256,8 @@ class TuneBunchAttrib: public Tango::Attr
 {
 public:
 	TuneBunchAttrib():Attr("TuneBunch",
-			Tango::DEV_SHORT, Tango::READ_WRITE) {};
-	~TuneBunchAttrib() {};
+			Tango::DEV_SHORT, Tango::READ_WRITE) {}
+	~TuneBunchAttrib() {}
 	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
 		{(static_cast<MBFControl *>(dev))->read_TuneBunch(att);}
 	virtual void write(Tango::DeviceImpl *dev,Tango::WAttribute &att)
@@ -271,8 +271,8 @@ class SweepStateAttrib: public Tango::Attr
 {
 public:
 	SweepStateAttrib():Attr("SweepState",
-			Tango::DEV_STATE, Tango::READ) {};
-	~SweepStateAttrib() {};
+			Tango::DEV_STATE, Tango::READ) {}
+	~SweepStateAttrib() {}
 	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
 		{(static_cast<MBFControl *>(dev))->read_SweepState(att);}
 	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
@@ -283,9 +283,11 @@ public:
 class MacroHistoryAttrib: public Tango::SpectrumAttr
 {
 public:
+	// Constants for MacroHistory attribute
+	constexpr static long X_DATA_SIZE = 1024;
 	MacroHistoryAttrib():SpectrumAttr("MacroHistory",
-			Tango::DEV_STRING, Tango::READ, 1024) {};
-	~MacroHistoryAttrib() {};
+			Tango::DEV_STRING, Tango::READ, MacroHistoryAttrib::X_DATA_SIZE) {}
+	~MacroHistoryAttrib() {}
 	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
 		{(static_cast<MBFControl *>(dev))->read_MacroHistory(att);}
 	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
@@ -296,9 +298,11 @@ public:
 class ModeListAttrib: public Tango::SpectrumAttr
 {
 public:
+	// Constants for ModeList attribute
+	constexpr static long X_DATA_SIZE = 32;
 	ModeListAttrib():SpectrumAttr("ModeList",
-			Tango::DEV_STRING, Tango::READ, 32) {};
-	~ModeListAttrib() {};
+			Tango::DEV_STRING, Tango::READ, ModeListAttrib::X_DATA_SIZE) {}
+	~ModeListAttrib() {}
 	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
 		{(static_cast<MBFControl *>(dev))->read_ModeList(att);}
 	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
@@ -309,9 +313,11 @@ public:
 class CleaningPatternAttrib: public Tango::SpectrumAttr
 {
 public:
+	// Constants for CleaningPattern attribute
+	constexpr static long X_DATA_SIZE = 1024;
 	CleaningPatternAttrib():SpectrumAttr("CleaningPattern",
-			Tango::DEV_SHORT, Tango::READ_WRITE, 1024) {};
-	~CleaningPatternAttrib() {};
+			Tango::DEV_SHORT, Tango::READ_WRITE, CleaningPatternAttrib::X_DATA_SIZE) {}
+	~CleaningPatternAttrib() {}
 	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
 		{(static_cast<MBFControl *>(dev))->read_CleaningPattern(att);}
 	virtual void write(Tango::DeviceImpl *dev,Tango::WAttribute &att)
@@ -328,20 +334,20 @@ public:
 class LoadConfigurationFileClass : public Tango::Command
 {
 public:
-	LoadConfigurationFileClass(const char   *name,
+	LoadConfigurationFileClass(const char   *cmd_name,
 	               Tango::CmdArgType in,
 				   Tango::CmdArgType out,
 				   const char        *in_desc,
 				   const char        *out_desc,
 				   Tango::DispLevel  level)
-	:Command(name,in,out,in_desc,out_desc, level)	{};
+	:Command(cmd_name,in,out,in_desc,out_desc, level)	{}
 
-	LoadConfigurationFileClass(const char   *name,
+	LoadConfigurationFileClass(const char   *cmd_name,
 	               Tango::CmdArgType in,
 				   Tango::CmdArgType out)
-	:Command(name,in,out)	{};
-	~LoadConfigurationFileClass() {};
-	
+	:Command(cmd_name,in,out)	{}
+	~LoadConfigurationFileClass() {}
+
 	virtual CORBA::Any *execute (Tango::DeviceImpl *dev, const CORBA::Any &any);
 	virtual bool is_allowed (Tango::DeviceImpl *dev, const CORBA::Any &any)
 	{return (static_cast<MBFControl *>(dev))->is_LoadConfigurationFile_allowed(any);}
@@ -351,20 +357,20 @@ public:
 class SaveConfigurationFileClass : public Tango::Command
 {
 public:
-	SaveConfigurationFileClass(const char   *name,
+	SaveConfigurationFileClass(const char   *cmd_name,
 	               Tango::CmdArgType in,
 				   Tango::CmdArgType out,
 				   const char        *in_desc,
 				   const char        *out_desc,
 				   Tango::DispLevel  level)
-	:Command(name,in,out,in_desc,out_desc, level)	{};
+	:Command(cmd_name,in,out,in_desc,out_desc, level)	{}
 
-	SaveConfigurationFileClass(const char   *name,
+	SaveConfigurationFileClass(const char   *cmd_name,
 	               Tango::CmdArgType in,
 				   Tango::CmdArgType out)
-	:Command(name,in,out)	{};
-	~SaveConfigurationFileClass() {};
-	
+	:Command(cmd_name,in,out)	{}
+	~SaveConfigurationFileClass() {}
+
 	virtual CORBA::Any *execute (Tango::DeviceImpl *dev, const CORBA::Any &any);
 	virtual bool is_allowed (Tango::DeviceImpl *dev, const CORBA::Any &any)
 	{return (static_cast<MBFControl *>(dev))->is_SaveConfigurationFile_allowed(any);}
@@ -374,20 +380,20 @@ public:
 class GetConfigurationFilePathClass : public Tango::Command
 {
 public:
-	GetConfigurationFilePathClass(const char   *name,
+	GetConfigurationFilePathClass(const char   *cmd_name,
 	               Tango::CmdArgType in,
 				   Tango::CmdArgType out,
 				   const char        *in_desc,
 				   const char        *out_desc,
 				   Tango::DispLevel  level)
-	:Command(name,in,out,in_desc,out_desc, level)	{};
+	:Command(cmd_name,in,out,in_desc,out_desc, level)	{}
 
-	GetConfigurationFilePathClass(const char   *name,
+	GetConfigurationFilePathClass(const char   *cmd_name,
 	               Tango::CmdArgType in,
 				   Tango::CmdArgType out)
-	:Command(name,in,out)	{};
-	~GetConfigurationFilePathClass() {};
-	
+	:Command(cmd_name,in,out)	{}
+	~GetConfigurationFilePathClass() {}
+
 	virtual CORBA::Any *execute (Tango::DeviceImpl *dev, const CORBA::Any &any);
 	virtual bool is_allowed (Tango::DeviceImpl *dev, const CORBA::Any &any)
 	{return (static_cast<MBFControl *>(dev))->is_GetConfigurationFilePath_allowed(any);}
@@ -397,20 +403,20 @@ public:
 class OnClass : public Tango::Command
 {
 public:
-	OnClass(const char   *name,
+	OnClass(const char   *cmd_name,
 	               Tango::CmdArgType in,
 				   Tango::CmdArgType out,
 				   const char        *in_desc,
 				   const char        *out_desc,
 				   Tango::DispLevel  level)
-	:Command(name,in,out,in_desc,out_desc, level)	{};
+	:Command(cmd_name,in,out,in_desc,out_desc, level)	{}
 
-	OnClass(const char   *name,
+	OnClass(const char   *cmd_name,
 	               Tango::CmdArgType in,
 				   Tango::CmdArgType out)
-	:Command(name,in,out)	{};
-	~OnClass() {};
-	
+	:Command(cmd_name,in,out)	{}
+	~OnClass() {}
+
 	virtual CORBA::Any *execute (Tango::DeviceImpl *dev, const CORBA::Any &any);
 	virtual bool is_allowed (Tango::DeviceImpl *dev, const CORBA::Any &any)
 	{return (static_cast<MBFControl *>(dev))->is_On_allowed(any);}
@@ -420,20 +426,20 @@ public:
 class OffClass : public Tango::Command
 {
 public:
-	OffClass(const char   *name,
+	OffClass(const char   *cmd_name,
 	               Tango::CmdArgType in,
 				   Tango::CmdArgType out,
 				   const char        *in_desc,
 				   const char        *out_desc,
 				   Tango::DispLevel  level)
-	:Command(name,in,out,in_desc,out_desc, level)	{};
+	:Command(cmd_name,in,out,in_desc,out_desc, level)	{}
 
-	OffClass(const char   *name,
+	OffClass(const char   *cmd_name,
 	               Tango::CmdArgType in,
 				   Tango::CmdArgType out)
-	:Command(name,in,out)	{};
-	~OffClass() {};
-	
+	:Command(cmd_name,in,out)	{}
+	~OffClass() {}
+
 	virtual CORBA::Any *execute (Tango::DeviceImpl *dev, const CORBA::Any &any);
 	virtual bool is_allowed (Tango::DeviceImpl *dev, const CORBA::Any &any)
 	{return (static_cast<MBFControl *>(dev))->is_Off_allowed(any);}
@@ -443,20 +449,20 @@ public:
 class SweepOnClass : public Tango::Command
 {
 public:
-	SweepOnClass(const char   *name,
+	SweepOnClass(const char   *cmd_name,
 	               Tango::CmdArgType in,
 				   Tango::CmdArgType out,
 				   const char        *in_desc,
 				   const char        *out_desc,
 				   Tango::DispLevel  level)
-	:Command(name,in,out,in_desc,out_desc, level)	{};
+	:Command(cmd_name,in,out,in_desc,out_desc, level)	{}
 
-	SweepOnClass(const char   *name,
+	SweepOnClass(const char   *cmd_name,
 	               Tango::CmdArgType in,
 				   Tango::CmdArgType out)
-	:Command(name,in,out)	{};
-	~SweepOnClass() {};
-	
+	:Command(cmd_name,in,out)	{}
+	~SweepOnClass() {}
+
 	virtual CORBA::Any *execute (Tango::DeviceImpl *dev, const CORBA::Any &any);
 	virtual bool is_allowed (Tango::DeviceImpl *dev, const CORBA::Any &any)
 	{return (static_cast<MBFControl *>(dev))->is_SweepOn_allowed(any);}
@@ -466,20 +472,20 @@ public:
 class SweepOffClass : public Tango::Command
 {
 public:
-	SweepOffClass(const char   *name,
+	SweepOffClass(const char   *cmd_name,
 	               Tango::CmdArgType in,
 				   Tango::CmdArgType out,
 				   const char        *in_desc,
 				   const char        *out_desc,
 				   Tango::DispLevel  level)
-	:Command(name,in,out,in_desc,out_desc, level)	{};
+	:Command(cmd_name,in,out,in_desc,out_desc, level)	{}
 
-	SweepOffClass(const char   *name,
+	SweepOffClass(const char   *cmd_name,
 	               Tango::CmdArgType in,
 				   Tango::CmdArgType out)
-	:Command(name,in,out)	{};
-	~SweepOffClass() {};
-	
+	:Command(cmd_name,in,out)	{}
+	~SweepOffClass() {}
+
 	virtual CORBA::Any *execute (Tango::DeviceImpl *dev, const CORBA::Any &any);
 	virtual bool is_allowed (Tango::DeviceImpl *dev, const CORBA::Any &any)
 	{return (static_cast<MBFControl *>(dev))->is_SweepOff_allowed(any);}
@@ -489,20 +495,20 @@ public:
 class CleanClass : public Tango::Command
 {
 public:
-	CleanClass(const char   *name,
+	CleanClass(const char   *cmd_name,
 	               Tango::CmdArgType in,
 				   Tango::CmdArgType out,
 				   const char        *in_desc,
 				   const char        *out_desc,
 				   Tango::DispLevel  level)
-	:Command(name,in,out,in_desc,out_desc, level)	{};
+	:Command(cmd_name,in,out,in_desc,out_desc, level)	{}
 
-	CleanClass(const char   *name,
+	CleanClass(const char   *cmd_name,
 	               Tango::CmdArgType in,
 				   Tango::CmdArgType out)
-	:Command(name,in,out)	{};
-	~CleanClass() {};
-	
+	:Command(cmd_name,in,out)	{}
+	~CleanClass() {}
+
 	virtual CORBA::Any *execute (Tango::DeviceImpl *dev, const CORBA::Any &any);
 	virtual bool is_allowed (Tango::DeviceImpl *dev, const CORBA::Any &any)
 	{return (static_cast<MBFControl *>(dev))->is_Clean_allowed(any);}
@@ -512,20 +518,20 @@ public:
 class ResetClass : public Tango::Command
 {
 public:
-	ResetClass(const char   *name,
+	ResetClass(const char   *cmd_name,
 	               Tango::CmdArgType in,
 				   Tango::CmdArgType out,
 				   const char        *in_desc,
 				   const char        *out_desc,
 				   Tango::DispLevel  level)
-	:Command(name,in,out,in_desc,out_desc, level)	{};
+	:Command(cmd_name,in,out,in_desc,out_desc, level)	{}
 
-	ResetClass(const char   *name,
+	ResetClass(const char   *cmd_name,
 	               Tango::CmdArgType in,
 				   Tango::CmdArgType out)
-	:Command(name,in,out)	{};
-	~ResetClass() {};
-	
+	:Command(cmd_name,in,out)	{}
+	~ResetClass() {}
+
 	virtual CORBA::Any *execute (Tango::DeviceImpl *dev, const CORBA::Any &any);
 	virtual bool is_allowed (Tango::DeviceImpl *dev, const CORBA::Any &any)
 	{return (static_cast<MBFControl *>(dev))->is_Reset_allowed(any);}
@@ -535,23 +541,69 @@ public:
 class ReLoadClass : public Tango::Command
 {
 public:
-	ReLoadClass(const char   *name,
+	ReLoadClass(const char   *cmd_name,
 	               Tango::CmdArgType in,
 				   Tango::CmdArgType out,
 				   const char        *in_desc,
 				   const char        *out_desc,
 				   Tango::DispLevel  level)
-	:Command(name,in,out,in_desc,out_desc, level)	{};
+	:Command(cmd_name,in,out,in_desc,out_desc, level)	{}
 
-	ReLoadClass(const char   *name,
+	ReLoadClass(const char   *cmd_name,
 	               Tango::CmdArgType in,
 				   Tango::CmdArgType out)
-	:Command(name,in,out)	{};
-	~ReLoadClass() {};
-	
+	:Command(cmd_name,in,out)	{}
+	~ReLoadClass() {}
+
 	virtual CORBA::Any *execute (Tango::DeviceImpl *dev, const CORBA::Any &any);
 	virtual bool is_allowed (Tango::DeviceImpl *dev, const CORBA::Any &any)
 	{return (static_cast<MBFControl *>(dev))->is_ReLoad_allowed(any);}
+};
+
+//	Command StartPermanent class definition
+class StartPermanentClass : public Tango::Command
+{
+public:
+	StartPermanentClass(const char   *cmd_name,
+	               Tango::CmdArgType in,
+				   Tango::CmdArgType out,
+				   const char        *in_desc,
+				   const char        *out_desc,
+				   Tango::DispLevel  level)
+	:Command(cmd_name,in,out,in_desc,out_desc, level)	{}
+
+	StartPermanentClass(const char   *cmd_name,
+	               Tango::CmdArgType in,
+				   Tango::CmdArgType out)
+	:Command(cmd_name,in,out)	{}
+	~StartPermanentClass() {}
+
+	virtual CORBA::Any *execute (Tango::DeviceImpl *dev, const CORBA::Any &any);
+	virtual bool is_allowed (Tango::DeviceImpl *dev, const CORBA::Any &any)
+	{return (static_cast<MBFControl *>(dev))->is_StartPermanent_allowed(any);}
+};
+
+//	Command StopPermanent class definition
+class StopPermanentClass : public Tango::Command
+{
+public:
+	StopPermanentClass(const char   *cmd_name,
+	               Tango::CmdArgType in,
+				   Tango::CmdArgType out,
+				   const char        *in_desc,
+				   const char        *out_desc,
+				   Tango::DispLevel  level)
+	:Command(cmd_name,in,out,in_desc,out_desc, level)	{}
+
+	StopPermanentClass(const char   *cmd_name,
+	               Tango::CmdArgType in,
+				   Tango::CmdArgType out)
+	:Command(cmd_name,in,out)	{}
+	~StopPermanentClass() {}
+
+	virtual CORBA::Any *execute (Tango::DeviceImpl *dev, const CORBA::Any &any);
+	virtual bool is_allowed (Tango::DeviceImpl *dev, const CORBA::Any &any)
+	{return (static_cast<MBFControl *>(dev))->is_StopPermanent_allowed(any);}
 };
 
 
@@ -565,43 +617,42 @@ class __declspec(dllexport)  MBFControlClass : public Tango::DeviceClass
 class MBFControlClass : public Tango::DeviceClass
 #endif
 {
-	/*----- PROTECTED REGION ID(MBFControlClass::Additionnal DServer data members) ENABLED START -----*/
+	/*----- PROTECTED REGION ID(MBFControlClass::Additional DServer data members) ENABLED START -----*/
 	
 	
-	/*----- PROTECTED REGION END -----*/	//	MBFControlClass::Additionnal DServer data members
+	/*----- PROTECTED REGION END -----*/	//	MBFControlClass::Additional DServer data members
 
 	public:
 		//	write class properties data members
 		Tango::DbData	cl_prop;
 		Tango::DbData	cl_def_prop;
 		Tango::DbData	dev_def_prop;
-	
 		//	Method prototypes
 		static MBFControlClass *init(const char *);
 		static MBFControlClass *instance();
 		~MBFControlClass();
-		Tango::DbDatum	get_class_property(string &);
-		Tango::DbDatum	get_default_device_property(string &);
-		Tango::DbDatum	get_default_class_property(string &);
-	
+		Tango::DbDatum	get_class_property(std::string &);
+		Tango::DbDatum	get_default_device_property(std::string &);
+		Tango::DbDatum	get_default_class_property(std::string &);
+
 	protected:
-		MBFControlClass(string &);
+		MBFControlClass(std::string &);
 		static MBFControlClass *_instance;
 		void command_factory();
-		void attribute_factory(vector<Tango::Attr *> &);
+		void attribute_factory(std::vector<Tango::Attr *> &);
 		void pipe_factory();
 		void write_class_property();
 		void set_default_property();
 		void get_class_property();
-		string get_cvstag();
-		string get_cvsroot();
-	
+		std::string get_cvstag();
+		std::string get_cvsroot();
+
 	private:
-		void device_factory(const Tango::DevVarStringArray *);
-		void create_static_attribute_list(vector<Tango::Attr *> &);
-		void erase_dynamic_attributes(const Tango::DevVarStringArray *,vector<Tango::Attr *> &);
-		vector<string>	defaultAttList;
-		Tango::Attr *get_attr_object_by_name(vector<Tango::Attr *> &att_list, string attname);
+		void device_factory(TANGO_UNUSED(const Tango::DevVarStringArray *));
+		void create_static_attribute_list(std::vector<Tango::Attr *> &);
+		void erase_dynamic_attributes(const Tango::DevVarStringArray *,std::vector<Tango::Attr *> &);
+		std::vector<std::string>	defaultAttList;
+		Tango::Attr *get_attr_object_by_name(std::vector<Tango::Attr *> &att_list, std::string attname);
 };
 
 }	//	End of namespace

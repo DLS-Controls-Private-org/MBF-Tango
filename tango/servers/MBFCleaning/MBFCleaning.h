@@ -37,7 +37,7 @@
 #ifndef MBFCleaning_H
 #define MBFCleaning_H
 
-#include <tango.h>
+#include <tango/tango.h>
 
 #define SR_FREQ  355043.0 // SR Clock
 
@@ -48,10 +48,21 @@
 
 /*----- PROTECTED REGION END -----*/	//	MBFCleaning.h
 
+#ifdef TANGO_LOG
+	// cppTango after c934adea (Merge branch 'remove-cout-definition' into 'main', 2022-05-23)
+	// nothing to do
+#else
+	// cppTango 9.3-backports and older
+	#define TANGO_LOG       cout
+	#define TANGO_LOG_INFO  cout2
+	#define TANGO_LOG_DEBUG cout3
+#endif // TANGO_LOG
+
 /**
  *  MBFCleaning class description:
  *    A class for the bunch by bunch cleaning in the SR
  */
+
 
 namespace MBFCleaning_ns
 {
@@ -82,30 +93,34 @@ public:
 		int nbScrapers;
 
 		string configFile;
-		int  configurationLoadFailed;
+		int    configurationLoadFailed;
+    string macroStatus;
+    bool   macroRunning;
+    bool   macroHasFail;
 
-		omni_mutex mutexsweep;
+		omni_mutex mutexmacro;
 
 		void get_scr_open_pos(string scraperName,double *pos);
 		void save_attribute_property(string attName,string propName,double value);
     string get_last_field(string name);
     int get_scr_idx(string attName);
     void split(vector<string> &tokens, const string &text, char sep);
+    string get_pattern_string();
 
 /*----- PROTECTED REGION END -----*/	//	MBFCleaning::Data Members
 
 //	Device property data members
 public:
 	//	MBFDevice:	Name of the MBF device
-	string	mBFDevice;
+	std::string	mBFDevice;
 	//	ExternalShakerDevice:	External shaker used for external sweep
-	string	externalShakerDevice;
+	std::string	externalShakerDevice;
 	//	ConfigFilePath:	Path where are stored configuration files
-	string	configFilePath;
+	std::string	configFilePath;
 	//	ScraperNames:	Scraper device list
-	vector<string>	scraperNames;
+	std::vector<std::string>	scraperNames;
 	//	UsedScrapers:	Array of scraper enable/disable flag
-	vector<Tango::DevShort>	usedScrapers;
+	std::vector<Tango::DevShort>	usedScrapers;
 
 //	Attribute data members
 public:
@@ -116,6 +131,7 @@ public:
 	Tango::DevDouble	*attr_Gain_read;
 	Tango::DevString	*attr_ConfigFileName_read;
 	Tango::DevBoolean	*attr_ExternalSweep_read;
+	Tango::DevState	*attr_SweepState_read;
 	Tango::DevBoolean	*attr_UsedScrapers_read;
 
 //	Constructors and destructors
@@ -126,7 +142,7 @@ public:
 	 *	@param cl	Class.
 	 *	@param s 	Device Name
 	 */
-	MBFCleaning(Tango::DeviceClass *cl,string &s);
+	MBFCleaning(Tango::DeviceClass *cl,std::string &s);
 	/**
 	 * Constructs a newly device object.
 	 *
@@ -145,7 +161,7 @@ public:
 	/**
 	 * The device object destructor.
 	 */
-	~MBFCleaning() {delete_device();};
+	~MBFCleaning();
 
 
 //	Miscellaneous methods
@@ -172,22 +188,22 @@ public:
 public:
 	//--------------------------------------------------------
 	/*
-	 *	Method      : MBFCleaning::read_attr_hardware()
-	 *	Description : Hardware acquisition for attributes.
+	 *	Method     : MBFCleaning::read_attr_hardware()
+	 *	Description: Hardware acquisition for attributes.
 	 */
 	//--------------------------------------------------------
-	virtual void read_attr_hardware(vector<long> &attr_list);
+	virtual void read_attr_hardware(std::vector<long> &attr_list);
 	//--------------------------------------------------------
 	/*
-	 *	Method      : MBFCleaning::write_attr_hardware()
-	 *	Description : Hardware writing for attributes.
+	 *	Method     : MBFCleaning::write_attr_hardware()
+	 *	Description: Hardware writing for attributes.
 	 */
 	//--------------------------------------------------------
-	virtual void write_attr_hardware(vector<long> &attr_list);
+	virtual void write_attr_hardware(std::vector<long> &attr_list);
 
 /**
  *	Attribute FreqMin related methods
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevDouble
  *	Attr type:	Scalar
@@ -197,7 +213,7 @@ public:
 	virtual bool is_FreqMin_allowed(Tango::AttReqType type);
 /**
  *	Attribute FreqMax related methods
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevDouble
  *	Attr type:	Scalar
@@ -207,7 +223,7 @@ public:
 	virtual bool is_FreqMax_allowed(Tango::AttReqType type);
 /**
  *	Attribute SweepPeriod related methods
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevDouble
  *	Attr type:	Scalar
@@ -217,7 +233,7 @@ public:
 	virtual bool is_SweepPeriod_allowed(Tango::AttReqType type);
 /**
  *	Attribute CleaningTime related methods
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevDouble
  *	Attr type:	Scalar
@@ -227,7 +243,7 @@ public:
 	virtual bool is_CleaningTime_allowed(Tango::AttReqType type);
 /**
  *	Attribute Gain related methods
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevDouble
  *	Attr type:	Scalar
@@ -237,7 +253,7 @@ public:
 	virtual bool is_Gain_allowed(Tango::AttReqType type);
 /**
  *	Attribute ConfigFileName related methods
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevString
  *	Attr type:	Scalar
@@ -246,7 +262,7 @@ public:
 	virtual bool is_ConfigFileName_allowed(Tango::AttReqType type);
 /**
  *	Attribute ExternalSweep related methods
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevBoolean
  *	Attr type:	Scalar
@@ -255,8 +271,17 @@ public:
 	virtual void write_ExternalSweep(Tango::WAttribute &attr);
 	virtual bool is_ExternalSweep_allowed(Tango::AttReqType type);
 /**
+ *	Attribute SweepState related methods
+ *
+ *
+ *	Data type:	Tango::DevState
+ *	Attr type:	Scalar
+ */
+	virtual void read_SweepState(Tango::Attribute &attr);
+	virtual bool is_SweepState_allowed(Tango::AttReqType type);
+/**
  *	Attribute UsedScrapers related methods
- *	Description: 
+ *
  *
  *	Data type:	Tango::DevBoolean
  *	Attr type:	Spectrum max = 16
@@ -267,8 +292,8 @@ public:
 
 	//--------------------------------------------------------
 	/**
-	 *	Method      : MBFCleaning::add_dynamic_attributes()
-	 *	Description : Add dynamic attributes if any.
+	 *	Method     : MBFCleaning::add_dynamic_attributes()
+	 *	Description: Add dynamic attributes if any.
 	 */
 	//--------------------------------------------------------
 	void add_dynamic_attributes();
@@ -278,6 +303,13 @@ public:
 
 //	Command related methods
 public:
+	/**
+	 *	Command State related method
+	 *	Description: This command gets the device state (stored in its device_state data member) and returns it to the caller.
+	 *
+	 *	@returns Device state
+	 */
+	virtual Tango::DevState dev_state();
 	/**
 	 *	Command StartCleaning related method
 	 *	Description: Starts the cleaning (Move scrapper down)
@@ -295,7 +327,7 @@ public:
 	virtual bool is_LoadConfigurationFile_allowed(const CORBA::Any &any);
 	/**
 	 *	Command SaveConfigurationFile related method
-	 *	Description: 
+	 *
 	 *
 	 *	@param argin Configuration file name (without the path)
 	 */
@@ -339,19 +371,33 @@ public:
 	virtual bool is_Stop_allowed(const CORBA::Any &any);
 	/**
 	 *	Command SelectScraper related method
-	 *	Description: 
+	 *
 	 *
 	 *	@param argin [0] = Scraper index
-	 *               [1] = Scraper enable=1 / disable=0
+	 *	[1] = Scraper enable=1 / disable=0
 	 */
 	virtual void select_scraper(const Tango::DevVarShortArray *argin);
 	virtual bool is_SelectScraper_allowed(const CORBA::Any &any);
+	/**
+	 *	Command StartPermanent related method
+	 *	Description: Start permanent sweep
+	 *
+	 */
+	virtual void start_permanent();
+	virtual bool is_StartPermanent_allowed(const CORBA::Any &any);
+	/**
+	 *	Command StopPermanent related method
+	 *	Description: Stop permanent sweep
+	 *
+	 */
+	virtual void stop_permanent();
+	virtual bool is_StopPermanent_allowed(const CORBA::Any &any);
 
 
 	//--------------------------------------------------------
 	/**
-	 *	Method      : MBFCleaning::add_dynamic_commands()
-	 *	Description : Add dynamic commands if any.
+	 *	Method     : MBFCleaning::add_dynamic_commands()
+	 *	Description: Add dynamic commands if any.
 	 */
 	//--------------------------------------------------------
 	void add_dynamic_commands();

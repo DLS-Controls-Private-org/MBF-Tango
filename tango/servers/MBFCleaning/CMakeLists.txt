@@ -40,8 +40,7 @@ include(${MAKE_ENV}/cmake_tango.opt)
 #
 set(MBFCLEANING MBFCleaning)
 set(MBFCLEANING_INCLUDE ${CMAKE_SOURCE_DIR})
-set(MBFCLEANING_SRC ${MBFCLEANING}.cpp ${MBFCLEANING}Class.cpp ${MBFCLEANING}StateMachine.cpp CleaningTask.cpp DoAllThread.cpp ScraperDownThread.cpp ScraperUpThread.cpp SweepThread.cpp)
-
+set(MBFCLEANING_SRC ${MBFCLEANING}.cpp ${MBFCLEANING}Class.cpp ${MBFCLEANING}StateMachine.cpp CleaningTask.cpp RunMacro.cpp)
 
 #
 # User additional include, link folders/libraries and source files
