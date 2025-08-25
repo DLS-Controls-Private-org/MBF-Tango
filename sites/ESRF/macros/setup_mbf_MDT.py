@@ -63,7 +63,7 @@ class MBF_HL_NCO1B(MBF_HL_USM, object):
         else:
             Mbf.put('NCO1:ENABLE_S', 'Off')
 
-    def set_param(self, cleaning, attName):
+    def set_param(self, attName):
         Mbf = self.Mbf
         mbfCtrl = self.mbfCtrl
 
@@ -76,13 +76,13 @@ class MBF_HL_NCO1B(MBF_HL_USM, object):
         if attName in ['All', 'Mode', 'Tune']:
             Mbf.put('NCO1:FREQ_S', mbfCtrl.Tune%1)
         
-        return super(MBF_HL_NCO1B, self).set_param(cleaning, attName)
+        return super(MBF_HL_NCO1B, self).set_param(attName)
 
 
 class MBF_HL_GROW_DAMP(MBF_HL_USM, object):
-    def set_param(self, cleaning, attName):
+    def set_param(self, attName):
         Mbf = self.Mbf
-        ret = super(MBF_HL_GROW_DAMP, self).set_param(cleaning, attName)
+        ret = super(MBF_HL_GROW_DAMP, self).set_param(attName)
         Mbf.put('DET:SELECT_S', 1)
         return ret
 
@@ -125,8 +125,8 @@ class MBF_HL_GROW_DAMP(MBF_HL_USM, object):
         fb_state = self.get_feedback_state()
         self.comm_set_feedback_on(fb_state == 'ON')
         self.comm_set_sweep_on(sweep_state)
-        self.set_param(None, 'Detector')
-        self.set_param(None, 'Seq1')
+        self.set_param('Detector')
+        self.set_param('Seq1')
         self.config_triggers()
 
 

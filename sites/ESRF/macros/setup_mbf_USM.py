@@ -207,6 +207,9 @@ class MBF_HL():
                 raise ValueError(('CleaningPattern should have exactly {:.0f} '
                         + 'elements').format(bunch_count))
             clean_pattern[:] = np.sign(user_pattern)
+        elif sr_mode == 'MDT_grow_damp':
+            # Feedback everywhere
+            fb_patterns[0][:] = 1
         else:
             raise NameError('SR mode ' + sr_mode + ' invalid')
         self.mbfCtrl.CleaningPattern = clean_pattern

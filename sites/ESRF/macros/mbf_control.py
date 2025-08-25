@@ -96,7 +96,7 @@ class mbf_control(Macro):
                 firGainList = [48,42,36,30,24,18,12,6,0,-6,-12,-18,-24,-30,
                         -36,-42]
 
-                self.output("Attriute=%s" % attName)
+                self.output("Attribute=%s" % attName)
                 self.output("Mode=%s" % mode)
                 self.output("Tune=%f" % mbfCtrl.Tune)
                 self.output("FeedbackGain=%d dB" %
