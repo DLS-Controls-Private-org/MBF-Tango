@@ -460,7 +460,7 @@ class MBF_HL():
         mbfDevName = Mbf.mbfDevName
 
         actions = []
-        if attName in ['All', 'Mode', 'BlankingInterval']:
+        if attName in ['All', 'Mode']:
             actions += ['reset_mbf']
         if attName in ['All', 'Mode', 'FeedbackFineGain', 'TuneOnSingleBunch',
                 'TuneBunch']:
@@ -477,6 +477,9 @@ class MBF_HL():
                 'SweepRange', 'SweepGainAllBunches', 'SweepGainSingleBunch',
                 'TuneOnSingleBunch', 'Seq1']:
             actions += ['set_sweep']
+        if attName in ['BlankingInterval']:
+            # BlankingInterval is not managed here anymore
+            pass
         
         sweep_state = self.get_sweep_state()
         fb_state = self.get_feedback_state()
@@ -485,7 +488,6 @@ class MBF_HL():
         det_gain = 0            # Don't use the -48 dB scaling (0)
         
         tune_fb = mbfCtrl.Tune
-        blanking_interval = mbfCtrl.BlankingInterval
 
         # Configure external devices
         # --------------------------
@@ -517,8 +519,9 @@ class MBF_HL():
             Mbf.put_axes('ADC:LOOPBACK_S', 'Normal')
             Mbf.put('SEQ:RESET_WIN_S', 0)
 
-            # Ensure the blanking interval is right (this is not axis specific)
-            Mbf.gput('TRG:BLANKING_S', blanking_interval)
+            # note: blanking interval is not axis specific.
+            # This parameter is not managed by the macros.
+            #Mbf.gput('TRG:BLANKING_S', 0)
 
             # Ensure NCO1, NCO2 and NCO_PLL are stopped
             Mbf.put('NCO1:ENABLE_S', 0)
