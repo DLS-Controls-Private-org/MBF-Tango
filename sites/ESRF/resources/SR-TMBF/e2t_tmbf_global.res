@@ -43,6 +43,7 @@ SR-TMBF:INFO:DAC_TAPS*Scalar*Int*READ_ONLY*ATTRIBUTE*INFO_DAC_TAPS,\
 SR-TMBF:INFO:DEVICE*Scalar*String*READ_ONLY*ATTRIBUTE*DEVICE,\ 
 SR-TMBF:INFO:DRIVER_VERSION*Scalar*String*READ_ONLY*ATTRIBUTE*DRIVER_VERSION,\ 
 SR-TMBF:INFO:FPGA_GIT_VERSION*Scalar*String*READ_ONLY*ATTRIBUTE*FPGA_GIT_VERSION,\ 
+SR-TMBF:INFO:FPGA_SEED*Scalar*Int*READ_ONLY*ATTRIBUTE*INFO_FPGA_SEED,\ 
 SR-TMBF:INFO:FPGA_VERSION*Scalar*String*READ_ONLY*ATTRIBUTE*FPGA_VERSION,\ 
 SR-TMBF:INFO:GIT_VERSION*Scalar*String*READ_ONLY*ATTRIBUTE*GIT_VERSION,\ 
 SR-TMBF:INFO:HOSTNAME*Array:256*Int*READ_ONLY*ATTRIBUTE*HOSTNAME,\ 
@@ -169,6 +170,7 @@ srdiag/mbf/utca-global/INFO_DAC_TAPS->description: "Length of DAC pre-emphasis f
 srdiag/mbf/utca-global/DEVICE->description: "Name of AMC525 device"
 srdiag/mbf/utca-global/DRIVER_VERSION->description: "Kernel driver version"
 srdiag/mbf/utca-global/FPGA_GIT_VERSION->description: "Firmware git version"
+srdiag/mbf/utca-global/INFO_FPGA_SEED->description: "Firmware build seed"
 srdiag/mbf/utca-global/FPGA_VERSION->description: "Firmware version"
 srdiag/mbf/utca-global/GIT_VERSION->description: "Software git version"
 srdiag/mbf/utca-global/HOSTNAME->description: "Host name of MBF IOC"
