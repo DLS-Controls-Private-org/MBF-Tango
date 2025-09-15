@@ -211,6 +211,16 @@ e2t_exceptions = {
     {'format': '%3.0f'},
 'NCO:FREQ_S':
     {'format': '%8.5f'},
+'PLL:CTRL:MAX_OFFSET_S':
+    {'format': '%8.7f'},
+'PLL:CTRL:MIN_MAG_S':
+    {'format': '%6.5f'},
+'PLL:CTRL:TARGET_S':
+    {'format': '%5.2f'},
+'PLL:NCO:FREQ_S':
+    {'format': '%10.7f'},
+'PLL:NCO:GAIN_SCALAR_S':
+    {'format': '%6.5f'},
 'SEQ:1:END_FREQ_S':
     {'format': '%8.5f'},
 'SEQ:1:START_FREQ_S':
