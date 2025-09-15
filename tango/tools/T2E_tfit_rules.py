@@ -34,15 +34,20 @@ def make_pv_short(dico_tango):
     for pv_name in dico_tango:
         # Drop first element before ':'
         pv_short = pv_name.split(':', 1)[-1]
-        # Drop axis
-        pv_short = pv_short.replace(horizontal_axis_name, "")
-        pv_short = pv_short.replace(vertical_axis_name, "")
-        # Drop ':Tune:'
-        pv_short = pv_short.replace(":TUNE:", "")
+        # Drop '$(AXIS_H):TUNE:'
+        prefix = horizontal_axis_name + ':TUNE:'
+        if pv_short.startswith(prefix):
+            pv_short = pv_short.replace(prefix, "", 1)
+        # Drop '$(AXIS_V):TUNE:'
+        prefix = vertical_axis_name + ':TUNE:'
+        if pv_short.startswith(prefix):
+            pv_short = pv_short.replace(prefix, "", 1)
         d = dico_tango[pv_name]
         d['__pv_short__'] = pv_short
 
 
 pv_dot_PROC = [ ]
+
 pv_dot_SCAN = [ ]
+
 e2t_exceptions = { }
