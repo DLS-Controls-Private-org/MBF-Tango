@@ -95,7 +95,7 @@ class mbf_control(Macro):
 
         except DevFailed as df:
             raise ValueError("%s %s Failed: %s" %
-                    (mbfCtrlDevName, command, df[0].desc))
+                    (mbfCtrlDevName, command, df.args[0].desc))
 
         output_str = f"[mbf_{command}] End macro\n"
         exec_time = time.time() - tic
