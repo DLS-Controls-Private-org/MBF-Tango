@@ -3,7 +3,7 @@
 import re
 from config import horizontal_axis_number
 
-re_scope = re.compile("\$\(DEVICE\):\$\(AXIS([01])\):")
+re_scope = re.compile(r"\$\(DEVICE\):\$\(AXIS([01])\):")
 
 def get_scope(pv):
     rout = re_scope.match(pv)
