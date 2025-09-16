@@ -43,7 +43,9 @@ SY-TMBF:Y:BUN:0:FIR:ENABLE_S*Array:704*Int*READ_WRITE*ATTRIBUTE*BUN_0_FIR_ENABLE
 SY-TMBF:Y:BUN:0:FIR:GAIN_DB*Array:704*Double*READ_ONLY*ATTRIBUTE*BUN_0_FIR_GAIN_DB,\ 
 SY-TMBF:Y:BUN:0:FIR:GAIN_S*Array:704*Double*READ_WRITE*ATTRIBUTE*BUN_0_FIR_GAIN_S,\ 
 SY-TMBF:Y:BUN:0:FIR:GAIN_SELECT_S*Scalar*Double*READ_WRITE*ATTRIBUTE*BUN_0_FIR_GAIN_SELECT_S,\ 
+SY-TMBF:Y:BUN:0:FIR:SET_DISABLE_ALL_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_0_FIR_SET_DISABLE_ALL_S,\ 
 SY-TMBF:Y:BUN:0:FIR:SET_DISABLE_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_0_FIR_SET_DISABLE_S,\ 
+SY-TMBF:Y:BUN:0:FIR:SET_ENABLE_ALL_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_0_FIR_SET_ENABLE_ALL_S,\ 
 SY-TMBF:Y:BUN:0:FIR:SET_ENABLE_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_0_FIR_SET_ENABLE_S,\ 
 SY-TMBF:Y:BUN:0:FIR:SET_GAIN_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_0_FIR_SET_GAIN_S,\ 
 SY-TMBF:Y:BUN:0:FIR:STATUS*Scalar*String*READ_ONLY*ATTRIBUTE*BUN_0_FIR_STATUS,\ 
@@ -55,7 +57,9 @@ SY-TMBF:Y:BUN:0:NCO1:ENABLE_S*Array:704*Int*READ_WRITE*ATTRIBUTE*BUN_0_NCO1_ENAB
 SY-TMBF:Y:BUN:0:NCO1:GAIN_DB*Array:704*Double*READ_ONLY*ATTRIBUTE*BUN_0_NCO1_GAIN_DB,\ 
 SY-TMBF:Y:BUN:0:NCO1:GAIN_S*Array:704*Double*READ_WRITE*ATTRIBUTE*BUN_0_NCO1_GAIN_S,\ 
 SY-TMBF:Y:BUN:0:NCO1:GAIN_SELECT_S*Scalar*Double*READ_WRITE*ATTRIBUTE*BUN_0_NCO1_GAIN_SELECT_S,\ 
+SY-TMBF:Y:BUN:0:NCO1:SET_DISABLE_ALL_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_0_NCO1_SET_DISABLE_ALL_S,\ 
 SY-TMBF:Y:BUN:0:NCO1:SET_DISABLE_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_0_NCO1_SET_DISABLE_S,\ 
+SY-TMBF:Y:BUN:0:NCO1:SET_ENABLE_ALL_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_0_NCO1_SET_ENABLE_ALL_S,\ 
 SY-TMBF:Y:BUN:0:NCO1:SET_ENABLE_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_0_NCO1_SET_ENABLE_S,\ 
 SY-TMBF:Y:BUN:0:NCO1:SET_GAIN_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_0_NCO1_SET_GAIN_S,\ 
 SY-TMBF:Y:BUN:0:NCO1:STATUS*Scalar*String*READ_ONLY*ATTRIBUTE*BUN_0_NCO1_STATUS,\ 
@@ -63,7 +67,9 @@ SY-TMBF:Y:BUN:0:NCO2:ENABLE_S*Array:704*Int*READ_WRITE*ATTRIBUTE*BUN_0_NCO2_ENAB
 SY-TMBF:Y:BUN:0:NCO2:GAIN_DB*Array:704*Double*READ_ONLY*ATTRIBUTE*BUN_0_NCO2_GAIN_DB,\ 
 SY-TMBF:Y:BUN:0:NCO2:GAIN_S*Array:704*Double*READ_WRITE*ATTRIBUTE*BUN_0_NCO2_GAIN_S,\ 
 SY-TMBF:Y:BUN:0:NCO2:GAIN_SELECT_S*Scalar*Double*READ_WRITE*ATTRIBUTE*BUN_0_NCO2_GAIN_SELECT_S,\ 
+SY-TMBF:Y:BUN:0:NCO2:SET_DISABLE_ALL_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_0_NCO2_SET_DISABLE_ALL_S,\ 
 SY-TMBF:Y:BUN:0:NCO2:SET_DISABLE_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_0_NCO2_SET_DISABLE_S,\ 
+SY-TMBF:Y:BUN:0:NCO2:SET_ENABLE_ALL_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_0_NCO2_SET_ENABLE_ALL_S,\ 
 SY-TMBF:Y:BUN:0:NCO2:SET_ENABLE_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_0_NCO2_SET_ENABLE_S,\ 
 SY-TMBF:Y:BUN:0:NCO2:SET_GAIN_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_0_NCO2_SET_GAIN_S,\ 
 SY-TMBF:Y:BUN:0:NCO2:STATUS*Scalar*String*READ_ONLY*ATTRIBUTE*BUN_0_NCO2_STATUS,\ 
@@ -72,7 +78,9 @@ SY-TMBF:Y:BUN:0:PLL:ENABLE_S*Array:704*Int*READ_WRITE*ATTRIBUTE*BUN_0_PLL_ENABLE
 SY-TMBF:Y:BUN:0:PLL:GAIN_DB*Array:704*Double*READ_ONLY*ATTRIBUTE*BUN_0_PLL_GAIN_DB,\ 
 SY-TMBF:Y:BUN:0:PLL:GAIN_S*Array:704*Double*READ_WRITE*ATTRIBUTE*BUN_0_PLL_GAIN_S,\ 
 SY-TMBF:Y:BUN:0:PLL:GAIN_SELECT_S*Scalar*Double*READ_WRITE*ATTRIBUTE*BUN_0_PLL_GAIN_SELECT_S,\ 
+SY-TMBF:Y:BUN:0:PLL:SET_DISABLE_ALL_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_0_PLL_SET_DISABLE_ALL_S,\ 
 SY-TMBF:Y:BUN:0:PLL:SET_DISABLE_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_0_PLL_SET_DISABLE_S,\ 
+SY-TMBF:Y:BUN:0:PLL:SET_ENABLE_ALL_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_0_PLL_SET_ENABLE_ALL_S,\ 
 SY-TMBF:Y:BUN:0:PLL:SET_ENABLE_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_0_PLL_SET_ENABLE_S,\ 
 SY-TMBF:Y:BUN:0:PLL:SET_GAIN_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_0_PLL_SET_GAIN_S,\ 
 SY-TMBF:Y:BUN:0:PLL:STATUS*Scalar*String*READ_ONLY*ATTRIBUTE*BUN_0_PLL_STATUS,\ 
@@ -82,7 +90,9 @@ SY-TMBF:Y:BUN:0:SEQ:ENABLE_S*Array:704*Int*READ_WRITE*ATTRIBUTE*BUN_0_SEQ_ENABLE
 SY-TMBF:Y:BUN:0:SEQ:GAIN_DB*Array:704*Double*READ_ONLY*ATTRIBUTE*BUN_0_SEQ_GAIN_DB,\ 
 SY-TMBF:Y:BUN:0:SEQ:GAIN_S*Array:704*Double*READ_WRITE*ATTRIBUTE*BUN_0_SEQ_GAIN_S,\ 
 SY-TMBF:Y:BUN:0:SEQ:GAIN_SELECT_S*Scalar*Double*READ_WRITE*ATTRIBUTE*BUN_0_SEQ_GAIN_SELECT_S,\ 
+SY-TMBF:Y:BUN:0:SEQ:SET_DISABLE_ALL_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_0_SEQ_SET_DISABLE_ALL_S,\ 
 SY-TMBF:Y:BUN:0:SEQ:SET_DISABLE_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_0_SEQ_SET_DISABLE_S,\ 
+SY-TMBF:Y:BUN:0:SEQ:SET_ENABLE_ALL_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_0_SEQ_SET_ENABLE_ALL_S,\ 
 SY-TMBF:Y:BUN:0:SEQ:SET_ENABLE_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_0_SEQ_SET_ENABLE_S,\ 
 SY-TMBF:Y:BUN:0:SEQ:SET_GAIN_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_0_SEQ_SET_GAIN_S,\ 
 SY-TMBF:Y:BUN:0:SEQ:STATUS*Scalar*String*READ_ONLY*ATTRIBUTE*BUN_0_SEQ_STATUS,\ 
@@ -92,7 +102,9 @@ SY-TMBF:Y:BUN:1:FIR:ENABLE_S*Array:704*Int*READ_WRITE*ATTRIBUTE*BUN_1_FIR_ENABLE
 SY-TMBF:Y:BUN:1:FIR:GAIN_DB*Array:704*Double*READ_ONLY*ATTRIBUTE*BUN_1_FIR_GAIN_DB,\ 
 SY-TMBF:Y:BUN:1:FIR:GAIN_S*Array:704*Double*READ_WRITE*ATTRIBUTE*BUN_1_FIR_GAIN_S,\ 
 SY-TMBF:Y:BUN:1:FIR:GAIN_SELECT_S*Scalar*Double*READ_WRITE*ATTRIBUTE*BUN_1_FIR_GAIN_SELECT_S,\ 
+SY-TMBF:Y:BUN:1:FIR:SET_DISABLE_ALL_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_1_FIR_SET_DISABLE_ALL_S,\ 
 SY-TMBF:Y:BUN:1:FIR:SET_DISABLE_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_1_FIR_SET_DISABLE_S,\ 
+SY-TMBF:Y:BUN:1:FIR:SET_ENABLE_ALL_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_1_FIR_SET_ENABLE_ALL_S,\ 
 SY-TMBF:Y:BUN:1:FIR:SET_ENABLE_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_1_FIR_SET_ENABLE_S,\ 
 SY-TMBF:Y:BUN:1:FIR:SET_GAIN_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_1_FIR_SET_GAIN_S,\ 
 SY-TMBF:Y:BUN:1:FIR:STATUS*Scalar*String*READ_ONLY*ATTRIBUTE*BUN_1_FIR_STATUS,\ 
@@ -104,7 +116,9 @@ SY-TMBF:Y:BUN:1:NCO1:ENABLE_S*Array:704*Int*READ_WRITE*ATTRIBUTE*BUN_1_NCO1_ENAB
 SY-TMBF:Y:BUN:1:NCO1:GAIN_DB*Array:704*Double*READ_ONLY*ATTRIBUTE*BUN_1_NCO1_GAIN_DB,\ 
 SY-TMBF:Y:BUN:1:NCO1:GAIN_S*Array:704*Double*READ_WRITE*ATTRIBUTE*BUN_1_NCO1_GAIN_S,\ 
 SY-TMBF:Y:BUN:1:NCO1:GAIN_SELECT_S*Scalar*Double*READ_WRITE*ATTRIBUTE*BUN_1_NCO1_GAIN_SELECT_S,\ 
+SY-TMBF:Y:BUN:1:NCO1:SET_DISABLE_ALL_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_1_NCO1_SET_DISABLE_ALL_S,\ 
 SY-TMBF:Y:BUN:1:NCO1:SET_DISABLE_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_1_NCO1_SET_DISABLE_S,\ 
+SY-TMBF:Y:BUN:1:NCO1:SET_ENABLE_ALL_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_1_NCO1_SET_ENABLE_ALL_S,\ 
 SY-TMBF:Y:BUN:1:NCO1:SET_ENABLE_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_1_NCO1_SET_ENABLE_S,\ 
 SY-TMBF:Y:BUN:1:NCO1:SET_GAIN_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_1_NCO1_SET_GAIN_S,\ 
 SY-TMBF:Y:BUN:1:NCO1:STATUS*Scalar*String*READ_ONLY*ATTRIBUTE*BUN_1_NCO1_STATUS,\ 
@@ -112,7 +126,9 @@ SY-TMBF:Y:BUN:1:NCO2:ENABLE_S*Array:704*Int*READ_WRITE*ATTRIBUTE*BUN_1_NCO2_ENAB
 SY-TMBF:Y:BUN:1:NCO2:GAIN_DB*Array:704*Double*READ_ONLY*ATTRIBUTE*BUN_1_NCO2_GAIN_DB,\ 
 SY-TMBF:Y:BUN:1:NCO2:GAIN_S*Array:704*Double*READ_WRITE*ATTRIBUTE*BUN_1_NCO2_GAIN_S,\ 
 SY-TMBF:Y:BUN:1:NCO2:GAIN_SELECT_S*Scalar*Double*READ_WRITE*ATTRIBUTE*BUN_1_NCO2_GAIN_SELECT_S,\ 
+SY-TMBF:Y:BUN:1:NCO2:SET_DISABLE_ALL_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_1_NCO2_SET_DISABLE_ALL_S,\ 
 SY-TMBF:Y:BUN:1:NCO2:SET_DISABLE_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_1_NCO2_SET_DISABLE_S,\ 
+SY-TMBF:Y:BUN:1:NCO2:SET_ENABLE_ALL_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_1_NCO2_SET_ENABLE_ALL_S,\ 
 SY-TMBF:Y:BUN:1:NCO2:SET_ENABLE_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_1_NCO2_SET_ENABLE_S,\ 
 SY-TMBF:Y:BUN:1:NCO2:SET_GAIN_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_1_NCO2_SET_GAIN_S,\ 
 SY-TMBF:Y:BUN:1:NCO2:STATUS*Scalar*String*READ_ONLY*ATTRIBUTE*BUN_1_NCO2_STATUS,\ 
@@ -121,7 +137,9 @@ SY-TMBF:Y:BUN:1:PLL:ENABLE_S*Array:704*Int*READ_WRITE*ATTRIBUTE*BUN_1_PLL_ENABLE
 SY-TMBF:Y:BUN:1:PLL:GAIN_DB*Array:704*Double*READ_ONLY*ATTRIBUTE*BUN_1_PLL_GAIN_DB,\ 
 SY-TMBF:Y:BUN:1:PLL:GAIN_S*Array:704*Double*READ_WRITE*ATTRIBUTE*BUN_1_PLL_GAIN_S,\ 
 SY-TMBF:Y:BUN:1:PLL:GAIN_SELECT_S*Scalar*Double*READ_WRITE*ATTRIBUTE*BUN_1_PLL_GAIN_SELECT_S,\ 
+SY-TMBF:Y:BUN:1:PLL:SET_DISABLE_ALL_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_1_PLL_SET_DISABLE_ALL_S,\ 
 SY-TMBF:Y:BUN:1:PLL:SET_DISABLE_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_1_PLL_SET_DISABLE_S,\ 
+SY-TMBF:Y:BUN:1:PLL:SET_ENABLE_ALL_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_1_PLL_SET_ENABLE_ALL_S,\ 
 SY-TMBF:Y:BUN:1:PLL:SET_ENABLE_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_1_PLL_SET_ENABLE_S,\ 
 SY-TMBF:Y:BUN:1:PLL:SET_GAIN_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_1_PLL_SET_GAIN_S,\ 
 SY-TMBF:Y:BUN:1:PLL:STATUS*Scalar*String*READ_ONLY*ATTRIBUTE*BUN_1_PLL_STATUS,\ 
@@ -131,7 +149,9 @@ SY-TMBF:Y:BUN:1:SEQ:ENABLE_S*Array:704*Int*READ_WRITE*ATTRIBUTE*BUN_1_SEQ_ENABLE
 SY-TMBF:Y:BUN:1:SEQ:GAIN_DB*Array:704*Double*READ_ONLY*ATTRIBUTE*BUN_1_SEQ_GAIN_DB,\ 
 SY-TMBF:Y:BUN:1:SEQ:GAIN_S*Array:704*Double*READ_WRITE*ATTRIBUTE*BUN_1_SEQ_GAIN_S,\ 
 SY-TMBF:Y:BUN:1:SEQ:GAIN_SELECT_S*Scalar*Double*READ_WRITE*ATTRIBUTE*BUN_1_SEQ_GAIN_SELECT_S,\ 
+SY-TMBF:Y:BUN:1:SEQ:SET_DISABLE_ALL_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_1_SEQ_SET_DISABLE_ALL_S,\ 
 SY-TMBF:Y:BUN:1:SEQ:SET_DISABLE_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_1_SEQ_SET_DISABLE_S,\ 
+SY-TMBF:Y:BUN:1:SEQ:SET_ENABLE_ALL_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_1_SEQ_SET_ENABLE_ALL_S,\ 
 SY-TMBF:Y:BUN:1:SEQ:SET_ENABLE_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_1_SEQ_SET_ENABLE_S,\ 
 SY-TMBF:Y:BUN:1:SEQ:SET_GAIN_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_1_SEQ_SET_GAIN_S,\ 
 SY-TMBF:Y:BUN:1:SEQ:STATUS*Scalar*String*READ_ONLY*ATTRIBUTE*BUN_1_SEQ_STATUS,\ 
@@ -141,7 +161,9 @@ SY-TMBF:Y:BUN:2:FIR:ENABLE_S*Array:704*Int*READ_WRITE*ATTRIBUTE*BUN_2_FIR_ENABLE
 SY-TMBF:Y:BUN:2:FIR:GAIN_DB*Array:704*Double*READ_ONLY*ATTRIBUTE*BUN_2_FIR_GAIN_DB,\ 
 SY-TMBF:Y:BUN:2:FIR:GAIN_S*Array:704*Double*READ_WRITE*ATTRIBUTE*BUN_2_FIR_GAIN_S,\ 
 SY-TMBF:Y:BUN:2:FIR:GAIN_SELECT_S*Scalar*Double*READ_WRITE*ATTRIBUTE*BUN_2_FIR_GAIN_SELECT_S,\ 
+SY-TMBF:Y:BUN:2:FIR:SET_DISABLE_ALL_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_2_FIR_SET_DISABLE_ALL_S,\ 
 SY-TMBF:Y:BUN:2:FIR:SET_DISABLE_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_2_FIR_SET_DISABLE_S,\ 
+SY-TMBF:Y:BUN:2:FIR:SET_ENABLE_ALL_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_2_FIR_SET_ENABLE_ALL_S,\ 
 SY-TMBF:Y:BUN:2:FIR:SET_ENABLE_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_2_FIR_SET_ENABLE_S,\ 
 SY-TMBF:Y:BUN:2:FIR:SET_GAIN_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_2_FIR_SET_GAIN_S,\ 
 SY-TMBF:Y:BUN:2:FIR:STATUS*Scalar*String*READ_ONLY*ATTRIBUTE*BUN_2_FIR_STATUS,\ 
@@ -153,7 +175,9 @@ SY-TMBF:Y:BUN:2:NCO1:ENABLE_S*Array:704*Int*READ_WRITE*ATTRIBUTE*BUN_2_NCO1_ENAB
 SY-TMBF:Y:BUN:2:NCO1:GAIN_DB*Array:704*Double*READ_ONLY*ATTRIBUTE*BUN_2_NCO1_GAIN_DB,\ 
 SY-TMBF:Y:BUN:2:NCO1:GAIN_S*Array:704*Double*READ_WRITE*ATTRIBUTE*BUN_2_NCO1_GAIN_S,\ 
 SY-TMBF:Y:BUN:2:NCO1:GAIN_SELECT_S*Scalar*Double*READ_WRITE*ATTRIBUTE*BUN_2_NCO1_GAIN_SELECT_S,\ 
+SY-TMBF:Y:BUN:2:NCO1:SET_DISABLE_ALL_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_2_NCO1_SET_DISABLE_ALL_S,\ 
 SY-TMBF:Y:BUN:2:NCO1:SET_DISABLE_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_2_NCO1_SET_DISABLE_S,\ 
+SY-TMBF:Y:BUN:2:NCO1:SET_ENABLE_ALL_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_2_NCO1_SET_ENABLE_ALL_S,\ 
 SY-TMBF:Y:BUN:2:NCO1:SET_ENABLE_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_2_NCO1_SET_ENABLE_S,\ 
 SY-TMBF:Y:BUN:2:NCO1:SET_GAIN_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_2_NCO1_SET_GAIN_S,\ 
 SY-TMBF:Y:BUN:2:NCO1:STATUS*Scalar*String*READ_ONLY*ATTRIBUTE*BUN_2_NCO1_STATUS,\ 
@@ -161,7 +185,9 @@ SY-TMBF:Y:BUN:2:NCO2:ENABLE_S*Array:704*Int*READ_WRITE*ATTRIBUTE*BUN_2_NCO2_ENAB
 SY-TMBF:Y:BUN:2:NCO2:GAIN_DB*Array:704*Double*READ_ONLY*ATTRIBUTE*BUN_2_NCO2_GAIN_DB,\ 
 SY-TMBF:Y:BUN:2:NCO2:GAIN_S*Array:704*Double*READ_WRITE*ATTRIBUTE*BUN_2_NCO2_GAIN_S,\ 
 SY-TMBF:Y:BUN:2:NCO2:GAIN_SELECT_S*Scalar*Double*READ_WRITE*ATTRIBUTE*BUN_2_NCO2_GAIN_SELECT_S,\ 
+SY-TMBF:Y:BUN:2:NCO2:SET_DISABLE_ALL_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_2_NCO2_SET_DISABLE_ALL_S,\ 
 SY-TMBF:Y:BUN:2:NCO2:SET_DISABLE_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_2_NCO2_SET_DISABLE_S,\ 
+SY-TMBF:Y:BUN:2:NCO2:SET_ENABLE_ALL_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_2_NCO2_SET_ENABLE_ALL_S,\ 
 SY-TMBF:Y:BUN:2:NCO2:SET_ENABLE_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_2_NCO2_SET_ENABLE_S,\ 
 SY-TMBF:Y:BUN:2:NCO2:SET_GAIN_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_2_NCO2_SET_GAIN_S,\ 
 SY-TMBF:Y:BUN:2:NCO2:STATUS*Scalar*String*READ_ONLY*ATTRIBUTE*BUN_2_NCO2_STATUS,\ 
@@ -170,7 +196,9 @@ SY-TMBF:Y:BUN:2:PLL:ENABLE_S*Array:704*Int*READ_WRITE*ATTRIBUTE*BUN_2_PLL_ENABLE
 SY-TMBF:Y:BUN:2:PLL:GAIN_DB*Array:704*Double*READ_ONLY*ATTRIBUTE*BUN_2_PLL_GAIN_DB,\ 
 SY-TMBF:Y:BUN:2:PLL:GAIN_S*Array:704*Double*READ_WRITE*ATTRIBUTE*BUN_2_PLL_GAIN_S,\ 
 SY-TMBF:Y:BUN:2:PLL:GAIN_SELECT_S*Scalar*Double*READ_WRITE*ATTRIBUTE*BUN_2_PLL_GAIN_SELECT_S,\ 
+SY-TMBF:Y:BUN:2:PLL:SET_DISABLE_ALL_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_2_PLL_SET_DISABLE_ALL_S,\ 
 SY-TMBF:Y:BUN:2:PLL:SET_DISABLE_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_2_PLL_SET_DISABLE_S,\ 
+SY-TMBF:Y:BUN:2:PLL:SET_ENABLE_ALL_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_2_PLL_SET_ENABLE_ALL_S,\ 
 SY-TMBF:Y:BUN:2:PLL:SET_ENABLE_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_2_PLL_SET_ENABLE_S,\ 
 SY-TMBF:Y:BUN:2:PLL:SET_GAIN_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_2_PLL_SET_GAIN_S,\ 
 SY-TMBF:Y:BUN:2:PLL:STATUS*Scalar*String*READ_ONLY*ATTRIBUTE*BUN_2_PLL_STATUS,\ 
@@ -180,7 +208,9 @@ SY-TMBF:Y:BUN:2:SEQ:ENABLE_S*Array:704*Int*READ_WRITE*ATTRIBUTE*BUN_2_SEQ_ENABLE
 SY-TMBF:Y:BUN:2:SEQ:GAIN_DB*Array:704*Double*READ_ONLY*ATTRIBUTE*BUN_2_SEQ_GAIN_DB,\ 
 SY-TMBF:Y:BUN:2:SEQ:GAIN_S*Array:704*Double*READ_WRITE*ATTRIBUTE*BUN_2_SEQ_GAIN_S,\ 
 SY-TMBF:Y:BUN:2:SEQ:GAIN_SELECT_S*Scalar*Double*READ_WRITE*ATTRIBUTE*BUN_2_SEQ_GAIN_SELECT_S,\ 
+SY-TMBF:Y:BUN:2:SEQ:SET_DISABLE_ALL_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_2_SEQ_SET_DISABLE_ALL_S,\ 
 SY-TMBF:Y:BUN:2:SEQ:SET_DISABLE_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_2_SEQ_SET_DISABLE_S,\ 
+SY-TMBF:Y:BUN:2:SEQ:SET_ENABLE_ALL_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_2_SEQ_SET_ENABLE_ALL_S,\ 
 SY-TMBF:Y:BUN:2:SEQ:SET_ENABLE_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_2_SEQ_SET_ENABLE_S,\ 
 SY-TMBF:Y:BUN:2:SEQ:SET_GAIN_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_2_SEQ_SET_GAIN_S,\ 
 SY-TMBF:Y:BUN:2:SEQ:STATUS*Scalar*String*READ_ONLY*ATTRIBUTE*BUN_2_SEQ_STATUS,\ 
@@ -190,7 +220,9 @@ SY-TMBF:Y:BUN:3:FIR:ENABLE_S*Array:704*Int*READ_WRITE*ATTRIBUTE*BUN_3_FIR_ENABLE
 SY-TMBF:Y:BUN:3:FIR:GAIN_DB*Array:704*Double*READ_ONLY*ATTRIBUTE*BUN_3_FIR_GAIN_DB,\ 
 SY-TMBF:Y:BUN:3:FIR:GAIN_S*Array:704*Double*READ_WRITE*ATTRIBUTE*BUN_3_FIR_GAIN_S,\ 
 SY-TMBF:Y:BUN:3:FIR:GAIN_SELECT_S*Scalar*Double*READ_WRITE*ATTRIBUTE*BUN_3_FIR_GAIN_SELECT_S,\ 
+SY-TMBF:Y:BUN:3:FIR:SET_DISABLE_ALL_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_3_FIR_SET_DISABLE_ALL_S,\ 
 SY-TMBF:Y:BUN:3:FIR:SET_DISABLE_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_3_FIR_SET_DISABLE_S,\ 
+SY-TMBF:Y:BUN:3:FIR:SET_ENABLE_ALL_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_3_FIR_SET_ENABLE_ALL_S,\ 
 SY-TMBF:Y:BUN:3:FIR:SET_ENABLE_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_3_FIR_SET_ENABLE_S,\ 
 SY-TMBF:Y:BUN:3:FIR:SET_GAIN_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_3_FIR_SET_GAIN_S,\ 
 SY-TMBF:Y:BUN:3:FIR:STATUS*Scalar*String*READ_ONLY*ATTRIBUTE*BUN_3_FIR_STATUS,\ 
@@ -202,7 +234,9 @@ SY-TMBF:Y:BUN:3:NCO1:ENABLE_S*Array:704*Int*READ_WRITE*ATTRIBUTE*BUN_3_NCO1_ENAB
 SY-TMBF:Y:BUN:3:NCO1:GAIN_DB*Array:704*Double*READ_ONLY*ATTRIBUTE*BUN_3_NCO1_GAIN_DB,\ 
 SY-TMBF:Y:BUN:3:NCO1:GAIN_S*Array:704*Double*READ_WRITE*ATTRIBUTE*BUN_3_NCO1_GAIN_S,\ 
 SY-TMBF:Y:BUN:3:NCO1:GAIN_SELECT_S*Scalar*Double*READ_WRITE*ATTRIBUTE*BUN_3_NCO1_GAIN_SELECT_S,\ 
+SY-TMBF:Y:BUN:3:NCO1:SET_DISABLE_ALL_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_3_NCO1_SET_DISABLE_ALL_S,\ 
 SY-TMBF:Y:BUN:3:NCO1:SET_DISABLE_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_3_NCO1_SET_DISABLE_S,\ 
+SY-TMBF:Y:BUN:3:NCO1:SET_ENABLE_ALL_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_3_NCO1_SET_ENABLE_ALL_S,\ 
 SY-TMBF:Y:BUN:3:NCO1:SET_ENABLE_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_3_NCO1_SET_ENABLE_S,\ 
 SY-TMBF:Y:BUN:3:NCO1:SET_GAIN_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_3_NCO1_SET_GAIN_S,\ 
 SY-TMBF:Y:BUN:3:NCO1:STATUS*Scalar*String*READ_ONLY*ATTRIBUTE*BUN_3_NCO1_STATUS,\ 
@@ -210,7 +244,9 @@ SY-TMBF:Y:BUN:3:NCO2:ENABLE_S*Array:704*Int*READ_WRITE*ATTRIBUTE*BUN_3_NCO2_ENAB
 SY-TMBF:Y:BUN:3:NCO2:GAIN_DB*Array:704*Double*READ_ONLY*ATTRIBUTE*BUN_3_NCO2_GAIN_DB,\ 
 SY-TMBF:Y:BUN:3:NCO2:GAIN_S*Array:704*Double*READ_WRITE*ATTRIBUTE*BUN_3_NCO2_GAIN_S,\ 
 SY-TMBF:Y:BUN:3:NCO2:GAIN_SELECT_S*Scalar*Double*READ_WRITE*ATTRIBUTE*BUN_3_NCO2_GAIN_SELECT_S,\ 
+SY-TMBF:Y:BUN:3:NCO2:SET_DISABLE_ALL_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_3_NCO2_SET_DISABLE_ALL_S,\ 
 SY-TMBF:Y:BUN:3:NCO2:SET_DISABLE_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_3_NCO2_SET_DISABLE_S,\ 
+SY-TMBF:Y:BUN:3:NCO2:SET_ENABLE_ALL_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_3_NCO2_SET_ENABLE_ALL_S,\ 
 SY-TMBF:Y:BUN:3:NCO2:SET_ENABLE_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_3_NCO2_SET_ENABLE_S,\ 
 SY-TMBF:Y:BUN:3:NCO2:SET_GAIN_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_3_NCO2_SET_GAIN_S,\ 
 SY-TMBF:Y:BUN:3:NCO2:STATUS*Scalar*String*READ_ONLY*ATTRIBUTE*BUN_3_NCO2_STATUS,\ 
@@ -219,7 +255,9 @@ SY-TMBF:Y:BUN:3:PLL:ENABLE_S*Array:704*Int*READ_WRITE*ATTRIBUTE*BUN_3_PLL_ENABLE
 SY-TMBF:Y:BUN:3:PLL:GAIN_DB*Array:704*Double*READ_ONLY*ATTRIBUTE*BUN_3_PLL_GAIN_DB,\ 
 SY-TMBF:Y:BUN:3:PLL:GAIN_S*Array:704*Double*READ_WRITE*ATTRIBUTE*BUN_3_PLL_GAIN_S,\ 
 SY-TMBF:Y:BUN:3:PLL:GAIN_SELECT_S*Scalar*Double*READ_WRITE*ATTRIBUTE*BUN_3_PLL_GAIN_SELECT_S,\ 
+SY-TMBF:Y:BUN:3:PLL:SET_DISABLE_ALL_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_3_PLL_SET_DISABLE_ALL_S,\ 
 SY-TMBF:Y:BUN:3:PLL:SET_DISABLE_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_3_PLL_SET_DISABLE_S,\ 
+SY-TMBF:Y:BUN:3:PLL:SET_ENABLE_ALL_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_3_PLL_SET_ENABLE_ALL_S,\ 
 SY-TMBF:Y:BUN:3:PLL:SET_ENABLE_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_3_PLL_SET_ENABLE_S,\ 
 SY-TMBF:Y:BUN:3:PLL:SET_GAIN_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_3_PLL_SET_GAIN_S,\ 
 SY-TMBF:Y:BUN:3:PLL:STATUS*Scalar*String*READ_ONLY*ATTRIBUTE*BUN_3_PLL_STATUS,\ 
@@ -229,7 +267,9 @@ SY-TMBF:Y:BUN:3:SEQ:ENABLE_S*Array:704*Int*READ_WRITE*ATTRIBUTE*BUN_3_SEQ_ENABLE
 SY-TMBF:Y:BUN:3:SEQ:GAIN_DB*Array:704*Double*READ_ONLY*ATTRIBUTE*BUN_3_SEQ_GAIN_DB,\ 
 SY-TMBF:Y:BUN:3:SEQ:GAIN_S*Array:704*Double*READ_WRITE*ATTRIBUTE*BUN_3_SEQ_GAIN_S,\ 
 SY-TMBF:Y:BUN:3:SEQ:GAIN_SELECT_S*Scalar*Double*READ_WRITE*ATTRIBUTE*BUN_3_SEQ_GAIN_SELECT_S,\ 
+SY-TMBF:Y:BUN:3:SEQ:SET_DISABLE_ALL_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_3_SEQ_SET_DISABLE_ALL_S,\ 
 SY-TMBF:Y:BUN:3:SEQ:SET_DISABLE_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_3_SEQ_SET_DISABLE_S,\ 
+SY-TMBF:Y:BUN:3:SEQ:SET_ENABLE_ALL_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_3_SEQ_SET_ENABLE_ALL_S,\ 
 SY-TMBF:Y:BUN:3:SEQ:SET_ENABLE_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_3_SEQ_SET_ENABLE_S,\ 
 SY-TMBF:Y:BUN:3:SEQ:SET_GAIN_S*Scalar*Int*READ_WRITE*ATTRIBUTE*BUN_3_SEQ_SET_GAIN_S,\ 
 SY-TMBF:Y:BUN:3:SEQ:STATUS*Scalar*String*READ_ONLY*ATTRIBUTE*BUN_3_SEQ_STATUS,\ 
@@ -585,7 +625,7 @@ SY-TMBF:Y:SEQ:STATUS:FAN*Scalar*Int*READ_WRITE*ATTRIBUTE*SEQ_STATUS_FAN,\
 SY-TMBF:Y:SEQ:STATUS:READ_S*Scalar*Int*READ_WRITE*ATTRIBUTE*SEQ_STATUS_READ_S,\ 
 SY-TMBF:Y:SEQ:SUPER:COUNT*Scalar*Int*READ_ONLY*ATTRIBUTE*SEQ_SUPER_COUNT,\ 
 SY-TMBF:Y:SEQ:SUPER:COUNT_S*Scalar*Int*READ_WRITE*ATTRIBUTE*SEQ_SUPER_COUNT_S,\ 
-SY-TMBF:Y:SEQ:SUPER:OFFSET_S*Array:1024*Double*READ_WRITE*ATTRIBUTE*SEQ_SUPER_OFFSET_S,\ 
+SY-TMBF:Y:SEQ:SUPER:OFFSET_S*Array:2048*Double*READ_WRITE*ATTRIBUTE*SEQ_SUPER_OFFSET_S,\ 
 SY-TMBF:Y:SEQ:SUPER:RESET_S*Scalar*Int*READ_WRITE*ATTRIBUTE*SEQ_SUPER_RESET_S,\ 
 SY-TMBF:Y:SEQ:TOTAL:DURATION*Scalar*Double*READ_ONLY*ATTRIBUTE*SEQ_TOTAL_DURATION,\ 
 SY-TMBF:Y:SEQ:TOTAL:DURATION:S*Scalar*Double*READ_ONLY*ATTRIBUTE*SEQ_TOTAL_DURATION_S,\ 
@@ -689,7 +729,9 @@ sy/d-mbf/utca-vertical/BUN_0_FIR_GAIN_SELECT_S->description: "Select FIR gain"
 sy/d-mbf/utca-vertical/BUN_0_FIR_GAIN_SELECT_S->min_value: "-8.0"
 sy/d-mbf/utca-vertical/BUN_0_FIR_GAIN_SELECT_S->max_value: "8.0"
 sy/d-mbf/utca-vertical/BUN_0_FIR_GAIN_SELECT_S->format: "%1.4f"
+sy/d-mbf/utca-vertical/BUN_0_FIR_SET_DISABLE_ALL_S->description: "Set disable for FIR"
 sy/d-mbf/utca-vertical/BUN_0_FIR_SET_DISABLE_S->description: "Set disable for FIR"
+sy/d-mbf/utca-vertical/BUN_0_FIR_SET_ENABLE_ALL_S->description: "Set enable for FIR"
 sy/d-mbf/utca-vertical/BUN_0_FIR_SET_ENABLE_S->description: "Set enable for FIR"
 sy/d-mbf/utca-vertical/BUN_0_FIR_SET_GAIN_S->description: "Set FIR gain"
 sy/d-mbf/utca-vertical/BUN_0_FIR_STATUS->description: "Bank 0 FIR source status"
@@ -706,7 +748,9 @@ sy/d-mbf/utca-vertical/BUN_0_NCO1_GAIN_SELECT_S->description: "Select NCO1 gain"
 sy/d-mbf/utca-vertical/BUN_0_NCO1_GAIN_SELECT_S->min_value: "-8.0"
 sy/d-mbf/utca-vertical/BUN_0_NCO1_GAIN_SELECT_S->max_value: "8.0"
 sy/d-mbf/utca-vertical/BUN_0_NCO1_GAIN_SELECT_S->format: "%1.4f"
+sy/d-mbf/utca-vertical/BUN_0_NCO1_SET_DISABLE_ALL_S->description: "Set disable for NCO1"
 sy/d-mbf/utca-vertical/BUN_0_NCO1_SET_DISABLE_S->description: "Set disable for NCO1"
+sy/d-mbf/utca-vertical/BUN_0_NCO1_SET_ENABLE_ALL_S->description: "Set enable for NCO1"
 sy/d-mbf/utca-vertical/BUN_0_NCO1_SET_ENABLE_S->description: "Set enable for NCO1"
 sy/d-mbf/utca-vertical/BUN_0_NCO1_SET_GAIN_S->description: "Set NCO1 gain"
 sy/d-mbf/utca-vertical/BUN_0_NCO1_STATUS->description: "Bank 0 NCO1 source status"
@@ -718,7 +762,9 @@ sy/d-mbf/utca-vertical/BUN_0_NCO2_GAIN_SELECT_S->description: "Select NCO2 gain"
 sy/d-mbf/utca-vertical/BUN_0_NCO2_GAIN_SELECT_S->min_value: "-8.0"
 sy/d-mbf/utca-vertical/BUN_0_NCO2_GAIN_SELECT_S->max_value: "8.0"
 sy/d-mbf/utca-vertical/BUN_0_NCO2_GAIN_SELECT_S->format: "%1.4f"
+sy/d-mbf/utca-vertical/BUN_0_NCO2_SET_DISABLE_ALL_S->description: "Set disable for NCO2"
 sy/d-mbf/utca-vertical/BUN_0_NCO2_SET_DISABLE_S->description: "Set disable for NCO2"
+sy/d-mbf/utca-vertical/BUN_0_NCO2_SET_ENABLE_ALL_S->description: "Set enable for NCO2"
 sy/d-mbf/utca-vertical/BUN_0_NCO2_SET_ENABLE_S->description: "Set enable for NCO2"
 sy/d-mbf/utca-vertical/BUN_0_NCO2_SET_GAIN_S->description: "Set NCO2 gain"
 sy/d-mbf/utca-vertical/BUN_0_NCO2_STATUS->description: "Bank 0 NCO2 source status"
@@ -731,7 +777,9 @@ sy/d-mbf/utca-vertical/BUN_0_PLL_GAIN_SELECT_S->description: "Select PLL gain"
 sy/d-mbf/utca-vertical/BUN_0_PLL_GAIN_SELECT_S->min_value: "-8.0"
 sy/d-mbf/utca-vertical/BUN_0_PLL_GAIN_SELECT_S->max_value: "8.0"
 sy/d-mbf/utca-vertical/BUN_0_PLL_GAIN_SELECT_S->format: "%1.4f"
+sy/d-mbf/utca-vertical/BUN_0_PLL_SET_DISABLE_ALL_S->description: "Set disable for PLL"
 sy/d-mbf/utca-vertical/BUN_0_PLL_SET_DISABLE_S->description: "Set disable for PLL"
+sy/d-mbf/utca-vertical/BUN_0_PLL_SET_ENABLE_ALL_S->description: "Set enable for PLL"
 sy/d-mbf/utca-vertical/BUN_0_PLL_SET_ENABLE_S->description: "Set enable for PLL"
 sy/d-mbf/utca-vertical/BUN_0_PLL_SET_GAIN_S->description: "Set PLL gain"
 sy/d-mbf/utca-vertical/BUN_0_PLL_STATUS->description: "Bank 0 PLL source status"
@@ -745,7 +793,9 @@ sy/d-mbf/utca-vertical/BUN_0_SEQ_GAIN_SELECT_S->description: "Select SEQ gain"
 sy/d-mbf/utca-vertical/BUN_0_SEQ_GAIN_SELECT_S->min_value: "-8.0"
 sy/d-mbf/utca-vertical/BUN_0_SEQ_GAIN_SELECT_S->max_value: "8.0"
 sy/d-mbf/utca-vertical/BUN_0_SEQ_GAIN_SELECT_S->format: "%1.4f"
+sy/d-mbf/utca-vertical/BUN_0_SEQ_SET_DISABLE_ALL_S->description: "Set disable for SEQ"
 sy/d-mbf/utca-vertical/BUN_0_SEQ_SET_DISABLE_S->description: "Set disable for SEQ"
+sy/d-mbf/utca-vertical/BUN_0_SEQ_SET_ENABLE_ALL_S->description: "Set enable for SEQ"
 sy/d-mbf/utca-vertical/BUN_0_SEQ_SET_ENABLE_S->description: "Set enable for SEQ"
 sy/d-mbf/utca-vertical/BUN_0_SEQ_SET_GAIN_S->description: "Set SEQ gain"
 sy/d-mbf/utca-vertical/BUN_0_SEQ_STATUS->description: "Bank 0 SEQ source status"
@@ -759,7 +809,9 @@ sy/d-mbf/utca-vertical/BUN_1_FIR_GAIN_SELECT_S->description: "Select FIR gain"
 sy/d-mbf/utca-vertical/BUN_1_FIR_GAIN_SELECT_S->min_value: "-8.0"
 sy/d-mbf/utca-vertical/BUN_1_FIR_GAIN_SELECT_S->max_value: "8.0"
 sy/d-mbf/utca-vertical/BUN_1_FIR_GAIN_SELECT_S->format: "%1.4f"
+sy/d-mbf/utca-vertical/BUN_1_FIR_SET_DISABLE_ALL_S->description: "Set disable for FIR"
 sy/d-mbf/utca-vertical/BUN_1_FIR_SET_DISABLE_S->description: "Set disable for FIR"
+sy/d-mbf/utca-vertical/BUN_1_FIR_SET_ENABLE_ALL_S->description: "Set enable for FIR"
 sy/d-mbf/utca-vertical/BUN_1_FIR_SET_ENABLE_S->description: "Set enable for FIR"
 sy/d-mbf/utca-vertical/BUN_1_FIR_SET_GAIN_S->description: "Set FIR gain"
 sy/d-mbf/utca-vertical/BUN_1_FIR_STATUS->description: "Bank 1 FIR source status"
@@ -776,7 +828,9 @@ sy/d-mbf/utca-vertical/BUN_1_NCO1_GAIN_SELECT_S->description: "Select NCO1 gain"
 sy/d-mbf/utca-vertical/BUN_1_NCO1_GAIN_SELECT_S->min_value: "-8.0"
 sy/d-mbf/utca-vertical/BUN_1_NCO1_GAIN_SELECT_S->max_value: "8.0"
 sy/d-mbf/utca-vertical/BUN_1_NCO1_GAIN_SELECT_S->format: "%1.4f"
+sy/d-mbf/utca-vertical/BUN_1_NCO1_SET_DISABLE_ALL_S->description: "Set disable for NCO1"
 sy/d-mbf/utca-vertical/BUN_1_NCO1_SET_DISABLE_S->description: "Set disable for NCO1"
+sy/d-mbf/utca-vertical/BUN_1_NCO1_SET_ENABLE_ALL_S->description: "Set enable for NCO1"
 sy/d-mbf/utca-vertical/BUN_1_NCO1_SET_ENABLE_S->description: "Set enable for NCO1"
 sy/d-mbf/utca-vertical/BUN_1_NCO1_SET_GAIN_S->description: "Set NCO1 gain"
 sy/d-mbf/utca-vertical/BUN_1_NCO1_STATUS->description: "Bank 1 NCO1 source status"
@@ -788,7 +842,9 @@ sy/d-mbf/utca-vertical/BUN_1_NCO2_GAIN_SELECT_S->description: "Select NCO2 gain"
 sy/d-mbf/utca-vertical/BUN_1_NCO2_GAIN_SELECT_S->min_value: "-8.0"
 sy/d-mbf/utca-vertical/BUN_1_NCO2_GAIN_SELECT_S->max_value: "8.0"
 sy/d-mbf/utca-vertical/BUN_1_NCO2_GAIN_SELECT_S->format: "%1.4f"
+sy/d-mbf/utca-vertical/BUN_1_NCO2_SET_DISABLE_ALL_S->description: "Set disable for NCO2"
 sy/d-mbf/utca-vertical/BUN_1_NCO2_SET_DISABLE_S->description: "Set disable for NCO2"
+sy/d-mbf/utca-vertical/BUN_1_NCO2_SET_ENABLE_ALL_S->description: "Set enable for NCO2"
 sy/d-mbf/utca-vertical/BUN_1_NCO2_SET_ENABLE_S->description: "Set enable for NCO2"
 sy/d-mbf/utca-vertical/BUN_1_NCO2_SET_GAIN_S->description: "Set NCO2 gain"
 sy/d-mbf/utca-vertical/BUN_1_NCO2_STATUS->description: "Bank 1 NCO2 source status"
@@ -801,7 +857,9 @@ sy/d-mbf/utca-vertical/BUN_1_PLL_GAIN_SELECT_S->description: "Select PLL gain"
 sy/d-mbf/utca-vertical/BUN_1_PLL_GAIN_SELECT_S->min_value: "-8.0"
 sy/d-mbf/utca-vertical/BUN_1_PLL_GAIN_SELECT_S->max_value: "8.0"
 sy/d-mbf/utca-vertical/BUN_1_PLL_GAIN_SELECT_S->format: "%1.4f"
+sy/d-mbf/utca-vertical/BUN_1_PLL_SET_DISABLE_ALL_S->description: "Set disable for PLL"
 sy/d-mbf/utca-vertical/BUN_1_PLL_SET_DISABLE_S->description: "Set disable for PLL"
+sy/d-mbf/utca-vertical/BUN_1_PLL_SET_ENABLE_ALL_S->description: "Set enable for PLL"
 sy/d-mbf/utca-vertical/BUN_1_PLL_SET_ENABLE_S->description: "Set enable for PLL"
 sy/d-mbf/utca-vertical/BUN_1_PLL_SET_GAIN_S->description: "Set PLL gain"
 sy/d-mbf/utca-vertical/BUN_1_PLL_STATUS->description: "Bank 1 PLL source status"
@@ -815,7 +873,9 @@ sy/d-mbf/utca-vertical/BUN_1_SEQ_GAIN_SELECT_S->description: "Select SEQ gain"
 sy/d-mbf/utca-vertical/BUN_1_SEQ_GAIN_SELECT_S->min_value: "-8.0"
 sy/d-mbf/utca-vertical/BUN_1_SEQ_GAIN_SELECT_S->max_value: "8.0"
 sy/d-mbf/utca-vertical/BUN_1_SEQ_GAIN_SELECT_S->format: "%1.4f"
+sy/d-mbf/utca-vertical/BUN_1_SEQ_SET_DISABLE_ALL_S->description: "Set disable for SEQ"
 sy/d-mbf/utca-vertical/BUN_1_SEQ_SET_DISABLE_S->description: "Set disable for SEQ"
+sy/d-mbf/utca-vertical/BUN_1_SEQ_SET_ENABLE_ALL_S->description: "Set enable for SEQ"
 sy/d-mbf/utca-vertical/BUN_1_SEQ_SET_ENABLE_S->description: "Set enable for SEQ"
 sy/d-mbf/utca-vertical/BUN_1_SEQ_SET_GAIN_S->description: "Set SEQ gain"
 sy/d-mbf/utca-vertical/BUN_1_SEQ_STATUS->description: "Bank 1 SEQ source status"
@@ -829,7 +889,9 @@ sy/d-mbf/utca-vertical/BUN_2_FIR_GAIN_SELECT_S->description: "Select FIR gain"
 sy/d-mbf/utca-vertical/BUN_2_FIR_GAIN_SELECT_S->min_value: "-8.0"
 sy/d-mbf/utca-vertical/BUN_2_FIR_GAIN_SELECT_S->max_value: "8.0"
 sy/d-mbf/utca-vertical/BUN_2_FIR_GAIN_SELECT_S->format: "%1.4f"
+sy/d-mbf/utca-vertical/BUN_2_FIR_SET_DISABLE_ALL_S->description: "Set disable for FIR"
 sy/d-mbf/utca-vertical/BUN_2_FIR_SET_DISABLE_S->description: "Set disable for FIR"
+sy/d-mbf/utca-vertical/BUN_2_FIR_SET_ENABLE_ALL_S->description: "Set enable for FIR"
 sy/d-mbf/utca-vertical/BUN_2_FIR_SET_ENABLE_S->description: "Set enable for FIR"
 sy/d-mbf/utca-vertical/BUN_2_FIR_SET_GAIN_S->description: "Set FIR gain"
 sy/d-mbf/utca-vertical/BUN_2_FIR_STATUS->description: "Bank 2 FIR source status"
@@ -846,7 +908,9 @@ sy/d-mbf/utca-vertical/BUN_2_NCO1_GAIN_SELECT_S->description: "Select NCO1 gain"
 sy/d-mbf/utca-vertical/BUN_2_NCO1_GAIN_SELECT_S->min_value: "-8.0"
 sy/d-mbf/utca-vertical/BUN_2_NCO1_GAIN_SELECT_S->max_value: "8.0"
 sy/d-mbf/utca-vertical/BUN_2_NCO1_GAIN_SELECT_S->format: "%1.4f"
+sy/d-mbf/utca-vertical/BUN_2_NCO1_SET_DISABLE_ALL_S->description: "Set disable for NCO1"
 sy/d-mbf/utca-vertical/BUN_2_NCO1_SET_DISABLE_S->description: "Set disable for NCO1"
+sy/d-mbf/utca-vertical/BUN_2_NCO1_SET_ENABLE_ALL_S->description: "Set enable for NCO1"
 sy/d-mbf/utca-vertical/BUN_2_NCO1_SET_ENABLE_S->description: "Set enable for NCO1"
 sy/d-mbf/utca-vertical/BUN_2_NCO1_SET_GAIN_S->description: "Set NCO1 gain"
 sy/d-mbf/utca-vertical/BUN_2_NCO1_STATUS->description: "Bank 2 NCO1 source status"
@@ -858,7 +922,9 @@ sy/d-mbf/utca-vertical/BUN_2_NCO2_GAIN_SELECT_S->description: "Select NCO2 gain"
 sy/d-mbf/utca-vertical/BUN_2_NCO2_GAIN_SELECT_S->min_value: "-8.0"
 sy/d-mbf/utca-vertical/BUN_2_NCO2_GAIN_SELECT_S->max_value: "8.0"
 sy/d-mbf/utca-vertical/BUN_2_NCO2_GAIN_SELECT_S->format: "%1.4f"
+sy/d-mbf/utca-vertical/BUN_2_NCO2_SET_DISABLE_ALL_S->description: "Set disable for NCO2"
 sy/d-mbf/utca-vertical/BUN_2_NCO2_SET_DISABLE_S->description: "Set disable for NCO2"
+sy/d-mbf/utca-vertical/BUN_2_NCO2_SET_ENABLE_ALL_S->description: "Set enable for NCO2"
 sy/d-mbf/utca-vertical/BUN_2_NCO2_SET_ENABLE_S->description: "Set enable for NCO2"
 sy/d-mbf/utca-vertical/BUN_2_NCO2_SET_GAIN_S->description: "Set NCO2 gain"
 sy/d-mbf/utca-vertical/BUN_2_NCO2_STATUS->description: "Bank 2 NCO2 source status"
@@ -871,7 +937,9 @@ sy/d-mbf/utca-vertical/BUN_2_PLL_GAIN_SELECT_S->description: "Select PLL gain"
 sy/d-mbf/utca-vertical/BUN_2_PLL_GAIN_SELECT_S->min_value: "-8.0"
 sy/d-mbf/utca-vertical/BUN_2_PLL_GAIN_SELECT_S->max_value: "8.0"
 sy/d-mbf/utca-vertical/BUN_2_PLL_GAIN_SELECT_S->format: "%1.4f"
+sy/d-mbf/utca-vertical/BUN_2_PLL_SET_DISABLE_ALL_S->description: "Set disable for PLL"
 sy/d-mbf/utca-vertical/BUN_2_PLL_SET_DISABLE_S->description: "Set disable for PLL"
+sy/d-mbf/utca-vertical/BUN_2_PLL_SET_ENABLE_ALL_S->description: "Set enable for PLL"
 sy/d-mbf/utca-vertical/BUN_2_PLL_SET_ENABLE_S->description: "Set enable for PLL"
 sy/d-mbf/utca-vertical/BUN_2_PLL_SET_GAIN_S->description: "Set PLL gain"
 sy/d-mbf/utca-vertical/BUN_2_PLL_STATUS->description: "Bank 2 PLL source status"
@@ -885,7 +953,9 @@ sy/d-mbf/utca-vertical/BUN_2_SEQ_GAIN_SELECT_S->description: "Select SEQ gain"
 sy/d-mbf/utca-vertical/BUN_2_SEQ_GAIN_SELECT_S->min_value: "-8.0"
 sy/d-mbf/utca-vertical/BUN_2_SEQ_GAIN_SELECT_S->max_value: "8.0"
 sy/d-mbf/utca-vertical/BUN_2_SEQ_GAIN_SELECT_S->format: "%1.4f"
+sy/d-mbf/utca-vertical/BUN_2_SEQ_SET_DISABLE_ALL_S->description: "Set disable for SEQ"
 sy/d-mbf/utca-vertical/BUN_2_SEQ_SET_DISABLE_S->description: "Set disable for SEQ"
+sy/d-mbf/utca-vertical/BUN_2_SEQ_SET_ENABLE_ALL_S->description: "Set enable for SEQ"
 sy/d-mbf/utca-vertical/BUN_2_SEQ_SET_ENABLE_S->description: "Set enable for SEQ"
 sy/d-mbf/utca-vertical/BUN_2_SEQ_SET_GAIN_S->description: "Set SEQ gain"
 sy/d-mbf/utca-vertical/BUN_2_SEQ_STATUS->description: "Bank 2 SEQ source status"
@@ -899,7 +969,9 @@ sy/d-mbf/utca-vertical/BUN_3_FIR_GAIN_SELECT_S->description: "Select FIR gain"
 sy/d-mbf/utca-vertical/BUN_3_FIR_GAIN_SELECT_S->min_value: "-8.0"
 sy/d-mbf/utca-vertical/BUN_3_FIR_GAIN_SELECT_S->max_value: "8.0"
 sy/d-mbf/utca-vertical/BUN_3_FIR_GAIN_SELECT_S->format: "%1.4f"
+sy/d-mbf/utca-vertical/BUN_3_FIR_SET_DISABLE_ALL_S->description: "Set disable for FIR"
 sy/d-mbf/utca-vertical/BUN_3_FIR_SET_DISABLE_S->description: "Set disable for FIR"
+sy/d-mbf/utca-vertical/BUN_3_FIR_SET_ENABLE_ALL_S->description: "Set enable for FIR"
 sy/d-mbf/utca-vertical/BUN_3_FIR_SET_ENABLE_S->description: "Set enable for FIR"
 sy/d-mbf/utca-vertical/BUN_3_FIR_SET_GAIN_S->description: "Set FIR gain"
 sy/d-mbf/utca-vertical/BUN_3_FIR_STATUS->description: "Bank 3 FIR source status"
@@ -916,7 +988,9 @@ sy/d-mbf/utca-vertical/BUN_3_NCO1_GAIN_SELECT_S->description: "Select NCO1 gain"
 sy/d-mbf/utca-vertical/BUN_3_NCO1_GAIN_SELECT_S->min_value: "-8.0"
 sy/d-mbf/utca-vertical/BUN_3_NCO1_GAIN_SELECT_S->max_value: "8.0"
 sy/d-mbf/utca-vertical/BUN_3_NCO1_GAIN_SELECT_S->format: "%1.4f"
+sy/d-mbf/utca-vertical/BUN_3_NCO1_SET_DISABLE_ALL_S->description: "Set disable for NCO1"
 sy/d-mbf/utca-vertical/BUN_3_NCO1_SET_DISABLE_S->description: "Set disable for NCO1"
+sy/d-mbf/utca-vertical/BUN_3_NCO1_SET_ENABLE_ALL_S->description: "Set enable for NCO1"
 sy/d-mbf/utca-vertical/BUN_3_NCO1_SET_ENABLE_S->description: "Set enable for NCO1"
 sy/d-mbf/utca-vertical/BUN_3_NCO1_SET_GAIN_S->description: "Set NCO1 gain"
 sy/d-mbf/utca-vertical/BUN_3_NCO1_STATUS->description: "Bank 3 NCO1 source status"
@@ -928,7 +1002,9 @@ sy/d-mbf/utca-vertical/BUN_3_NCO2_GAIN_SELECT_S->description: "Select NCO2 gain"
 sy/d-mbf/utca-vertical/BUN_3_NCO2_GAIN_SELECT_S->min_value: "-8.0"
 sy/d-mbf/utca-vertical/BUN_3_NCO2_GAIN_SELECT_S->max_value: "8.0"
 sy/d-mbf/utca-vertical/BUN_3_NCO2_GAIN_SELECT_S->format: "%1.4f"
+sy/d-mbf/utca-vertical/BUN_3_NCO2_SET_DISABLE_ALL_S->description: "Set disable for NCO2"
 sy/d-mbf/utca-vertical/BUN_3_NCO2_SET_DISABLE_S->description: "Set disable for NCO2"
+sy/d-mbf/utca-vertical/BUN_3_NCO2_SET_ENABLE_ALL_S->description: "Set enable for NCO2"
 sy/d-mbf/utca-vertical/BUN_3_NCO2_SET_ENABLE_S->description: "Set enable for NCO2"
 sy/d-mbf/utca-vertical/BUN_3_NCO2_SET_GAIN_S->description: "Set NCO2 gain"
 sy/d-mbf/utca-vertical/BUN_3_NCO2_STATUS->description: "Bank 3 NCO2 source status"
@@ -941,7 +1017,9 @@ sy/d-mbf/utca-vertical/BUN_3_PLL_GAIN_SELECT_S->description: "Select PLL gain"
 sy/d-mbf/utca-vertical/BUN_3_PLL_GAIN_SELECT_S->min_value: "-8.0"
 sy/d-mbf/utca-vertical/BUN_3_PLL_GAIN_SELECT_S->max_value: "8.0"
 sy/d-mbf/utca-vertical/BUN_3_PLL_GAIN_SELECT_S->format: "%1.4f"
+sy/d-mbf/utca-vertical/BUN_3_PLL_SET_DISABLE_ALL_S->description: "Set disable for PLL"
 sy/d-mbf/utca-vertical/BUN_3_PLL_SET_DISABLE_S->description: "Set disable for PLL"
+sy/d-mbf/utca-vertical/BUN_3_PLL_SET_ENABLE_ALL_S->description: "Set enable for PLL"
 sy/d-mbf/utca-vertical/BUN_3_PLL_SET_ENABLE_S->description: "Set enable for PLL"
 sy/d-mbf/utca-vertical/BUN_3_PLL_SET_GAIN_S->description: "Set PLL gain"
 sy/d-mbf/utca-vertical/BUN_3_PLL_STATUS->description: "Bank 3 PLL source status"
@@ -955,7 +1033,9 @@ sy/d-mbf/utca-vertical/BUN_3_SEQ_GAIN_SELECT_S->description: "Select SEQ gain"
 sy/d-mbf/utca-vertical/BUN_3_SEQ_GAIN_SELECT_S->min_value: "-8.0"
 sy/d-mbf/utca-vertical/BUN_3_SEQ_GAIN_SELECT_S->max_value: "8.0"
 sy/d-mbf/utca-vertical/BUN_3_SEQ_GAIN_SELECT_S->format: "%1.4f"
+sy/d-mbf/utca-vertical/BUN_3_SEQ_SET_DISABLE_ALL_S->description: "Set disable for SEQ"
 sy/d-mbf/utca-vertical/BUN_3_SEQ_SET_DISABLE_S->description: "Set disable for SEQ"
+sy/d-mbf/utca-vertical/BUN_3_SEQ_SET_ENABLE_ALL_S->description: "Set enable for SEQ"
 sy/d-mbf/utca-vertical/BUN_3_SEQ_SET_ENABLE_S->description: "Set enable for SEQ"
 sy/d-mbf/utca-vertical/BUN_3_SEQ_SET_GAIN_S->description: "Set SEQ gain"
 sy/d-mbf/utca-vertical/BUN_3_SEQ_STATUS->description: "Bank 3 SEQ source status"
@@ -1215,11 +1295,11 @@ sy/d-mbf/utca-vertical/PLL_CTRL_KI_S->description: "Integral factor for controll
 sy/d-mbf/utca-vertical/PLL_CTRL_KP_S->description: "Proportional factor for controller"
 sy/d-mbf/utca-vertical/PLL_CTRL_MAX_OFFSET_S->description: "Maximum frequency offset for feedback"
 sy/d-mbf/utca-vertical/PLL_CTRL_MAX_OFFSET_S->unit: "tune"
-sy/d-mbf/utca-vertical/PLL_CTRL_MAX_OFFSET_S->format: "%.7f"
+sy/d-mbf/utca-vertical/PLL_CTRL_MAX_OFFSET_S->format: "%8.7f"
 sy/d-mbf/utca-vertical/PLL_CTRL_MIN_MAG_S->description: "Minimum magnitude for feedback"
 sy/d-mbf/utca-vertical/PLL_CTRL_MIN_MAG_S->min_value: "0.0"
 sy/d-mbf/utca-vertical/PLL_CTRL_MIN_MAG_S->max_value: "1.0"
-sy/d-mbf/utca-vertical/PLL_CTRL_MIN_MAG_S->format: "%1.5f"
+sy/d-mbf/utca-vertical/PLL_CTRL_MIN_MAG_S->format: "%6.5f"
 sy/d-mbf/utca-vertical/PLL_CTRL_START_S->description: "Start tune PLL"
 sy/d-mbf/utca-vertical/PLL_CTRL_STATUS->description: "Tune PLL feedback status"
 sy/d-mbf/utca-vertical/PLL_CTRL_STATUS->EnumLabels: "Stopped", "Running"
@@ -1235,7 +1315,7 @@ sy/d-mbf/utca-vertical/PLL_CTRL_STOP_S->description: "Stop tune PLL"
 sy/d-mbf/utca-vertical/PLL_CTRL_TARGET_S->description: "Target phase"
 sy/d-mbf/utca-vertical/PLL_CTRL_TARGET_S->min_value: "-180.0"
 sy/d-mbf/utca-vertical/PLL_CTRL_TARGET_S->max_value: "180.0"
-sy/d-mbf/utca-vertical/PLL_CTRL_TARGET_S->format: "%3.2f"
+sy/d-mbf/utca-vertical/PLL_CTRL_TARGET_S->format: "%5.2f"
 sy/d-mbf/utca-vertical/PLL_CTRL_UPDATE_STATUS_DONE_S->description: "UPDATE_STATUS processing done"
 sy/d-mbf/utca-vertical/PLL_CTRL_UPDATE_STATUS_TRIG->description: "UPDATE_STATUS processing trigger"
 sy/d-mbf/utca-vertical/PLL_DEBUG_ANGLE->description: "Tune PLL angle"
@@ -1284,7 +1364,7 @@ sy/d-mbf/utca-vertical/PLL_NCO_FREQ->description: "Tune PLL NCO frequency"
 sy/d-mbf/utca-vertical/PLL_NCO_FREQ->unit: "tune"
 sy/d-mbf/utca-vertical/PLL_NCO_FREQ_S->description: "Base Tune PLL NCO frequency"
 sy/d-mbf/utca-vertical/PLL_NCO_FREQ_S->unit: "tune"
-sy/d-mbf/utca-vertical/PLL_NCO_FREQ_S->format: "%.7f"
+sy/d-mbf/utca-vertical/PLL_NCO_FREQ_S->format: "%10.7f"
 sy/d-mbf/utca-vertical/PLL_NCO_GAIN_DB_S->description: "Set tune PLL NCO gain dB"
 sy/d-mbf/utca-vertical/PLL_NCO_GAIN_DB_S->unit: "dB"
 sy/d-mbf/utca-vertical/PLL_NCO_GAIN_DB_S->format: "%.2f"
@@ -1293,7 +1373,7 @@ sy/d-mbf/utca-vertical/PLL_NCO_GAIN_S->EnumLabels: "0dB", "-6dB", "-12dB", "-18d
 sy/d-mbf/utca-vertical/PLL_NCO_GAIN_SCALAR_S->description: "Set tune PLL NCO gain"
 sy/d-mbf/utca-vertical/PLL_NCO_GAIN_SCALAR_S->min_value: "0.0"
 sy/d-mbf/utca-vertical/PLL_NCO_GAIN_SCALAR_S->max_value: "1.0"
-sy/d-mbf/utca-vertical/PLL_NCO_GAIN_SCALAR_S->format: "%1.5f"
+sy/d-mbf/utca-vertical/PLL_NCO_GAIN_SCALAR_S->format: "%6.5f"
 sy/d-mbf/utca-vertical/PLL_NCO_MEAN_OFFSET->description: "Mean tune PLL offset"
 sy/d-mbf/utca-vertical/PLL_NCO_MEAN_OFFSET->unit: "tune"
 sy/d-mbf/utca-vertical/PLL_NCO_OFFSET->description: "Filtered frequency offset"
@@ -1665,7 +1745,7 @@ sy/d-mbf/utca-vertical/SEQ_STATUS_READ_S->description: "Poll sequencer status"
 sy/d-mbf/utca-vertical/SEQ_SUPER_COUNT->description: "Current super sequencer count"
 sy/d-mbf/utca-vertical/SEQ_SUPER_COUNT_S->description: "Super sequencer count"
 sy/d-mbf/utca-vertical/SEQ_SUPER_COUNT_S->min_value: "1.0"
-sy/d-mbf/utca-vertical/SEQ_SUPER_COUNT_S->max_value: "1024.0"
+sy/d-mbf/utca-vertical/SEQ_SUPER_COUNT_S->max_value: "2048.0"
 sy/d-mbf/utca-vertical/SEQ_SUPER_COUNT_S->format: "%4d"
 sy/d-mbf/utca-vertical/SEQ_SUPER_OFFSET_S->description: "Frequency offsets for super sequencer"
 sy/d-mbf/utca-vertical/SEQ_SUPER_OFFSET_S->format: "%.5f"
